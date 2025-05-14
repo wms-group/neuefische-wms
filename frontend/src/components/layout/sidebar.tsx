@@ -1,4 +1,4 @@
-import { SidebarComponentProps} from "@/types";
+import {SidebarComponentProps} from "@/types";
 import {cn} from "@/utils";
 import {NavLink} from "react-router-dom";
 

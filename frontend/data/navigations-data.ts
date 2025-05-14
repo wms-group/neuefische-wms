@@ -1,4 +1,4 @@
-import {Home, Box, ClipboardList, CheckCircle} from "lucide-react";
+import {Box, CheckCircle, ClipboardList, Home} from "lucide-react";
 import {FooterConfig, SidebarConfig} from "@/types";
 
 export const sidebarItemsConfig: SidebarConfig = {
