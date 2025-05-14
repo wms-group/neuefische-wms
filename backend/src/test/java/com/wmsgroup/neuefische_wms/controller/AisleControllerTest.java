@@ -157,7 +157,7 @@ public class AisleControllerTest {
 				.map(Aisle::id)
 				.collect(Collectors.joining(","));
 
-		String response = mvc.perform(get("/aisles")
+		String response = mvc.perform(get(uri)
 				.param("ids", idsParam)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
