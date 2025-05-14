@@ -21,14 +21,14 @@ import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
 import com.wmsgroup.neuefische_wms.repository.AisleRepository;
 
-public class AisleManagementServiceTest {
-	public AisleManagementService service;
+class AisleManagementServiceTest {
+	private AisleManagementService service;
 
-	public AisleRepository repo;
-	public IdService idService;
+	private AisleRepository repo;
+	private IdService idService;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		repo = mock(AisleRepository.class);
 		idService = mock(IdService.class);
 		service = new AisleManagementService(idService, repo);
@@ -84,7 +84,7 @@ public class AisleManagementServiceTest {
 	}
 
 	@Test
-	void updateAisle_throwsAisleNotFound_withInvalidAisle() throws AisleNotFoundException {
+	void updateAisle_throwsAisleNotFound_withInvalidAisle() {
 		Aisle invalidAisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
 
 		when(repo.existsById(invalidAisle.id())).thenReturn(false);
@@ -133,14 +133,14 @@ public class AisleManagementServiceTest {
 		List<Aisle> aisles = List.of(aisle, aisle.withId("A2"), aisle.withId("A3"));
 		List<String> ids = aisles.stream()
 				.map(Aisle::id)
-				.collect(Collectors.toList());
+				.toList();
 
-		when(repo.findAllById(ids)).thenAnswer((inv) -> {
+		when(repo.findAllById(ids)).thenAnswer(inv -> {
 			Iterable<String> requestedIds = inv.getArgument(0);
 			return aisles.stream()
 					.filter(a -> StreamSupport.stream(requestedIds.spliterator(), false)
 							.anyMatch(id -> id.equals(a.id())))
-					.collect(Collectors.toList());
+					.toList();
 		});
 
 		assertThat(service.getAislesWithIds(ids))

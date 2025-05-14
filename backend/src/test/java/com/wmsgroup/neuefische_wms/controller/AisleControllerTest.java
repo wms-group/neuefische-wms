@@ -27,7 +27,7 @@ import com.wmsgroup.neuefische_wms.repository.AisleRepository;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AisleControllerTest {
+class AisleControllerTest {
 	private final String uri = "/api/aisles";
 
 	@Autowired
