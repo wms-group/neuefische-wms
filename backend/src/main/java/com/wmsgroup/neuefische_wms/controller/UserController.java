@@ -1,7 +1,8 @@
 package com.wmsgroup.neuefische_wms.controller;
 
 import com.wmsgroup.neuefische_wms.model.user.User;
-import com.wmsgroup.neuefische_wms.model.user.UserNotFoundException;
+import com.wmsgroup.neuefische_wms.model.user.exceptions.UserExistException;
+import com.wmsgroup.neuefische_wms.model.user.exceptions.UserNotFoundException;
 import com.wmsgroup.neuefische_wms.model.user.dto.UserDto;
 import com.wmsgroup.neuefische_wms.service.IdService;
 import com.wmsgroup.neuefische_wms.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,7 +27,7 @@ public class UserController {
    * adds user to db and return userDto with min infos
    * */
   @PostMapping
-  public ResponseEntity<UserDto> addUser(@RequestBody User userReq) {
+  public ResponseEntity<?> addUser(@RequestBody User userReq) {
     User newUser = new User(
             idService.generateId(),
             userReq.name(),
@@ -33,14 +35,20 @@ public class UserController {
             userReq.password()
     );
 
-    userService.addUser(newUser);
+    try {
+      userService.addUser(newUser);
 
-    UserDto createdUser = new UserDto(
-            newUser.name(),
-            newUser.role()
-    );
+      UserDto createdUser = new UserDto(
+              newUser.name(),
+              newUser.role()
+      );
 
-    return ResponseEntity.status(HttpStatus.OK).body(createdUser);
+      return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+
+    } catch (UserExistException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(Map.of("error", e.getMessage()));
+    }
   }
 
   /*

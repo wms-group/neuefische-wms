@@ -26,8 +26,7 @@ class UserControllerTest {
 
   @Test
   void addUser_shouldAddUser_whenCalledWithValidData() throws Exception {
-    User doeUser = new User("1", "Joe Doe", UserRole.ADMIN, "wms123!");
-    userRepository.save(doeUser);
+    userRepository.deleteAll(); // Clean state
 
     mockMvc.perform(post("/api/wms-group")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -38,13 +37,35 @@ class UserControllerTest {
                               "password": "wms123!"
                             }
                         """)
-            ).andExpect(status().isOk())
-            .andExpect(content().json(("""
+            ).andExpect(status().isCreated()) // <- geändert von isOk()
+            .andExpect(content().json("""
                     {
                         "name": "Joe Doe",
                         "role": "ADMIN"
                     }
-                    """)));
+                    """));
+  }
+
+  @Test
+  void addUser_shouldReturnConflict_whenUserAlreadyExists() throws Exception {
+    userRepository.deleteAll();
+    userRepository.save(new User("1", "Jane Doe", UserRole.ADMIN, "1234"));
+
+    mockMvc.perform(post("/api/wms-group")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                    {
+                      "name": "Jane Doe",
+                      "role": "ADMIN",
+                      "password": "1234"
+                    }
+                    """)
+            ).andExpect(status().isConflict())
+            .andExpect(content().json("""
+        {
+          "error": "User with the name 'Jane Doe' already exists! Try another name."
+        }
+     """));
   }
 
   @Test
