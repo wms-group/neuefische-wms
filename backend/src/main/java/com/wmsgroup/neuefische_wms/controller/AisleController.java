@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wmsgroup.neuefische_wms.exceptions.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
+import com.wmsgroup.neuefische_wms.model.dto.AisleUpdateDTO;
 import com.wmsgroup.neuefische_wms.model.dto.ErrorDTO;
 import com.wmsgroup.neuefische_wms.service.AisleManagementService;
 
@@ -58,7 +59,7 @@ public class AisleController {
 	}
 
 	@PutMapping
-	public ResponseEntity<Aisle> updateAisle(@RequestBody Aisle aisle) throws AisleNotFoundException {
+	public ResponseEntity<Aisle> updateAisle(@RequestBody AisleUpdateDTO aisle) throws AisleNotFoundException {
 		return ResponseEntity.ok(aisleService.updateAisle(aisle));
 	}
 

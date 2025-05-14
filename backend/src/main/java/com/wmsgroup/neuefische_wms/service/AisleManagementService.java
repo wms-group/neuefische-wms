@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.wmsgroup.neuefische_wms.exceptions.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
+import com.wmsgroup.neuefische_wms.model.dto.AisleUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.AisleRepository;
 
 @Service
@@ -24,7 +25,7 @@ public class AisleManagementService {
 		return repo.save(Aisle.of(dto).withId(idService.generateId()));
 	}
 
-	public Aisle updateAisle(Aisle dto) throws AisleNotFoundException {
+	public Aisle updateAisle(AisleUpdateDTO dto) throws AisleNotFoundException {
 		if (!repo.existsById(dto.id())) {
 			throw new AisleNotFoundException("Aisle with id: " + dto.id() + " was not found.");
 		}
