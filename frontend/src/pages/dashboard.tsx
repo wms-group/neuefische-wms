@@ -1,13 +1,11 @@
 import LayoutContainer from "@/components/shared/layout-container.tsx";
-import Dashboard from "@/pages/dashboard.tsx";
 
-function App() {
-
+const Dashboard = () => {
     return (
         <LayoutContainer>
-            <Dashboard/>
+            Dashboard
         </LayoutContainer>
-    );
+    )
 }
 
-export default App;
+export default Dashboard;
