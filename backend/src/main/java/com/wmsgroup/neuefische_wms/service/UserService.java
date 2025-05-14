@@ -1,7 +1,7 @@
 package com.wmsgroup.neuefische_wms.service;
 
 import com.wmsgroup.neuefische_wms.model.user.User;
-import com.wmsgroup.neuefische_wms.model.user.exceptions.UserExistException;
+import com.wmsgroup.neuefische_wms.model.user.exceptions.UserAlreadyExistException;
 import com.wmsgroup.neuefische_wms.model.user.exceptions.UserNotFoundException;
 import com.wmsgroup.neuefische_wms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ public class UserService {
   private final UserRepository userRepository;
 
   public void addUser(User user) {
-    if (userRepository.findByName(user.name()).isPresent()) {
-      throw new UserExistException(
-              "User with the name '" + user.name() + "' already exists!."
+    if (userRepository.findByUsername(user.username()).isPresent()) {
+      throw new UserAlreadyExistException(
+              "User with the username '" + user.username() + "' already exists!"
       );
     }
     userRepository.save(user);

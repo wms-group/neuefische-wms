@@ -1,7 +1,7 @@
 package com.wmsgroup.neuefische_wms.controller;
 
 import com.wmsgroup.neuefische_wms.model.user.User;
-import com.wmsgroup.neuefische_wms.model.user.exceptions.UserExistException;
+import com.wmsgroup.neuefische_wms.model.user.exceptions.UserAlreadyExistException;
 import com.wmsgroup.neuefische_wms.model.user.exceptions.UserNotFoundException;
 import com.wmsgroup.neuefische_wms.model.user.dto.UserDto;
 import com.wmsgroup.neuefische_wms.service.IdService;
@@ -30,6 +30,7 @@ public class UserController {
   public ResponseEntity<?> addUser(@RequestBody User userReq) {
     User newUser = new User(
             idService.generateId(),
+            userReq.username(),
             userReq.name(),
             userReq.role(),
             userReq.password()
@@ -39,13 +40,14 @@ public class UserController {
       userService.addUser(newUser);
 
       UserDto createdUser = new UserDto(
+              newUser.username(),
               newUser.name(),
               newUser.role()
       );
 
       return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
 
-    } catch (UserExistException e) {
+    } catch (UserAlreadyExistException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
               .body(Map.of("error", e.getMessage()));
     }

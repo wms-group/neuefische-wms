@@ -26,20 +26,22 @@ class UserControllerTest {
 
   @Test
   void addUser_shouldAddUser_whenCalledWithValidData() throws Exception {
-    userRepository.deleteAll(); // Clean state
+    userRepository.deleteAll();
 
     mockMvc.perform(post("/api/wms-group")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("""
                             {
+                              "username": "j_doe",
                               "name": "Joe Doe",
                               "role": "ADMIN",
                               "password": "wms123!"
                             }
                         """)
-            ).andExpect(status().isCreated()) // <- geändert von isOk()
+            ).andExpect(status().isCreated())
             .andExpect(content().json("""
                     {
+                        "username": "j_doe",
                         "name": "Joe Doe",
                         "role": "ADMIN"
                     }
@@ -49,12 +51,13 @@ class UserControllerTest {
   @Test
   void addUser_shouldReturnConflict_whenUserAlreadyExists() throws Exception {
     userRepository.deleteAll();
-    userRepository.save(new User("1", "Jane Doe", UserRole.ADMIN, "1234"));
+    userRepository.save(new User("1", "j_doe","Jane Doe", UserRole.ADMIN, "1234"));
 
     mockMvc.perform(post("/api/wms-group")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("""
                     {
+                      "username": "j_doe",
                       "name": "Jane Doe",
                       "role": "ADMIN",
                       "password": "1234"
@@ -63,7 +66,7 @@ class UserControllerTest {
             ).andExpect(status().isConflict())
             .andExpect(content().json("""
         {
-          "error": "User with the name 'Jane Doe' already exists! Try another name."
+          "error": "User with the username 'j_doe' already exists!"
         }
      """));
   }
@@ -74,6 +77,7 @@ class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                     {
+                      "username": "j_doe",
                       "name": "Jane Doe",
                       "role": "INVALID_ROLE",
                       "password": "12345"
@@ -82,4 +86,19 @@ class UserControllerTest {
     ).andExpect(status().isBadRequest());
   }
 
+  @Test
+  void deleteUser() {
+  }
+
+  @Test
+  void updateUser() {
+  }
+
+  @Test
+  void getUsers() {
+  }
+
+  @Test
+  void getUserById() {
+  }
 }
