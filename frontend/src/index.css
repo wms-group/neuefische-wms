@@ -5,13 +5,6 @@
     box-sizing: border-box;
 }
 
-/* Enable keyword animations */
-@media (prefers-reduced-motion: no-preference) {
-    html {
-        interpolate-size: allow-keywords;
-    }
-}
-
 body {
     /* Add accessible line-height */
     line-height: 1.5;
