@@ -30,7 +30,7 @@ public class AisleManagementService {
 			throw new AisleNotFoundException("Aisle with id: " + dto.id() + " was not found.");
 		}
 
-		return repo.save(dto);
+		return repo.save(Aisle.of(dto));
 	}
 
 	public void deleteAisleById(String id) throws AisleNotFoundException {

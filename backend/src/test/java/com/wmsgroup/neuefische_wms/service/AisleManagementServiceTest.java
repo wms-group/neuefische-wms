@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import com.wmsgroup.neuefische_wms.exceptions.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
+import com.wmsgroup.neuefische_wms.model.dto.AisleUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.AisleRepository;
 
 class AisleManagementServiceTest {
@@ -73,25 +74,26 @@ class AisleManagementServiceTest {
 
 	@Test
 	void updateAisle_updatesAisle_withValidAisle() throws AisleNotFoundException {
-		Aisle validAisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+		AisleUpdateDTO updatedAisle = new AisleUpdateDTO("A1", "Updated Name", List.of("C1", "C2"), List.of("S1", "S2"));
+		Aisle validAisle = Aisle.of(updatedAisle).withName("Original Name");
 
 		when(repo.existsById(validAisle.id())).thenReturn(true);
 
-		service.updateAisle(validAisle);
+		service.updateAisle(updatedAisle);
 
-		verify(repo, times(1)).save(validAisle);
+		verify(repo, times(1)).save(Aisle.of(updatedAisle));
 	}
 
 	@Test
 	void updateAisle_throwsAisleNotFound_withInvalidAisle() {
-		Aisle invalidAisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+		AisleUpdateDTO updatedAisle = new AisleUpdateDTO("A1", "Updated Name", List.of("C1", "C2"), List.of("S1", "S2"));
 
-		when(repo.existsById(invalidAisle.id())).thenReturn(false);
+		when(repo.existsById(updatedAisle.id())).thenReturn(false);
 
 		assertThatThrownBy(() -> {
-			service.updateAisle(invalidAisle);
+			service.updateAisle(updatedAisle);
 		}).isInstanceOf(AisleNotFoundException.class)
-				.hasMessage("Aisle with id: " + invalidAisle.id() + " was not found.");
+				.hasMessage("Aisle with id: " + updatedAisle.id() + " was not found.");
 
 		verify(repo, never()).save(any());
 	}

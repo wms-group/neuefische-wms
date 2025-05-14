@@ -18,7 +18,7 @@ public record Aisle(
 		@Id String id,
 		String name,
 		List<String> categoryIds,
-		List<String> stockId) {
+		List<String> stockIds) {
 
 	public static Aisle of(AisleCreationDTO dto) {
 		return new Aisle("", dto.name(), dto.categoryIds(), dto.stockIds());
