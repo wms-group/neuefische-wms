@@ -33,7 +33,7 @@ public class HallController {
 		this.service = service;
 	}
 
-	@GetMapping("/{ids}")
+	@GetMapping
 	public ResponseEntity<List<Hall>> getHalls(@RequestParam Optional<List<String>> ids) {
 		List<Hall> halls = ids.isEmpty() || ids.get().isEmpty()
 				? service.getHalls()

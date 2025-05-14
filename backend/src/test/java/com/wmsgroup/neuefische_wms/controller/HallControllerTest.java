@@ -132,7 +132,7 @@ class HallControllerTest {
 		Hall hall = Hall.of(dto).withName("Original Hall").withAisleIds(List.of());
 		repo.save(hall);
 
-		String response = mvc.perform(put(uri + "/" + dto.id())
+		String response = mvc.perform(put(uri)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(dto)))
 				.andExpect(status().isOk())
@@ -150,7 +150,7 @@ class HallControllerTest {
 	void updateHall_throwsNotFound_withInvalidDto() throws Exception {
 		HallUpdateDTO dto = new HallUpdateDTO("H1", "Updated Hall", List.of("A1"));
 
-		mvc.perform(put(uri + "/" + dto.id())
+		mvc.perform(put(uri)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(dto)))
 				.andExpect(status().isNotFound());
