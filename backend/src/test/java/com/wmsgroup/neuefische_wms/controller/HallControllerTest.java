@@ -42,7 +42,7 @@ class HallControllerTest {
 	private HallRepository repo;
 
 	@Test
-	private void getHalls_returnAllHalls_withNoIds() throws JsonProcessingException, Exception {
+	void getHalls_returnAllHalls_withNoIds() throws Exception {
 		Hall hall = new Hall("H1", "New Hall", List.of("A1", "A2"));
 		List<Hall> halls = List.of(hall, hall.withId("H2"), hall.withId("H3"));
 
@@ -55,7 +55,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void getHalls_returnsOnlyExpectedHalls_withIds() throws Exception {
+	void getHalls_returnsOnlyExpectedHalls_withIds() throws Exception {
 		Hall hall = new Hall("H1", "New Hall", List.of("A1", "A2"));
 		List<Hall> halls = List.of(hall, hall.withId("H2"), hall.withId("H3"));
 		List<String> ids = halls.stream()
@@ -82,7 +82,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void getHall_returnsHall_withValidId() throws Exception {
+	void getHall_returnsHall_withValidId() throws Exception {
 		Hall hall = new Hall("H1", "New Hall", List.of("A1", "A2"));
 		repo.save(hall);
 
@@ -94,7 +94,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void getHall_throwsHallNotFound_withInvalidId() throws Exception {
+	void getHall_throwsHallNotFound_withInvalidId() throws Exception {
 		String invalidId = "H1";
 
 		mvc.perform(get(uri + "/" + invalidId)
@@ -103,7 +103,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void createHall_createsHall_whenCalled() throws Exception {
+	void createHall_createsHall_whenCalled() throws Exception {
 		HallCreationDTO dto = new HallCreationDTO("New Hall", List.of());
 
 		String response = mvc.perform(post(uri)
@@ -127,7 +127,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void updateHall_updatesHall_withValidDto() throws Exception {
+	void updateHall_updatesHall_withValidDto() throws Exception {
 		HallUpdateDTO dto = new HallUpdateDTO("H1", "Updated Hall", List.of("A1"));
 		Hall hall = Hall.of(dto).withName("Original Hall").withAisleIds(List.of());
 		repo.save(hall);
@@ -147,7 +147,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void updateHall_throwsNotFound_withInvalidDto() throws Exception {
+	void updateHall_throwsNotFound_withInvalidDto() throws Exception {
 		HallUpdateDTO dto = new HallUpdateDTO("H1", "Updated Hall", List.of("A1"));
 
 		mvc.perform(put(uri + "/" + dto.id())
@@ -157,7 +157,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void deleteHall_deletes_withValidId() throws Exception {
+	void deleteHall_deletes_withValidId() throws Exception {
 		Hall hall = new Hall("H1", "New Hall", List.of("A1", "A2"));
 
 		repo.save(hall);
@@ -170,7 +170,7 @@ class HallControllerTest {
 	}
 
 	@Test
-	private void deleteHall_throwsNotFound_withInalidId() throws Exception {
+	void deleteHall_throwsNotFound_withInalidId() throws Exception {
 		String invalidId = "H1";
 
 		mvc.perform(delete(uri + "/" + invalidId))
