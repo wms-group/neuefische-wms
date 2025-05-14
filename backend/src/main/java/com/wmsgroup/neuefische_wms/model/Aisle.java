@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
+
 import lombok.Builder;
 import lombok.With;
 
@@ -17,4 +19,7 @@ public record Aisle(
 		List<String> categoryIds,
 		List<String> stockId) {
 
+	public static Aisle of(AisleCreationDTO dto) {
+		return new Aisle("", dto.name(), dto.categoryIds(), dto.stockIds());
+	}
 }

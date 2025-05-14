@@ -7,5 +7,4 @@ import com.wmsgroup.neuefische_wms.model.Aisle;
 
 @Repository
 public interface AisleRepository extends MongoRepository<Aisle, String> {
-
 }
