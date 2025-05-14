@@ -1,12 +1,17 @@
 package com.wmsgroup.neuefische_wms.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +21,8 @@ import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.ErrorDTO;
 import com.wmsgroup.neuefische_wms.service.AisleManagementService;
 
-@RestController("/api/aisles")
+@RestController
+@RequestMapping("/api/aisles")
 public class AisleController {
 	private final AisleManagementService aisleService;
 
@@ -34,6 +40,22 @@ public class AisleController {
 		aisleService.deleteAisleById(id);
 		return ResponseEntity.noContent().build();
 	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Aisle> getAisleById(@PathVariable String id) throws AisleNotFoundException {
+		return ResponseEntity.ok(aisleService.getAisleById(id));
+	}
+
+	@GetMapping()
+	public ResponseEntity<List<Aisle>> getAisles() {
+		return ResponseEntity.ok(aisleService.getAisles());
+	}
+
+	@GetMapping()
+	public ResponseEntity<List<Aisle>> getAislesWithIds(@RequestBody List<String> ids) {
+		return ResponseEntity.ok(aisleService.getAislesWithIds(ids));
+	}
+
 	@PutMapping()
 	public ResponseEntity<Aisle> updateAisle(@RequestBody Aisle aisle) throws AisleNotFoundException {
 		return ResponseEntity.ok(aisleService.updateAisle(aisle));

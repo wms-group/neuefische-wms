@@ -1,6 +1,9 @@
 package com.wmsgroup.neuefische_wms.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -92,5 +95,56 @@ public class AisleManagementServiceTest {
 				.hasMessage("Aisle with id: " + invalidAisle.id() + " was not found.");
 
 		verify(repo, never()).save(any());
+	}
+
+	@Test
+	void getAisleById_returnsAisle_withValidId() throws AisleNotFoundException {
+		Aisle validAisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+		when(repo.findById(validAisle.id())).thenReturn(Optional.of(validAisle));
+
+		assertThat(service.getAisleById(validAisle.id())).isEqualTo(validAisle);
+	}
+
+	@Test
+	void getAisleById_throwsAisleNotFound_withInvalidId() {
+		String invalidId = "A1";
+		when(repo.findById(invalidId)).thenReturn(Optional.empty());
+
+		assertThatThrownBy(() -> {
+			service.getAisleById(invalidId);
+		}).isInstanceOf(AisleNotFoundException.class)
+				.hasMessage("Aisle with id: " + invalidId + " was not found.");
+	}
+
+	@Test
+	void getAisles_returnsAisles_whenCalled() {
+		Aisle aisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+		List<Aisle> aisles = List.of(aisle, aisle.withId("A2"), aisle.withId("A3"));
+
+		when(repo.findAll()).thenReturn(aisles);
+
+		assertThat(service.getAisles())
+				.containsExactlyInAnyOrderElementsOf(aisles);
+	}
+
+	@Test
+	void getAislesWitIds_returnsAisle_whenCalled() {
+		Aisle aisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+		List<Aisle> aisles = List.of(aisle, aisle.withId("A2"), aisle.withId("A3"));
+		List<String> ids = aisles.stream()
+				.map(Aisle::id)
+				.collect(Collectors.toList());
+
+		when(repo.findAllById(ids)).thenAnswer((inv) -> {
+			Iterable<String> requestedIds = inv.getArgument(0);
+			return aisles.stream()
+					.filter(a -> StreamSupport.stream(requestedIds.spliterator(), false)
+							.anyMatch(id -> id.equals(a.id())))
+					.collect(Collectors.toList());
+		});
+
+		assertThat(service.getAislesWithIds(ids))
+				.hasSize(ids.size())
+				.containsExactlyElementsOf(aisles);
 	}
 }

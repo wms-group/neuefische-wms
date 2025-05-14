@@ -1,6 +1,7 @@
 package com.wmsgroup.neuefische_wms.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class AisleManagementService {
 		return repo.save(dto);
 	}
 
-	public void deleteAisleById(String id) {
+	public void deleteAisleById(String id) throws AisleNotFoundException {
 		if (!repo.existsById(id)) {
 			throw new AisleNotFoundException("Aisle with id: " + id + " was not found.");
 		}
@@ -39,11 +40,21 @@ public class AisleManagementService {
 		repo.deleteById(id);
 	}
 
-	public Aisle getAisleWithId(String id) {
-		return new Aisle("", "", List.of(), List.of());
+	public Aisle getAisleById(String id) throws AisleNotFoundException {
+		Optional<Aisle> aisle = repo.findById(id);
+		if (aisle.isEmpty()) {
+			throw new AisleNotFoundException("Aisle with id: " + id + " was not found.");
+		}
+
+		return aisle.get();
 	}
 
 	public List<Aisle> getAisles() {
-		return List.of();
+		return repo.findAll();
 	}
+
+	public List<Aisle> getAislesWithIds(List<String> ids) {
+		return repo.findAllById(ids);
+	}
+
 }
