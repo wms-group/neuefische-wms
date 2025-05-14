@@ -1,5 +1,5 @@
-import { clsx, ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import {ClassValue, clsx} from "clsx";
+import {twMerge} from "tailwind-merge";
 
 /*
  * Combines conditional class names from 'clsx' or 'classnames'
@@ -8,3 +8,8 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/*
+* Return current Year
+* */
+export const FullYear = () => new Date().getFullYear();

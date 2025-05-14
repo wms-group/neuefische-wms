@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -14,6 +14,13 @@ export default defineConfig({
       * only for example purposes - creates an alias "@utils" pointing to "src/utils"
       * "@utils": path.resolve(__dirname, "src/utils"),
       * */
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: 'http://localhost:8080',
+      },
     },
   },
 });

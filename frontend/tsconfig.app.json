@@ -19,15 +19,17 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
     // Enables non-relative imports from the 'src' folder using '@/'
     "baseUrl": "./",
     "paths": {
-      "@/": ["src/"]
+      "@/*": [
+        "src/*"
+      ]
     }
   },
   "include": ["src"]
 }
+
