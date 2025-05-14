@@ -35,7 +35,7 @@ public class CategoryServiceTest {
         String generatedId = "new-id";
         Category testCategory = Category.builder().id(generatedId).name("Test Category").build();
         CategoryInputDTO inputDTO = new CategoryInputDTO("Test Category", null);
-        CategoryOutputDTO outputDTO = new CategoryOutputDTO(generatedId, "Test Category");
+        CategoryOutputDTO outputDTO = new CategoryOutputDTO(generatedId, "Test Category", null);
 
         Mockito.when(idService.generateId()).thenReturn(generatedId);
         Mockito.when(categoryRepository.save(any(Category.class))).thenReturn(testCategory);
@@ -82,11 +82,11 @@ public class CategoryServiceTest {
         // Given
         List<Category> categories = List.of(
                 Category.builder().id("id1").name("Cat1").build(),
-                Category.builder().id("id2").name("Cat2").build()
+                Category.builder().id("id2").name("Cat2").parentId("id1").build()
         );
         List<CategoryOutputDTO> outputDTOs = List.of(
-                new CategoryOutputDTO("id1", "Cat1"),
-                new CategoryOutputDTO("id2", "Cat2")
+                new CategoryOutputDTO("id1", "Cat1", null),
+                new CategoryOutputDTO("id2", "Cat2", "id1")
         );
 
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);

@@ -20,7 +20,8 @@ public class CategoryOutputDTOConverter {
     public static CategoryOutputDTO convert(@NonNull Category category) {
         return new CategoryOutputDTO(
                 category.getId(),
-                category.getName()
+                category.getName(),
+                category.getParentId()
         );
     }
 

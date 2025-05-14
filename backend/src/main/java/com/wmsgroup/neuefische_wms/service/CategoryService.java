@@ -21,13 +21,16 @@ public class CategoryService {
         return CategoryOutputDTOConverter.convert(categoryRepository.findAll());
     }
 
-    public CategoryOutputDTO addCategory(@NonNull CategoryInputDTO categoryManagerInputDTO) {
-        if (categoryManagerInputDTO.parentId() != null && !categoryRepository.existsById(categoryManagerInputDTO.parentId())) {
-            throw new IllegalArgumentException(String.format("Category for parentId %s does not exist", categoryManagerInputDTO.parentId()));
+    public CategoryOutputDTO addCategory(@NonNull CategoryInputDTO categoryInputDTO) {
+        if (categoryInputDTO.parentId() != null && !categoryRepository.existsById(categoryInputDTO.parentId())) {
+            throw new IllegalArgumentException(String.format("Category for parentId %s does not exist", categoryInputDTO.parentId()));
+        }
+        if (categoryInputDTO.name().isBlank()) {
+            throw new IllegalArgumentException("Name must not be blank");
         }
         return CategoryOutputDTOConverter.convert(
                 categoryRepository.save(
-                        CategoryConverter.convert(categoryManagerInputDTO)
+                        CategoryConverter.convert(categoryInputDTO)
                                 .withId(idService.generateId())
                 )
         );
