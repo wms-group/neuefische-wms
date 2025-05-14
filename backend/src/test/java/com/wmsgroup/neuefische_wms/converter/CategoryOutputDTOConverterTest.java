@@ -1,6 +1,6 @@
 package com.wmsgroup.neuefische_wms.converter;
 
-import com.wmsgroup.neuefische_wms.dto.CategoryManagerOutputDTO;
+import com.wmsgroup.neuefische_wms.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,9 +10,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class CategoryManagerOutputDTOConverterTest {
+class CategoryOutputDTOConverterTest {
 
-    private final CategoryManagerOutputDTOConverter converter = new CategoryManagerOutputDTOConverter();
+    private final CategoryOutputDTOConverter converter = new CategoryOutputDTOConverter();
 
     @Test
     void convert_shouldConvertCategoryToCategoryManagerOutputDTO() {
@@ -23,7 +23,7 @@ class CategoryManagerOutputDTOConverterTest {
                 .build();
 
         // Act
-        CategoryManagerOutputDTO result = converter.convert(category);
+        CategoryOutputDTO result = converter.convert(category);
 
         // Assert
         assertNotNull(result);
@@ -37,7 +37,7 @@ class CategoryManagerOutputDTOConverterTest {
         List<Category> categories = List.of();
 
         // Act
-        List<CategoryManagerOutputDTO> result = converter.convert(categories);
+        List<CategoryOutputDTO> result = converter.convert(categories);
 
         // Assert
         assertNotNull(result);
@@ -60,7 +60,7 @@ class CategoryManagerOutputDTOConverterTest {
         List<Category> categories = List.of(category1, category2);
 
         // Act
-        List<CategoryManagerOutputDTO> result = converter.convert(categories);
+        List<CategoryOutputDTO> result = converter.convert(categories);
 
         // Assert
         assertNotNull(result);

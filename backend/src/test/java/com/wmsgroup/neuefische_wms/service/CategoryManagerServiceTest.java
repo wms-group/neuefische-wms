@@ -4,6 +4,9 @@ import com.wmsgroup.neuefische_wms.converter.CategoryConverter;
 import com.wmsgroup.neuefische_wms.converter.CategoryManagerOutputDTOConverter;
 import com.wmsgroup.neuefische_wms.dto.CategoryManagerInputDTO;
 import com.wmsgroup.neuefische_wms.dto.CategoryManagerOutputDTO;
+import com.wmsgroup.neuefische_wms.converter.CategoryOutputDTOConverter;
+import com.wmsgroup.neuefische_wms.dto.CategoryInputDTO;
+import com.wmsgroup.neuefische_wms.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import com.wmsgroup.neuefische_wms.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -29,21 +32,21 @@ public class CategoryManagerServiceTest {
     private IdService idService;
 
     @Mock
-    private CategoryManagerOutputDTOConverter categoryManagerOutputDTOConverter;
+    private CategoryOutputDTOConverter categoryManagerOutputDTOConverter;
 
     @Mock
     private CategoryConverter categoryConverter;
 
     @InjectMocks
-    private CategoryManagerService categoryManagerService;
+    private CategoryService categoryManagerService;
 
     @Test
     void addCategory_shouldReturnOutputDto_whenInputDtoIsValid() {
         // Given
         String generatedId = "new-id";
         Category testCategory = Category.builder().id(generatedId).name("Test Category").build();
-        CategoryManagerInputDTO inputDTO = new CategoryManagerInputDTO("Test Category", null);
-        CategoryManagerOutputDTO outputDTO = new CategoryManagerOutputDTO(generatedId, "Test Category");
+        CategoryInputDTO inputDTO = new CategoryInputDTO("Test Category", null);
+        CategoryOutputDTO outputDTO = new CategoryOutputDTO(generatedId, "Test Category");
 
         Mockito.when(idService.generateId()).thenReturn(generatedId);
         Mockito.when(categoryConverter.convert(eq(inputDTO))).thenReturn(testCategory);
@@ -51,7 +54,7 @@ public class CategoryManagerServiceTest {
         Mockito.when(categoryManagerOutputDTOConverter.convert(any(Category.class))).thenReturn(outputDTO);
 
         // When
-        CategoryManagerOutputDTO result = categoryManagerService.addCategory(inputDTO);
+        CategoryOutputDTO result = categoryManagerService.addCategory(inputDTO);
 
         // Then
         assertEquals(generatedId, result.id());
@@ -77,16 +80,16 @@ public class CategoryManagerServiceTest {
                 Category.builder().id("id1").name("Cat1").build(),
                 Category.builder().id("id2").name("Cat2").build()
         );
-        List<CategoryManagerOutputDTO> outputDTOs = List.of(
-                new CategoryManagerOutputDTO("id1", "Cat1"),
-                new CategoryManagerOutputDTO("id2", "Cat2")
+        List<CategoryOutputDTO> outputDTOs = List.of(
+                new CategoryOutputDTO("id1", "Cat1"),
+                new CategoryOutputDTO("id2", "Cat2")
         );
 
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);
         Mockito.when(categoryManagerOutputDTOConverter.convert(categories)).thenReturn(outputDTOs);
 
         // When
-        List<CategoryManagerOutputDTO> result = categoryManagerService.getAllCategories();
+        List<CategoryOutputDTO> result = categoryManagerService.getAllCategories();
 
         // Then
         assertEquals(outputDTOs, result);
