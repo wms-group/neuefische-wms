@@ -3,7 +3,9 @@ import {FooterConfig, SidebarConfig} from "@/types";
 
 export const sidebarItemsConfig: SidebarConfig = {
     defaultOpen: true,
-    logo: "LOGO",
+    sidebarHeader: {
+        logo: "LOGO",
+    },
     sidebarNavItems: [
         {
             link: "dashboard",
@@ -31,5 +33,5 @@ export const sidebarItemsConfig: SidebarConfig = {
 
 export const footerConfig: FooterConfig = {
     showFullYear: true,
-    company: "wms.group",
+    company: "wms-group.tech",
 };

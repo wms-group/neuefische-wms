@@ -12,7 +12,7 @@ const RootLayout: FC<PropsWithChildren> = () => {
             <Sidebar sidebarItems={sidebarItemsConfig} />
             <LayoutContainer className={"relative"}>
                 <Header />
-                <main className={"flex-1 w-full relative pt-16"}>
+                <main className={"flex-1 w-full relative p-4"}>
                     <Outlet/>
                 </main>
                 <Footer footerItems={footerConfig}/>
