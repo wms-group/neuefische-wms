@@ -1,6 +1,6 @@
 package com.wmsgroup.neuefische_wms.converter;
 
-import com.wmsgroup.neuefische_wms.dto.CategoryInputDTO;
+import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import lombok.NonNull;
 

@@ -1,9 +1,7 @@
 package com.wmsgroup.neuefische_wms.service;
 
-import com.wmsgroup.neuefische_wms.converter.CategoryConverter;
-import com.wmsgroup.neuefische_wms.converter.CategoryOutputDTOConverter;
-import com.wmsgroup.neuefische_wms.dto.CategoryInputDTO;
-import com.wmsgroup.neuefische_wms.dto.CategoryOutputDTO;
+import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
+import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import com.wmsgroup.neuefische_wms.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -46,6 +44,7 @@ public class CategoryServiceTest {
         CategoryOutputDTO result = categoryManagerService.addCategory(inputDTO);
 
         // Then
+        assertEquals(outputDTO, result);
         assertEquals(generatedId, result.id());
         assertEquals("Test Category", result.name());
 
