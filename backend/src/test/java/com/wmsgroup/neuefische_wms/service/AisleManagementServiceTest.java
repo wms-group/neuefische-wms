@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -45,7 +46,7 @@ public class AisleManagementServiceTest {
 	}
 
 	@Test
-	void deleteAisle_deletes_withValidId() {
+	void deleteAisle_deletes_withValidId() throws AisleNotFoundException {
 		String validId = "A1";
 		when(repo.existsById(validId)).thenReturn(true);
 
@@ -65,6 +66,31 @@ public class AisleManagementServiceTest {
 				.isInstanceOf(AisleNotFoundException.class)
 				.hasMessage("Aisle with id: " + invalidId + " was not found.");
 
-		verify(repo, never()).deleteById(invalidId);
+		verify(repo, never()).deleteById(any());
+	}
+
+	@Test
+	void updateAisle_updatesAisle_withValidAisle() throws AisleNotFoundException {
+		Aisle validAisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+
+		when(repo.existsById(validAisle.id())).thenReturn(true);
+
+		service.updateAisle(validAisle);
+
+		verify(repo, times(1)).save(validAisle);
+	}
+
+	@Test
+	void updateAisle_throwsAisleNotFound_withInvalidAisle() throws AisleNotFoundException {
+		Aisle invalidAisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+
+		when(repo.existsById(invalidAisle.id())).thenReturn(false);
+
+		assertThatThrownBy(() -> {
+			service.updateAisle(invalidAisle);
+		}).isInstanceOf(AisleNotFoundException.class)
+				.hasMessage("Aisle with id: " + invalidAisle.id() + " was not found.");
+
+		verify(repo, never()).save(any());
 	}
 }

@@ -30,9 +30,13 @@ public class AisleController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteAisle(@PathVariable String id) {
+	public ResponseEntity<Void> deleteAisle(@PathVariable String id) throws AisleNotFoundException {
 		aisleService.deleteAisleById(id);
 		return ResponseEntity.noContent().build();
+	}
+	@PutMapping()
+	public ResponseEntity<Aisle> updateAisle(@RequestBody Aisle aisle) throws AisleNotFoundException {
+		return ResponseEntity.ok(aisleService.updateAisle(aisle));
 	}
 
 	@ExceptionHandler(AisleNotFoundException.class)

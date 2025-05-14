@@ -1,6 +1,6 @@
 package com.wmsgroup.neuefische_wms.exceptions;
 
-public class AisleNotFoundException extends RuntimeException {
+public class AisleNotFoundException extends Exception {
 
 	public AisleNotFoundException(String message) {
 		super(message);

@@ -23,8 +23,12 @@ public class AisleManagementService {
 		return repo.save(Aisle.of(dto).withId(idService.generateId()));
 	}
 
-	public Aisle updateAisle(Aisle dto) {
-		return dto;
+	public Aisle updateAisle(Aisle dto) throws AisleNotFoundException {
+		if (!repo.existsById(dto.id())) {
+			throw new AisleNotFoundException("Aisle with id: " + dto.id() + " was not found.");
+		}
+
+		return repo.save(dto);
 	}
 
 	public void deleteAisleById(String id) {
