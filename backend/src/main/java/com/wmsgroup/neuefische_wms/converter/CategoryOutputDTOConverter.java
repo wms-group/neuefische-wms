@@ -25,6 +25,6 @@ public class CategoryOutputDTOConverter {
     }
 
     public static List<CategoryOutputDTO> convert(@NonNull List<Category> categories) {
-        return categories.stream().map(this::convert).toList();
+        return categories.stream().map(CategoryOutputDTOConverter::convert).toList();
     }
 }

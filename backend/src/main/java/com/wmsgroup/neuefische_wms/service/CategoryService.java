@@ -16,8 +16,6 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final IdService idService;
-    private final CategoryOutputDTOConverter categoryOutputDTOConverter;
-    private final CategoryConverter categoryConverter;
 
     public List<CategoryOutputDTO> getAllCategories() {
         return CategoryOutputDTOConverter.convert(categoryRepository.findAll());
@@ -27,9 +25,9 @@ public class CategoryService {
         if (categoryManagerInputDTO.parentId() != null && !categoryRepository.existsById(categoryManagerInputDTO.parentId())) {
             throw new IllegalArgumentException(String.format("Category for parentId %s does not exist", categoryManagerInputDTO.parentId()));
         }
-        return categoryOutputDTOConverter.convert(
+        return CategoryOutputDTOConverter.convert(
                 categoryRepository.save(
-                        categoryConverter.convert(categoryManagerInputDTO)
+                        CategoryConverter.convert(categoryManagerInputDTO)
                                 .withId(idService.generateId())
                 )
         );

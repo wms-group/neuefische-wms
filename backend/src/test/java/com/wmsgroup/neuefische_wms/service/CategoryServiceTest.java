@@ -1,9 +1,6 @@
 package com.wmsgroup.neuefische_wms.service;
 
 import com.wmsgroup.neuefische_wms.converter.CategoryConverter;
-import com.wmsgroup.neuefische_wms.converter.CategoryManagerOutputDTOConverter;
-import com.wmsgroup.neuefische_wms.dto.CategoryManagerInputDTO;
-import com.wmsgroup.neuefische_wms.dto.CategoryManagerOutputDTO;
 import com.wmsgroup.neuefische_wms.converter.CategoryOutputDTOConverter;
 import com.wmsgroup.neuefische_wms.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.dto.CategoryOutputDTO;
@@ -23,19 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryManagerServiceTest {
+public class CategoryServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
 
     @Mock
     private IdService idService;
-
-    @Mock
-    private CategoryOutputDTOConverter categoryManagerOutputDTOConverter;
-
-    @Mock
-    private CategoryConverter categoryConverter;
 
     @InjectMocks
     private CategoryService categoryManagerService;
@@ -49,9 +40,7 @@ public class CategoryManagerServiceTest {
         CategoryOutputDTO outputDTO = new CategoryOutputDTO(generatedId, "Test Category");
 
         Mockito.when(idService.generateId()).thenReturn(generatedId);
-        Mockito.when(categoryConverter.convert(eq(inputDTO))).thenReturn(testCategory);
         Mockito.when(categoryRepository.save(any(Category.class))).thenReturn(testCategory);
-        Mockito.when(categoryManagerOutputDTOConverter.convert(any(Category.class))).thenReturn(outputDTO);
 
         // When
         CategoryOutputDTO result = categoryManagerService.addCategory(inputDTO);
@@ -61,9 +50,25 @@ public class CategoryManagerServiceTest {
         assertEquals("Test Category", result.name());
 
         Mockito.verify(idService).generateId();
-        Mockito.verify(categoryConverter).convert(eq(inputDTO));
         Mockito.verify(categoryRepository).save(any());
-        Mockito.verify(categoryManagerOutputDTOConverter).convert(argThat((Category input) -> input.equals(testCategory)));
+    }
+
+    @Test
+    void addCategory_shouldThrowIllegalArgumentException_whenParentIdDoesNotExist() {
+        // Given
+        String missingParentId = "missing-parent-id";
+        CategoryInputDTO inputDTO = new CategoryInputDTO("Child Category", missingParentId);
+
+        Mockito.when(categoryRepository.existsById(missingParentId)).thenReturn(false);
+
+        // When / Then
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> categoryManagerService.addCategory(inputDTO)
+        );
+        assertEquals("Category for parentId missing-parent-id does not exist", ex.getMessage());
+
+        Mockito.verify(categoryRepository).existsById(missingParentId);
     }
 
     @Test
@@ -86,14 +91,12 @@ public class CategoryManagerServiceTest {
         );
 
         Mockito.when(categoryRepository.findAll()).thenReturn(categories);
-        Mockito.when(categoryManagerOutputDTOConverter.convert(categories)).thenReturn(outputDTOs);
 
         // When
         List<CategoryOutputDTO> result = categoryManagerService.getAllCategories();
 
         // Then
-        assertEquals(outputDTOs, result);
+        assertEquals(outputDTOs, result);  // Hinweis: Hier wird verglichen, ob die Inhalte gleich sind. Die Konvertierung ist jetzt statisch im Service implementiert.
         Mockito.verify(categoryRepository).findAll();
-        Mockito.verify(categoryManagerOutputDTOConverter).convert(categories);
     }
 }

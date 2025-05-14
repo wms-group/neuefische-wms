@@ -11,9 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CategoryOutputDTOConverterTest {
-
-    private final CategoryOutputDTOConverter converter = new CategoryOutputDTOConverter();
-
     @Test
     void convert_shouldConvertCategoryToCategoryManagerOutputDTO() {
         // Arrange
@@ -23,7 +20,7 @@ class CategoryOutputDTOConverterTest {
                 .build();
 
         // Act
-        CategoryOutputDTO result = converter.convert(category);
+        CategoryOutputDTO result = CategoryOutputDTOConverter.convert(category);
 
         // Assert
         assertNotNull(result);
@@ -37,7 +34,7 @@ class CategoryOutputDTOConverterTest {
         List<Category> categories = List.of();
 
         // Act
-        List<CategoryOutputDTO> result = converter.convert(categories);
+        List<CategoryOutputDTO> result = CategoryOutputDTOConverter.convert(categories);
 
         // Assert
         assertNotNull(result);
@@ -60,7 +57,7 @@ class CategoryOutputDTOConverterTest {
         List<Category> categories = List.of(category1, category2);
 
         // Act
-        List<CategoryOutputDTO> result = converter.convert(categories);
+        List<CategoryOutputDTO> result = CategoryOutputDTOConverter.convert(categories);
 
         // Assert
         assertNotNull(result);
@@ -75,15 +72,14 @@ class CategoryOutputDTOConverterTest {
     void convert_shouldThrowNullPointerException_whenCalledWithNullCategory() {
         assertThrows(NullPointerException.class, () -> {
             //noinspection DataFlowIssue
-            converter.convert((Category) null); });
+            CategoryOutputDTOConverter.convert((Category) null); });
     }
-    
+
     @Test
     void convert_shouldThrowNullPointerException_whenCalledWithNullCategoryList() {
         assertThrows(NullPointerException.class, () -> {
             //noinspection DataFlowIssue
-            converter.convert((List<Category>) null); });
+            CategoryOutputDTOConverter.convert((List<Category>) null); });
     }
-
 
 }
