@@ -69,4 +69,10 @@ public class HallController {
 		return e.getMessage();
 	}
 
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	private String handleIllegalArgument(IllegalArgumentException e) {
+		return e.getMessage();
+	}
+
 }

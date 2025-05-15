@@ -83,6 +83,7 @@ class HallManagementServiceTest {
 		Hall hall = new Hall(null, "Hall One", List.of());
 		Hall savedHall = new Hall("H1", "Hall One", List.of());
 		when(idService.generateId()).thenReturn("H1");
+		when(hallRepo.findAll()).thenReturn(List.of());
 		when(hallRepo.save(any(Hall.class))).thenReturn(savedHall);
 
 		assertThat(service.createHall(dto))
@@ -91,10 +92,44 @@ class HallManagementServiceTest {
 	}
 
 	@Test
+	void createHall_thRowsIllegalArgument_whenDtoIsNull() {
+		assertThatThrownBy(() -> service.createHall(null))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall creation data cannot be null.");
+	}
+
+	@Test
+	void createHall_throwsIllegalArgument_whenNameIsNull() {
+		HallCreationDTO dto = new HallCreationDTO(null, List.of());
+		assertThatThrownBy(() -> service.createHall(dto))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall name cannot be null or empty.");
+	}
+
+	@Test
+	void createHall_throwsIllegalArgument_whenNameIsEmpty() {
+		HallCreationDTO dto = new HallCreationDTO("", List.of());
+		assertThatThrownBy(() -> service.createHall(dto))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall name cannot be null or empty.");
+	}
+
+	@Test
+	void createHall_throwsIllegalArgument_whenAisleIdsAreDuplicated() {
+		HallCreationDTO dto = new HallCreationDTO("Hall One", List.of("A1"));
+		Hall existingHall = new Hall("H2", "Hall Two", List.of("A1"));
+		when(hallRepo.findAll()).thenReturn(List.of(existingHall));
+		assertThatThrownBy(() -> service.createHall(dto))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall contains duplicate aisle IDs.");
+	}
+
+	@Test
 	void updateHall_updatesAndReturnsHall_whenHallExists() throws HallNotFoundException {
 		HallUpdateDTO dto = new HallUpdateDTO("H1", "Updated Hall", List.of());
 		Hall updatedHall = new Hall("H1", "Updated Hall", List.of());
 		when(hallRepo.existsById("H1")).thenReturn(true);
+		when(hallRepo.findAll()).thenReturn(List.of());
 		when(hallRepo.save(any(Hall.class))).thenReturn(updatedHall);
 
 		assertThat(service.updateHall(dto))
@@ -110,6 +145,42 @@ class HallManagementServiceTest {
 		assertThatThrownBy(() -> service.updateHall(dto))
 				.isInstanceOf(HallNotFoundException.class)
 				.hasMessage("Hall with id: " + dto.id() + " could not be found.");
+	}
+
+	@Test
+	void updateHall_throwsIllegalArgumentException_whenDtoIsNull() {
+		assertThatThrownBy(() -> service.updateHall(null))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall update data cannot be null.");
+	}
+
+	@Test
+	void updateHall_throwsIllegalArgumentException_whenNameIsNull() {
+		HallUpdateDTO dto = new HallUpdateDTO("H1", null, List.of());
+		when(hallRepo.existsById("H1")).thenReturn(true);
+		assertThatThrownBy(() -> service.updateHall(dto))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall name cannot be null or empty.");
+	}
+
+	@Test
+	void updateHall_throwsIllegalArgumentException_whenNameIsEmpty() {
+		HallUpdateDTO dto = new HallUpdateDTO("H1", "", List.of());
+		when(hallRepo.existsById("H1")).thenReturn(true);
+		assertThatThrownBy(() -> service.updateHall(dto))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall name cannot be null or empty.");
+	}
+
+	@Test
+	void updateHall_throwsIllegalArgumentException_whenAisleIdsAreDuplicated() {
+		HallUpdateDTO dto = new HallUpdateDTO("H1", "Updated Hall", List.of("A1"));
+		Hall existingHall = new Hall("H2", "Hall Two", List.of("A1"));
+		when(hallRepo.existsById("H1")).thenReturn(true);
+		when(hallRepo.findAll()).thenReturn(List.of(existingHall));
+		assertThatThrownBy(() -> service.updateHall(dto))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Hall contains duplicate aisle IDs.");
 	}
 
 	@Test
