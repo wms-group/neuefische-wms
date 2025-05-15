@@ -1,4 +1,5 @@
 import {Box, ClipboardList, Columns3Icon, Home} from "lucide-react";
+import {Box, CheckCircle, ClipboardList, Folders, Home} from "lucide-react";
 import {FooterConfig, SidebarConfig} from "@/types";
 
 export const sidebarItemsConfig: SidebarConfig = {
@@ -10,6 +11,11 @@ export const sidebarItemsConfig: SidebarConfig = {
             link: "dashboard",
             path: "/",
             icon: Home
+        },
+        {
+            link: "categories",
+            path: "/categories",
+            icon: Folders
         },
         {
             link: "products",
