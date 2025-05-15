@@ -1,6 +1,8 @@
 package com.wmsgroup.neuefische_wms.service;
 
 import com.wmsgroup.neuefische_wms.model.user.User;
+import com.wmsgroup.neuefische_wms.model.user.UserRole;
+import com.wmsgroup.neuefische_wms.model.user.dto.UserDto;
 import com.wmsgroup.neuefische_wms.model.user.exceptions.UserAlreadyExistException;
 import com.wmsgroup.neuefische_wms.model.user.exceptions.UserNotFoundException;
 import com.wmsgroup.neuefische_wms.repository.UserRepository;
@@ -29,16 +31,27 @@ public class UserService {
     user.ifPresent(userRepository::delete);
   }
 
-  public User updateUser(String id, User user) {
-    User updatedUser = userRepository.findById(id).orElseThrow(
-            () -> new UserNotFoundException("Could not update the user: " + user +
-                    ". User with the id: " + id + " not found!")
+  public User updateUser(String id, UserDto userDto) {
+    User existing = userRepository.findById(id).orElseThrow(
+            () -> new UserNotFoundException("User with id " + id + " not found.")
     );
 
-    userRepository.save(updatedUser);
+    String username = userDto.username() != null ? userDto.username() : existing.username();
+    String name = userDto.name() != null ? userDto.name() : existing.name();
+    UserRole role = userDto.role() != null ? userDto.role() : existing.role();
 
-    return updatedUser;
+
+    User updatedUser = new User(
+            existing.id(),
+            username,
+            name,
+            role,
+            existing.password()
+    );
+
+    return userRepository.save(updatedUser);
   }
+
 
   public List<User> getUsers() {
     return userRepository.findAll();

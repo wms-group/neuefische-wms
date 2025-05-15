@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class UserController {
    * updates user by id
    * */
   @PutMapping("{id}")
-  public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User user)
+  public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserDto user)
           throws UserNotFoundException {
     User userResponse;
 
@@ -93,6 +94,14 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(Optional.ofNullable(userService.getUserById(id).orElseThrow(
             () -> new UserNotFoundException("User with the id: " + " not found!")
     )));
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFoundException ex) {
+    Map<String, String> errorBody = new HashMap<>();
+    errorBody.put("error", "Not Found");
+    errorBody.put("message", ex.getMessage());
+    return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
   }
 
 }
