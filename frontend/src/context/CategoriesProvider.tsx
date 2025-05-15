@@ -1,5 +1,5 @@
-import CategoriesContext from "./CategoriesContext";
-import useCategories from "../src/hooks/useCategories";
+import CategoriesContext from "./CategoriesContext.ts";
+import useCategories from "../hooks/useCategories.ts";
 
 export const CategoriesProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   return (

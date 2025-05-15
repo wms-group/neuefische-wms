@@ -2,7 +2,7 @@ import {CategoryInputDTO} from "@/types";
 import {CategoryForm, CategoryList} from "@/features/category";
 import {toast, Toaster} from "sonner";
 import {AxiosError} from "axios";
-import {useCategoriesContext} from "../../../../context/CategoriesContext.ts";
+import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 
 const CategoryListPage = () => {
     const {categories, addCategory} = useCategoriesContext();

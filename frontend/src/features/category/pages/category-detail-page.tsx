@@ -1,6 +1,6 @@
 import {CategoryBreadcrumbs, CategoryForm, CategoryList} from "@/features/category";
 import {Link, useParams} from "react-router-dom";
-import {useCategoriesContext} from "../../../../context/CategoriesContext.ts";
+import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 import {useEffect, useState} from "react";
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
 import {toast} from "sonner";

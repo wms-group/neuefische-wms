@@ -45,7 +45,7 @@ export default function CategoryForm({ categories, onSubmit, className, defaultP
                 options={selectGroupsFromCategoryOutputDTOs(categories)}
                 onChange={(newValue) => handleChange({target: {name: 'parentId', value: newValue?.value}} as unknown as React.ChangeEvent<HTMLInputElement>)}
             />
-            <button type="submit" className="basis-6 shrink"><Plus /></button>
+            <button className="basis-6 shrink"><Plus /></button>
         </form>
     )
 

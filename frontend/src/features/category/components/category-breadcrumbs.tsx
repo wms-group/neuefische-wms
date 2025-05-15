@@ -1,5 +1,5 @@
 import {CategoryOutputDTO} from "@/types";
-import {useCategoriesContext} from "../../../../context/CategoriesContext.ts";
+import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 import { Link } from "react-router-dom";
 import {cn} from "@/utils";
 
