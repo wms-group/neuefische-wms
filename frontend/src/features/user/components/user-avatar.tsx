@@ -21,21 +21,21 @@ const UserAvatar = ({userName = 'Max Mustermann', onLogout}: UserAvatarProps) =>
                 className="relative inline-block text-left bg-transparent border-0 focus-visible:border-0">
                 <div className="flex items-center justify-center gap-4">
                     <div
-                        className="w-10 h-10 bg-blue-600 text-white flex items-center justify-center rounded-full cursor-pointer select-none"
+                        className="w-10 h-10 bg-slate-500 text-white font-medium flex items-center justify-center rounded-full cursor-pointer select-none"
                         onMouseEnter={() => document.body.style.cursor = 'pointer'}
                         onMouseLeave={() => document.body.style.cursor = 'default'}
                     >
                         {initials}
                     </div>
-                    <p className="text-sm text-gray-600">{userName}</p>
+                    <p className="text-sm font-medium text-gray-600">{userName}</p>
                 </div>
             </Button>
             {open && (
                 <div className={cn(
-                    "absolute -top-32 -right-4 mt-2 w-60 rounded-xl shadow-lg z-30 p-2 bg-gray-100 border border-gray-300 transition-all duration-300 ease-in-out"
+                    "absolute -top-32 left-1/2 -translate-x-1/2 w-60 lg:w-52 rounded-xl shadow-lg z-30 p-4 bg-gray-100 border border-gray-300 transition-all duration-300 ease-in-out"
                 )}>
                     <Link
-                        to="/user-profile"
+                        to="/users/user-profile"
                         className="block px-5 py-2 text-base text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
                         onClick={() => setOpen(false)}
                     >

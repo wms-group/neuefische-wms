@@ -1,8 +1,7 @@
-import {Box, CheckCircle, ClipboardList, Home} from "lucide-react";
+import {Box, ClipboardList, Columns3Icon, Home} from "lucide-react";
 import {FooterConfig, SidebarConfig} from "@/types";
 
 export const sidebarItemsConfig: SidebarConfig = {
-    defaultOpen: true,
     sidebarHeader: {
         logo: "LOGO",
     },
@@ -23,9 +22,9 @@ export const sidebarItemsConfig: SidebarConfig = {
             icon: ClipboardList
         },
         {
-            link: "hall",
-            path: "/status/done",
-            icon: CheckCircle
+            link: "halls",
+            path: "/halls",
+            icon: Columns3Icon,
         },
     ],
 };

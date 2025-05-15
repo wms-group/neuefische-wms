@@ -7,23 +7,26 @@ export interface SideBarNavItem {
     icon: ComponentType<LucideProps>;
 }
 
-
 export interface SidebarConfig {
-    defaultOpen: boolean;
     sidebarHeader: {
         logo: string | ReactNode;
     }
     sidebarNavItems: SideBarNavItem[];
 }
 
+export interface SidebarComponentProps {
+    sidebarItems: SidebarConfig;
+}
+
+export type SidebarContextType = {
+    isOpen: boolean;
+    toggleSidebar: () => void;
+    closeSidebar: () => void;
+}
+
 export interface FooterConfig {
     showFullYear: boolean;
     company: string;
-}
-
-
-export interface SidebarComponentProps {
-    sidebarItems: SidebarConfig;
 }
 
 export interface FooterComponentProps {
@@ -52,8 +55,21 @@ export type ButtonProps = {
     iconBefore?: ReactNode;
 }
 
-
 export type UserAvatarProps = {
     userName: string;
     onLogout?: () => void;
+};
+
+export enum Role {
+    ADMIN = "ADMIN",
+    MANAGER = "MANAGER",
+    CLERK = "CLERK",
+}
+
+export type UserDto = {
+    id?: string;
+    username: string;
+    name: string;
+    role: Role;
+    password?: string;
 };
