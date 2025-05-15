@@ -29,9 +29,9 @@ const Button: FC<ButtonProps> = ({
             onClick={onClick}
             disabled={disabled}
             {...rest}>
-            {iconBefore && iconBefore}
-            {buttonContent && buttonContent}
-            {iconAfter && iconAfter}
+            {iconBefore}
+            {buttonContent}
+            {iconAfter}
         </button>
     )
 }
