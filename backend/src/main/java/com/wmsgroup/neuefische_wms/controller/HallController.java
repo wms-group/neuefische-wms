@@ -65,12 +65,14 @@ public class HallController {
 
 	@ExceptionHandler(HallNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@SuppressWarnings("unused")
 	private String handleHallNotFound(HallNotFoundException e) {
 		return e.getMessage();
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@SuppressWarnings("unused")
 	private String handleIllegalArgument(IllegalArgumentException e) {
 		return e.getMessage();
 	}

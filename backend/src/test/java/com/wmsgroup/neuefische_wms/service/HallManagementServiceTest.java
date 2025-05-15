@@ -24,6 +24,7 @@ class HallManagementServiceTest {
 	private HallRepository hallRepo;
 
 	@BeforeEach
+	@SuppressWarnings("unused")
 	void setup() {
 		idService = mock(IdService.class);
 		hallRepo = mock(HallRepository.class);
