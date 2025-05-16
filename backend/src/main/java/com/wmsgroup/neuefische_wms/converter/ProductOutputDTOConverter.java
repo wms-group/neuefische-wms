@@ -4,7 +4,6 @@ import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.ProductOutputDTO;
 import lombok.NonNull;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductOutputDTOConverter {
