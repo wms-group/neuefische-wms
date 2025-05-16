@@ -22,7 +22,7 @@ export const sidebarItemsConfig: SidebarConfig = {
         },
         {
             link: "hall",
-            path: "/status/done",
+            path: "/halls",
             icon: CheckCircle
         },
     ],
