@@ -1,6 +1,5 @@
 package com.wmsgroup.neuefische_wms.model;
 
-import com.mongodb.lang.Nullable;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

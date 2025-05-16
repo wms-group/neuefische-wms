@@ -4,7 +4,6 @@ import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.ProductOutputDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -78,8 +77,8 @@ class ProductOutputDTOConverterTest {
         // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals("123", result.get(0).id());
-        assertEquals("Electronics", result.get(0).name());
+        assertEquals("123", result.getFirst().id());
+        assertEquals("Electronics", result.getFirst().name());
         assertEquals("1", result.get(0).categoryId());
         assertEquals("10,00", result.get(0).price());
         assertEquals("456", result.get(1).id());
