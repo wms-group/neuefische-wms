@@ -63,3 +63,20 @@ export interface SelectGroup {
     label: string;
     options: SelectOption[];
 }
+
+export interface ErrorDTO {
+    error: string;
+    cause: string | null;
+    causeMessage: string | null;
+    message: string | null;
+    status: string;
+}
+
+export function isErrorDTO(obj: unknown): obj is ErrorDTO {
+    return typeof obj === "object" && obj !== null
+        && "error" in obj && typeof obj.error === "string"
+        && "cause" in obj && (typeof obj.cause === "string" || obj.cause === null)
+        && "causeMessage" in obj && (typeof obj.causeMessage === "string" || obj.causeMessage === null)
+        && "message" in obj && (typeof obj.message === "string" || obj.message === null)
+        && "status" in obj && typeof obj.status === "string";
+}
