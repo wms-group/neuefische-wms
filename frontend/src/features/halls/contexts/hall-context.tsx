@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode } from 'react';
 import { Hall, HallContextType } from '../types/hall';
-import { useHallApi } from './hall-api';
+import { useHallApi } from '../api/hall-api';
 import { AxiosError } from 'axios';
 
 // Create the context with a default value
