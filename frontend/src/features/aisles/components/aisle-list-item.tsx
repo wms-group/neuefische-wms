@@ -1,15 +1,8 @@
-import { Aisle } from '../types/aisle'
 
-type Props = {
-    aisle: Aisle;
-}
-
-const AisleListItem = ({ aisle }: Props) => {
-
-
+const AisleListItem = () => {
     return (
         <div>AisleListItem
-        
+            
         </div>
     )
 }
