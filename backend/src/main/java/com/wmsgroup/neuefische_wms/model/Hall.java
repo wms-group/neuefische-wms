@@ -19,6 +19,17 @@ public record Hall(@Id String id, String name, List<String> aisleIds) {
 
 	public static Hall of(HallUpdateDTO dto) {
 		return new Hall(dto.id(), dto.name(), dto.aisleIds());
-
 	}
+
+    public Hall withId(String id) {
+        return new Hall(id, name, aisleIds);
+    }
+
+    public Hall withName(String name) {
+        return new Hall(id, name, aisleIds);
+    }
+
+    public Hall withAisleIds(List<String> aisleIds) {
+        return new Hall(id, name, aisleIds);
+    }
 }
