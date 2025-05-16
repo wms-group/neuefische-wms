@@ -37,4 +37,8 @@ public class ProductService {
                 )
         );
     }
+
+    public List<ProductOutputDTO> getProductsByCategoryId(@NonNull String categoryId) {
+        return ProductOutputDTOConverter.convert(productRepository.findAllByCategoryId(categoryId));
+    }
 }

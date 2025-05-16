@@ -22,12 +22,12 @@ export function selectOptionsFromCategorieOutputDTOs(categories: CategoryOutputD
     return options
 }
 
-export function selectGroupsFromCategoryOutputDTOs(categories: CategoryOutputDTO[]): SelectGroup[] {
+export function selectGroupsFromCategoryOutputDTOs(categories: CategoryOutputDTO[]): SelectGroup[] & SelectOption[] {
     return categories
         .filter(c => c.parentId === null)
         .map(category => {
             const group = selectGroupFromCategoryOutputDTO(category);
             group.options = [...group.options, ...selectOptionsFromCategorieOutputDTOs(categories, category.id, "\u00A0")];
             return group;
-    });
+    }) as SelectGroup[] & SelectOption[];
 }

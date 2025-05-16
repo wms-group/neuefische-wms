@@ -22,6 +22,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/category/{categoryId}")
+    public List<ProductOutputDTO> getProductsByCategoryId(@PathVariable String categoryId) {
+        return productService.getProductsByCategoryId(categoryId);
+    }
+
     @PostMapping
     public ResponseEntity<ProductOutputDTO> addProduct(@RequestBody ProductInputDTO productInputDTO) {
         return new ResponseEntity<>(
