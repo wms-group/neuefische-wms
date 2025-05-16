@@ -8,7 +8,7 @@ import {OrderDetailPage, OrderListPage} from "@/features/orders";
 import {ProductDetailPage, ProductListPage} from "@/features/product";
 import {CategoryDetailPage, CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
-import {CategoriesProductsLayout, RootLayout} from "@/layouts";
+import {RootLayout} from "@/layouts";
 import CategoriesProductsLayout from './layouts/categories-products-layout.tsx';
 import HallListPage from './features/halls/pages/hall-list-page.tsx';
 import HallDetailPage from './features/halls/pages/hall-details-page.tsx';

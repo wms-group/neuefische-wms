@@ -1,9 +1,5 @@
-import axios from 'axios';
+import api from '@/api/axios';
 import { Hall } from '../types/hall';
-
-const api = axios.create({
-  baseURL: '/api',
-});
 
 export const useHallApi = () => {
     const fetchHalls = async (): Promise<Hall[]> => {
