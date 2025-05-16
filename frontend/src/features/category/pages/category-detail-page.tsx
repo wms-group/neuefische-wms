@@ -3,7 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 import {useEffect, useState} from "react";
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
-import {toast} from "sonner";
+import {toast, Toaster} from "sonner";
 import {AxiosError} from "axios";
 import {ChevronLeft} from "lucide-react";
 
@@ -33,6 +33,7 @@ const CategoryDetailPage = () => {
             <CategoryBreadcrumbs category={category} />
             <CategoryForm onSubmit={handleSubmitCategory} categories={categories} defaultParentId={category.id} />
             <CategoryList categories={categories} parentId={category.id} />
+            <Toaster />
         </div>
     )
 }
