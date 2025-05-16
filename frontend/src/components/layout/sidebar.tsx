@@ -1,37 +1,74 @@
 import {SidebarComponentProps} from "@/types";
 import {cn} from "@/utils";
-import {NavLink} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
+import UserAvatar from "@/features/user/components/user-avatar.tsx";
+import {useSidebar} from "@/context/sidebar/useSidebar.ts";
+import {SidebarClose, UserPlus} from "lucide-react";
+import Button from "@/components/ui/button.tsx";
 
 const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
-    const {defaultOpen, logo, sidebarNavItems} = sidebarItems;
+    const location = useLocation();
+    const {isOpen, closeSidebar} = useSidebar()
+    const {sidebarHeader, sidebarNavItems} = sidebarItems;
     return (
         <>
+            {isOpen && <div className="absolute h-full w-full inset-0 z-9998 bg-zinc-600/65 transition-opacity duration-350 ease-in-out lg:hidden"/>}
             <aside className={cn(
-                "bg-gray-100 border-r-gray-300 border-r-1 p-4 pt-0 fixed h-screen flex flex-col",
-                defaultOpen && "w-64",
+                "bg-gray-100 border-r border-gray-200 px-4 h-screen flex fixed flex-col inset-0 z-9999 lg:sticky w-64 transition-transform duration-300 ease-in-out",
+                isOpen ? "translate-x-0" : "-translate-x-full",
+                "lg:translate-x-0",
             )}>
-                <div className="h-16 border-b-gray-300 border-b-1 p-2 flex items-center">
-                    <p className="text-xl font-bold text-center flex-1 overflow-x-auto">{logo}</p>
+                <div className="h-16 border-b-gray-300 border-b-1 p-2 flex items-center relative justify-between">
+                    <p className="text-xl font-bold text-center flex-1 overflow-x-auto">{sidebarHeader.logo}</p>
+
+                    <Button
+                        className="bg-transparent p-2 lg:hidden"
+                        iconAfter={true}
+                        onClick={closeSidebar}
+                    >
+                        <SidebarClose size={20}/>
+
+                    </Button>
                 </div>
                 <ul className={cn("flex flex-col gap-2 mt-2 flex-1 overflow-y-auto")}>
-                {sidebarNavItems.map(({path, link, icon: Icon,}) => {
-                    return(
-                    <li key={path}>
-                        <NavLink
-                            className="w-full flex items-center justify-between gap-2 px-2 py-1 hover:bg-gray-200"
-                            to={path}>
-                            {link}
-                            {Icon && <Icon size={20}/>}
-                        </NavLink>
-                    </li>
-                )})}
+                    {sidebarNavItems.map(({path, link, icon: Icon,}) => {
+                        console.log(path)
+
+                        return (
+                            <li key={path}>
+                                <NavLink
+                                    to={location.pathname === path ? "#" : path}
+                                    className={({ isActive }) => cn(
+                                        "w-full flex items-center justify-between gap-2 py-2 px-4 text-slate-600",
+                                        "hover:bg-gray-200 transition-colors ease-in-out rounded-lg",
+                                        isActive && "bg-gray-200 text-slate-800 font-medium"
+                                    )}
+                                onClick={closeSidebar}
+                                >
+                                    {link} {Icon && <Icon size={20}/>}
+                                </NavLink>
+                            </li>
+                        )
+                    })}
                 </ul>
-                <div className="h-10 border-t-gray-300 border-t-1 p-2">
-                    <p>LOGOUT</p>
+                <div className={"my-2"}>
+                    <NavLink
+                        to={location.pathname === "/users/create-user" ? "#" : "/users/create-user"}
+                        className={({ isActive }) => cn(
+                            "w-full flex items-center justify-between gap-2 py-2 px-4 text-sm text-slate-600 ",
+                            "hover:bg-gray-200 transition-colors ease-in-out rounded-lg [&_svg]:size-5 [&_svg]:shrink-0",
+                            isActive && "bg-gray-200 text-slate-800 font-medium"
+                        )}
+                        onClick={closeSidebar}
+                    >
+                        Created new user <UserPlus />
+                    </NavLink>
+                </div>
+                <div
+                    className="h-16 border-t-gray-300 border-t-1 p-2 flex items-center justify-center [&_svg]:size-5 [&_svg]:shrink-0">
+                    <UserAvatar userName={"Jane Doe"} onLogout={() => console.log("log-out")}/>
                 </div>
             </aside>
-            {/* PLACEHOLDER FOR SIDEBAR */}
-            <div className={cn(defaultOpen && "ml-64")}/>
         </>
     )
 }

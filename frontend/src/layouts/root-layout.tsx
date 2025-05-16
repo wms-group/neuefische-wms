@@ -5,6 +5,7 @@ import LayoutContainer from "@/components/shared/layout-container.tsx";
 import Header from "@/components/layout/header.tsx";
 import Sidebar from "@/components/layout/sidebar.tsx";
 import Footer from "@/components/layout/footer.tsx";
+import {Toaster} from "sonner";
 
 const RootLayout: FC<PropsWithChildren> = () => {
     return (
@@ -12,10 +13,11 @@ const RootLayout: FC<PropsWithChildren> = () => {
             <Sidebar sidebarItems={sidebarItemsConfig} />
             <LayoutContainer className={"relative"}>
                 <Header />
-                <main className={"flex-1 w-full relative pt-16"}>
+                <main className={"flex-1 w-full relative p-4"}>
                     <Outlet/>
                 </main>
                 <Footer footerItems={footerConfig}/>
+                <Toaster richColors />
             </LayoutContainer>
         </>
     )
