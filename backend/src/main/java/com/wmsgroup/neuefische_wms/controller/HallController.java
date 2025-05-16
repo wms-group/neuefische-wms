@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wmsgroup.neuefische_wms.exceptions.HallNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Hall;
+import com.wmsgroup.neuefische_wms.model.dto.ErrorDTO;
 import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.HallUpdateDTO;
 import com.wmsgroup.neuefische_wms.service.HallManagementService;
@@ -66,15 +67,19 @@ public class HallController {
 	@ExceptionHandler(HallNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@SuppressWarnings("unused")
-	private String handleHallNotFound(HallNotFoundException e) {
-		return e.getMessage();
+	private ResponseEntity<ErrorDTO> handleHallNotFound(HallNotFoundException e) {
+		return new ResponseEntity<>(
+                ErrorDTO.fromException(e),
+                HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@SuppressWarnings("unused")
-	private String handleIllegalArgument(IllegalArgumentException e) {
-		return e.getMessage();
+	private ResponseEntity<ErrorDTO> handleIllegalArgument(IllegalArgumentException e) {
+		return new ResponseEntity<>(
+                ErrorDTO.fromException(e),
+                HttpStatus.BAD_REQUEST);
 	}
 
 }
