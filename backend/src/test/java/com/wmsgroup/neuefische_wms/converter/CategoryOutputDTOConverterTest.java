@@ -3,13 +3,11 @@ package com.wmsgroup.neuefische_wms.converter;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class CategoryOutputDTOConverterTest {
     @Test
     void convert_shouldConvertCategoryToCategoryManagerOutputDTO() {
