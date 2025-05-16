@@ -47,7 +47,6 @@ createRoot(document.getElementById('root')!).render(
                         <Route path=":id" element={<HallDetailPage />} />
                         <Route path=":id/edit" element={<HallEditPage />} />
                     </Route>
-
                 </Route>
             </Routes>
         </BrowserRouter>

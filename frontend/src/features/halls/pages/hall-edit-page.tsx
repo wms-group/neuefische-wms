@@ -1,8 +1,8 @@
 import LayoutContainer from "@/components/shared/layout-container.tsx";
-import { useHalls } from "../contexts/hall-context";
 import { useState } from "react";
 import { Hall } from "../types/hall";
 import { useNavigate, useParams } from "react-router-dom";
+import { useHalls } from "../hooks/useHalls";
 
 
 const HallEditPage = () => {

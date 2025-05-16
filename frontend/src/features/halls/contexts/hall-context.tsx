@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 import { Hall, HallContextType } from '../types/hall';
 import { useHallApi } from './hall-api';
 import { AxiosError } from 'axios';
@@ -13,7 +13,7 @@ interface HallProviderProps {
 }
 
 // Reusable HallProvider component
-export const HallProvider: React.FC<HallProviderProps> = ({ children, initialHalls = [] }) => {
+const HallProvider: React.FC<HallProviderProps> = ({ children, initialHalls = [] }) => {
   const [halls, setHalls] = useState<Hall[]>(initialHalls);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,11 +84,6 @@ export const HallProvider: React.FC<HallProviderProps> = ({ children, initialHal
   );
 };
 
-// Custom hook to use the hall context
-export const useHalls = (): HallContextType => {
-  const context = useContext(HallContext);
-  if (!context) {
-    throw new Error('useHalls must be used within a HallProvider');
-  }
-  return context;
-};
+export {
+    HallContext, HallProvider
+}
