@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.6",
+    "axios": "^1.9.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.510.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
+    "react-select": "^5.10.1",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.6"

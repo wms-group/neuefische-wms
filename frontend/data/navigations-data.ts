@@ -1,14 +1,20 @@
-import {Box, CheckCircle, ClipboardList, Home} from "lucide-react";
 import {FooterConfig, SidebarConfig} from "@/types";
+import {Box, ClipboardList, Columns3Icon, Folders, LayoutDashboardIcon} from "lucide-react";
 
 export const sidebarItemsConfig: SidebarConfig = {
-    defaultOpen: true,
-    logo: "LOGO",
+    sidebarHeader: {
+        logo: "LOGO",
+    },
     sidebarNavItems: [
         {
             link: "dashboard",
             path: "/",
-            icon: Home
+            icon: LayoutDashboardIcon
+        },
+        {
+            link: "categories",
+            path: "/categories",
+            icon: Folders
         },
         {
             link: "products",
@@ -21,9 +27,9 @@ export const sidebarItemsConfig: SidebarConfig = {
             icon: ClipboardList
         },
         {
-            link: "hall",
-            path: "/status/done",
-            icon: CheckCircle
+            link: "halls",
+            path: "/halls",
+            icon: Columns3Icon,
         },
     ],
 };
@@ -31,5 +37,5 @@ export const sidebarItemsConfig: SidebarConfig = {
 
 export const footerConfig: FooterConfig = {
     showFullYear: true,
-    company: "wms.group",
+    company: "wms-group.tech",
 };

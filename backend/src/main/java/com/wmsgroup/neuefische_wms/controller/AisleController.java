@@ -66,6 +66,6 @@ public class AisleController {
 	@ExceptionHandler(AisleNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ErrorDTO handleRedoException(AisleNotFoundException e) {
-		return new ErrorDTO(HttpStatus.BAD_REQUEST, e.getMessage());
+		return ErrorDTO.fromException(e);
 	}
 }
