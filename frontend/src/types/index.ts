@@ -31,3 +31,35 @@ export interface FooterComponentProps {
 export interface ILayoutContainer extends PropsWithChildren {
     className?: string;
 }
+
+export interface CategoryOutputDTO {
+    id: string;
+    name: string;
+    parentId: string | null;
+}
+
+export function isCategoryOutputDTO(obj: unknown): obj is CategoryOutputDTO {
+    return typeof obj === "object" && obj !== null &&
+        "id" in obj && "name" in obj && "parentId" in obj &&
+        typeof obj.id === "string" &&
+        typeof obj.name === "string" &&
+        (
+            typeof obj.parentId === "string" ||
+            obj.parentId === null
+        );
+}
+
+export interface CategoryInputDTO {
+    name: string;
+    parentId?: string | null;
+}
+
+export interface SelectOption {
+    label: string;
+    value: string;
+}
+
+export interface SelectGroup {
+    label: string;
+    options: SelectOption[];
+}

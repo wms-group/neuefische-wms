@@ -13,3 +13,8 @@ export function cn(...inputs: ClassValue[]) {
 * Return current Year
 * */
 export const FullYear = () => new Date().getFullYear();
+
+/*
+* Return Select Groups for react-select from Categories
+*/
+export {selectGroupsFromCategoryOutputDTOs} from "./CategoryUtils"
