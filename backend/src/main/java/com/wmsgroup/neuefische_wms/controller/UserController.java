@@ -29,7 +29,7 @@ public class UserController {
    * adds user to db and return userDto with min infos
    * */
   @PostMapping
-  public ResponseEntity<Object> addUser(@RequestBody UserRequestDto userReq) {
+  public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto userReq) {
     User newUser = new User(
             idService.generateId(),
             userReq.username(),
@@ -38,21 +38,15 @@ public class UserController {
             userReq.password()
     );
 
-    try {
-      userService.addUser(newUser);
+    userService.addUser(newUser);
 
-      UserResponseDto createdUser = new UserResponseDto(
-              newUser.username(),
-              newUser.name(),
-              newUser.role()
-      );
+    UserResponseDto createdUser = new UserResponseDto(
+            newUser.username(),
+            newUser.name(),
+            newUser.role()
+    );
 
-      return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-
-    } catch (UserAlreadyExistException e) {
-      return ResponseEntity.status(HttpStatus.CONFLICT)
-              .body(Map.of("error", e.getMessage()));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
   }
 
   /*
@@ -67,16 +61,11 @@ public class UserController {
    * updates user by id
    * */
   @PutMapping("{id}")
-  public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserDto user)
-          throws UserNotFoundException {
+  public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserDto user) {
     User userResponse;
 
-    try {
-      userResponse = userService.updateUser(id, user);
-      return ResponseEntity.status(HttpStatus.OK).body(userResponse);
-    } catch (UserNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    }
+    userResponse = userService.updateUser(id, user);
+    return ResponseEntity.status(HttpStatus.OK).body(userResponse);
   }
 
   /*

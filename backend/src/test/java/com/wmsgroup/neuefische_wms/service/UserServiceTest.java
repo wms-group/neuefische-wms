@@ -106,7 +106,7 @@ class UserServiceTest {
 
   @Test
   void getUserById_shouldReturnOptionalUser() {
-    when(userRepository.getUserById(testUser.id())).thenReturn(Optional.of(testUser));
+    when(userRepository.findById(testUser.id())).thenReturn(Optional.of(testUser));
 
     Optional<User> result = userService.getUserById(testUser.id());
 
@@ -116,7 +116,7 @@ class UserServiceTest {
 
   @Test
   void getUserById_shouldReturnEmptyOptional_whenNotFound() {
-    when(userRepository.getUserById("unknown")).thenReturn(Optional.empty());
+    when(userRepository.findById("unknown")).thenReturn(Optional.empty());
 
     Optional<User> result = userService.getUserById("unknown");
 

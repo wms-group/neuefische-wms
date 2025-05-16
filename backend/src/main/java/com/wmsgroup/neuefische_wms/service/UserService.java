@@ -40,7 +40,6 @@ public class UserService {
     String name = userDto.name() != null ? userDto.name() : existing.name();
     UserRole role = userDto.role() != null ? userDto.role() : existing.role();
 
-
     User updatedUser = new User(
             existing.id(),
             username,
@@ -58,6 +57,6 @@ public class UserService {
   }
 
   public Optional<User> getUserById(String id) {
-    return userRepository.getUserById(id);
+    return userRepository.findById(id);
   }
 }

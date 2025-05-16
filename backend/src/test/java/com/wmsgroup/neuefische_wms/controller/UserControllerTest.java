@@ -1,7 +1,10 @@
 package com.wmsgroup.neuefische_wms.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wmsgroup.neuefische_wms.model.user.User;
 import com.wmsgroup.neuefische_wms.model.user.UserRole;
+import com.wmsgroup.neuefische_wms.model.user.dto.UserRequestDto;
+import com.wmsgroup.neuefische_wms.model.user.dto.UserResponseDto;
 import com.wmsgroup.neuefische_wms.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -26,6 +30,9 @@ class UserControllerTest {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private ObjectMapper objectMapper;
+
   @BeforeEach
   void cleanDb() {
     userRepository.deleteAll();
@@ -33,44 +40,34 @@ class UserControllerTest {
 
   @Test
   void addUser_shouldAddUser_whenCalledWithValidData() throws Exception {
-    mockMvc.perform(post("/api/wms-group")
+    UserRequestDto userRequestDto = new UserRequestDto("j_doe", "Joe Doe", UserRole.ADMIN, "wms123!");
+
+    String response = mockMvc.perform(post("/api/wms-group")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("""
-                            {
-                              "username": "j_doe",
-                              "name": "Joe Doe",
-                              "role": "ADMIN",
-                              "password": "wms123!"
-                            }
-                        """)
+                    .content(objectMapper.writeValueAsString(userRequestDto))
             ).andExpect(status().isCreated())
-            .andExpect(content().json("""
-                    {
-                        "username": "j_doe",
-                        "name": "Joe Doe",
-                        "role": "ADMIN"
-                    }
-                    """));
+            .andReturn().getResponse().getContentAsString();
+
+    UserResponseDto responseDto = objectMapper.readValue(response, UserResponseDto.class);
+    UserResponseDto expected = new UserResponseDto(userRequestDto.username(), userRequestDto.name(), userRequestDto.role());
+
+    assertThat(responseDto).isEqualTo(expected);
   }
 
   @Test
   void addUser_shouldReturnConflict_whenUserAlreadyExists() throws Exception {
-    userRepository.save(new User("1", "j_doe","Jane Doe", UserRole.ADMIN, "1234"));
+    User existingUser = new User("1", "j_doe", "John Doe", UserRole.ADMIN, "wms123!");
+
+    userRepository.save(existingUser);
+    UserRequestDto userRequestDto = new UserRequestDto("j_doe", "John Doe", UserRole.ADMIN, "wms123!");
 
     mockMvc.perform(post("/api/wms-group")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("""
-                    {
-                      "username": "j_doe",
-                      "name": "Jane Doe",
-                      "role": "ADMIN",
-                      "password": "1234"
-                    }
-                    """)
+                    .content(objectMapper.writeValueAsString(userRequestDto))
             ).andExpect(status().isConflict())
             .andExpect(content().json("""
         {
-          "error": "User with the username 'j_doe' already exists!"
+          "message": "User with the username 'j_doe' already exists!"
         }
      """));
   }
@@ -117,33 +114,27 @@ class UserControllerTest {
 
   @Test
   void updateUser_shouldReturnNotFound_whenUserDoesNotExist() throws Exception {
+    UserRequestDto userRequestDto = new UserRequestDto("updated_username", "Updated Name", UserRole.ADMIN, "newPassword123!");
     mockMvc.perform(put("/api/wms-group/non-existent-id")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("""
-                                {
-                                    "username": "updated_user",
-                                    "name": "Updated Name",
-                                    "role": "ADMIN",
-                                    "password": "newPassword123!"
-                                }
-                                """))
+                    .content(objectMapper.writeValueAsString(userRequestDto)))
             .andExpect(status().isNotFound());
   }
 
   @Test
   void getUsers_shouldReturnAllUsers() throws Exception {
     // GIVEN
-    userRepository.saveAll(List.of(
-            new User("1", "user1", "User One", UserRole.CLERK, "pass1"),
-            new User("2", "user2", "User Two", UserRole.ADMIN, "pass2")
-    ));
+    User user1 = new User("1", "joe_1", "Joe Doe 1", UserRole.CLERK, "pass1");
+    User user2 = new User("2", "joe_2", "Joe Doe 2", UserRole.CLERK, "pass2");
+    List<User> jsonUserArray = List.of(user1, user2);
+    userRepository.saveAll(jsonUserArray);
 
     // WHEN & THEN
     mockMvc.perform(get("/api/wms-group"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(2))
-            .andExpect(jsonPath("$[0].username").value("user1"))
-            .andExpect(jsonPath("$[1].username").value("user2"));
+            .andExpect(jsonPath("$[0].username").value("joe_1"))
+            .andExpect(jsonPath("$[1].username").value("joe_2"));
   }
 
   @Test
