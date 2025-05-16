@@ -21,9 +21,9 @@ public record ErrorDTO(
         Throwable cause = exception.getCause();
         return new ErrorDTO(
                 exception.getClass().getSimpleName(),
-                exception.getMessage(),
                 cause != null ? cause.getClass().getSimpleName() : null,
                 cause != null ? cause.getMessage() : null,
+                exception.getMessage(),
                 HttpStatus.BAD_REQUEST.name()
         );
     }
