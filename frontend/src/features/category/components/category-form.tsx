@@ -50,7 +50,7 @@ export default function CategoryForm({ categories, onSubmit, className, defaultP
                 className={cn("flex gap-1 flex-row justify-between items-end", className)}
                 onSubmit={handleSubmit}>
                     <div className="h-full grow flex-basis-60">
-                        <label className={cn("text-sm/6 font-medium text-gray")}>Name</label>
+                        <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
                         <input
                             name="name"
                             className={cn(
@@ -61,7 +61,7 @@ export default function CategoryForm({ categories, onSubmit, className, defaultP
                         />
                     </div>
                     <div className="h-full grow flex-basis-60">
-                        <label className={clsx("text-sm/6 font-medium text-gray")}>Unterkategorie von...</label>
+                        <label htmlFor="parentId" className={clsx("text-sm/6 font-medium text-gray")}>Unterkategorie von...</label>
                         <SearchableSelect
                             name="parentId"
                             options={selectGroupsFromCategoryOutputDTOs(categories)}
