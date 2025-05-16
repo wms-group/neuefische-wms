@@ -1,5 +1,5 @@
 import axios from "axios";
-import {CategoryInputDTO, CategoryOutputDTO, isCategoryOutputDTO} from "@/types";
+import {CategoryInputDTO, CategoryOutputDTO, isCategoryOutputDTO, isErrorDTO} from "@/types";
 
 export const CategoriesApi = {
     baseUrl: '/api/categories',
@@ -9,6 +9,14 @@ export const CategoriesApi = {
     cancelableSaveCategoryRef: null as AbortController | null,
     cancelableUpdateCategoryRef: {} as Record<string, AbortController | null>,
     cancelableDeleteCategoryRef: {} as Record<string, AbortController | null>,
+
+    throwErrorByResponse(error: unknown) {
+        console.error(error);
+        if (axios.isAxiosError(error) && isErrorDTO(error.response?.data)) {
+            throw new Error(error.response.data.message ?? "Unbekannter Fehler");
+        }
+        throw new Error("Unbekannter Fehler");
+    },
 
     async getAllCategories(): Promise<CategoryOutputDTO[]> {
         this.cancelableGetAllRef?.abort();
@@ -25,6 +33,7 @@ export const CategoriesApi = {
             if (axios.isCancel(error)) {
                 return [];
             }
+            this.throwErrorByResponse(error);
         }
         throw new TypeError("Ungültige Antwort beim Laden der Kategorien");
     },
@@ -44,6 +53,7 @@ export const CategoriesApi = {
             if (axios.isCancel(error)) {
                 return null;
             }
+            this.throwErrorByResponse(error);
         }
         throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
     },
