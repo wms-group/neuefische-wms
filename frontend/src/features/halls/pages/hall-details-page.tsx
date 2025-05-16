@@ -1,6 +1,6 @@
 import LayoutContainer from "@/components/shared/layout-container.tsx";
 import { NavLink, useParams } from "react-router-dom";
-import { useHalls } from "../contexts/hall-context";
+import { useHalls } from "../hooks/useHalls";
 
 const HallDetailPage = () => {
     const { halls } = useHalls();
