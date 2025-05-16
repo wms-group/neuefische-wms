@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+
+@layer base {
+    body {
+        @apply text-slate-700;
+    }
+
+    #root {
+        @apply min-h-screen;
+    }
+
+    h1 {
+        @apply text-2xl font-bold;
+    }
+
+    h2 {
+        @apply text-xl font-bold;
+    }
+
+    h3 {
+        @apply text-lg font-semibold;
+    }
+}
+
+@layer components {
+    .card {
+        @apply rounded-lg p-6 bg-gray-100 shadow-xl;
+    }
+}

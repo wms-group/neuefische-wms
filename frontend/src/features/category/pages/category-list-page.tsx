@@ -17,7 +17,7 @@ const CategoryListPage = () => {
     }
 
     return (
-        <div className={"category-list-page p-2 flex flex-col gap-4"}>
+        <div className={"category-list-page p-2 flex flex-col flex-1 gap-4"}>
             <h2>Kategorien</h2>
             <CategoryForm onSubmit={handleSubmitCategory} categories={categories} />
             <CategoryList categories={categories} parentId={null} />

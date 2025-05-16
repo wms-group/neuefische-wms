@@ -1,4 +1,4 @@
-import {ComponentType, PropsWithChildren, type ReactNode} from "react";
+import {ChangeEvent, ComponentType, PropsWithChildren, type ReactNode} from "react";
 import {LucideProps} from "lucide-react";
 
 export interface SideBarNavItem {
@@ -120,4 +120,28 @@ export function isErrorDTO(obj: unknown): obj is ErrorDTO {
         && "causeMessage" in obj && (typeof obj.causeMessage === "string" || obj.causeMessage === null)
         && "message" in obj && (typeof obj.message === "string" || obj.message === null)
         && "status" in obj && typeof obj.status === "string";
+}
+
+export type SelectProps<T extends string | number> = {
+    label: string;
+    description?: string;
+    options: T[];
+    value: T;
+    onChange: (value: T) => void;
+    disabled?: boolean;
+    className?: string;
+};
+
+export type InputWithLabelProps = {
+    label: string
+    name: string
+    value: string
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+    onBlur: (e: ChangeEvent<HTMLInputElement>) => void
+    type?: string
+    placeholder?: string
+    required?: boolean
+    className?: string
+    error?: string
+    disabled?: boolean
 }

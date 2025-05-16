@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {UserAvatarProps} from "@/types";
-import Button from "@/components/ui/button.tsx";
+import {Button} from "@/components/ui";
 import {LogOut, UserRoundIcon} from "lucide-react";
 import {cn} from "@/utils";
 
@@ -15,15 +15,13 @@ const UserAvatar = ({userName = 'Max Mustermann', onLogout}: UserAvatarProps) =>
         .toUpperCase();
 
     return (
-        <div className="relative w-full">
+        <>
             <Button
                 onClick={() => setOpen(!open)}
-                className="relative inline-block text-left bg-transparent border-0 focus-visible:border-0">
+                className="relative inline-block text-left bg-transparent border-0 focus-visible:border-0 w-full">
                 <div className="flex items-center justify-center gap-4">
                     <div
                         className="w-10 h-10 bg-slate-500 text-white font-medium flex items-center justify-center rounded-full cursor-pointer select-none"
-                        onMouseEnter={() => document.body.style.cursor = 'pointer'}
-                        onMouseLeave={() => document.body.style.cursor = 'default'}
                     >
                         {initials}
                     </div>
@@ -55,7 +53,7 @@ const UserAvatar = ({userName = 'Max Mustermann', onLogout}: UserAvatarProps) =>
                     </Button>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

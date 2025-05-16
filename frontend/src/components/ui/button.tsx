@@ -1,5 +1,6 @@
-import {ButtonProps, ButtonType} from "@/types";
 import {FC} from "react";
+import {Button as UIButton} from "@headlessui/react";
+import {ButtonProps, ButtonType} from "@/types";
 import {cn} from "@/utils";
 
 const Button: FC<ButtonProps> = ({
@@ -16,7 +17,7 @@ const Button: FC<ButtonProps> = ({
  }) => {
     const buttonContent = children ?? label
     return (
-        <button
+        <UIButton
             className={cn(
                 "flex justify-center items-center text-indigo-700 transition-all bg-indigo-100",
                 "rounded-lg border border-transparent px-5 py-[0.6em] text-base [&_svg]:size-5 [&_svg]:shrink-0",
@@ -32,7 +33,7 @@ const Button: FC<ButtonProps> = ({
             {iconBefore}
             {buttonContent}
             {iconAfter}
-        </button>
+        </UIButton>
     )
 }
 
