@@ -21,7 +21,7 @@ public record Aisle(
 		List<String> stockIds) {
 
 	public static Aisle of(AisleCreationDTO dto) {
-		return new Aisle("", dto.name(), dto.categoryIds(), dto.stockIds());
+		return new Aisle("", dto.name(), dto.categoryIds(), List.of());
 	}
 
 	public static Aisle of(AisleUpdateDTO dto) {
