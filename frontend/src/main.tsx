@@ -15,24 +15,25 @@ import HallEditPage from './features/halls/pages/hall-edit-page.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter >
-        <Routes>
-            {/*APP RootLayout*/}
-            <Route element={<RootLayout />}>
-                {/*APP Entry point*/}
-                <Route path={"/"} element={<App/>} />
+    <HallProvider >
+        <BrowserRouter >
+            <Routes>
+                {/*APP RootLayout*/}
+                <Route element={<RootLayout />}>
+                    {/*APP Entry point*/}
+                    <Route path={"/"} element={<App/>} />
 
-                {/*Relative routing for categories*/}
-                <Route path={"categories"} element={<CategoriesProductsLayout />}>
-                    <Route index element={<CategoryListPage />} />
-                    <Route path=":id" element={<CategoryDetailPage />} />
-                </Route>
+                    {/*Relative routing for categories*/}
+                    <Route path={"categories"} element={<CategoriesProductsLayout />}>
+                        <Route index element={<CategoryListPage />} />
+                        <Route path=":id" element={<CategoryDetailPage />} />
+                    </Route>
 
-                {/*Relative routing for products*/}
-                <Route path={"products"} element={<CategoriesProductsLayout />}>
-                    <Route index element={<ProductListPage />} />
-                    <Route path=":id" element={<ProductDetailPage />} />
-                </Route>
+                    {/*Relative routing for products*/}
+                    <Route path={"products"} element={<CategoriesProductsLayout />}>
+                        <Route index element={<ProductListPage />} />
+                        <Route path=":id" element={<ProductDetailPage />} />
+                    </Route>
 
                     {/*Relative routing for orders*/}
                     <Route path={"orders"}>
