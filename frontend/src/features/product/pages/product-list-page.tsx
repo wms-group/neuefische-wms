@@ -21,12 +21,6 @@ const ProductListPage = () => {
     useEffect(() => {
         if (categoryId) {
             setCategory(categories.find(c => c.id === categoryId))
-            getProductsByCategoryId(categoryId)
-                .then(setProducts)
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .catch(_e => {
-                    setProducts([])
-            })
         } else {
             setCategory(undefined);
             setProducts([]);
@@ -34,13 +28,34 @@ const ProductListPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [categoryId, categories])
 
+    useEffect(() => {
+        if (!category) {
+            return
+        }
+        getProductsByCategoryId(category.id)
+            .then((products  ) => {
+                setProducts(products)
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .catch(_e => {
+                setProducts([])
+            })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [category]);
+
     const handleSubmitProduct = async (product: ProductInputDTO) => {
-        return toast.promise(addProduct(product),
-            {
-                loading: "Speichere Kategorie...",
-                success: "Kategorie erfolgreich gespeichert.",
-                error: (reason: AxiosError) => "Speichern der Kategorie fehlgeschlagen: " + reason.message
-            });
+        return toast.promise(addProduct(product)
+                .then(product => {
+                    if (product) {
+                        setProducts(prev => [product, ...prev]);
+                    }
+                    return product;
+                }),
+                {
+                    loading: "Speichere Produkt...",
+                    success: "Produkt erfolgreich gespeichert.",
+                    error: (reason: AxiosError) => "Speichern des Produkts fehlgeschlagen: " + reason.message
+                });
     }
 
     return (

@@ -67,11 +67,12 @@ export default function useProduct() {
                     setState(prev => ({...prev, productsByCategoryId: {...prev.productsByCategoryId, [categoryId]: []}}));
                     return Promise.resolve([]);
                 }
-                return setProducts(prev => withReplaceOrAddedProducts(prev, products))
+                setProducts(prev => withReplaceOrAddedProducts(prev, products));
+                return products
             })
             .catch(e => {
                 setError(e.message);
-                return Promise.reject(e);
+                throw e;
             })
             .finally(() => setLoading(false));
     }
@@ -90,7 +91,7 @@ export default function useProduct() {
             })
             .catch(e => {
                 setError(e.message);
-                return null;
+                throw e;
             })
             .finally(() => setLoading(false));
     }
