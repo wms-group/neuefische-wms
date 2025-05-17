@@ -11,16 +11,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -50,9 +49,9 @@ class ProductServiceTest {
         ProductInputDTO inputDTO = new ProductInputDTO("Test Product", "cat-1", "10,00");
         ProductOutputDTO outputDTO = new ProductOutputDTO(generatedId, "Test Product", "cat-1", "10,00");
 
-        Mockito.when(idService.generateId()).thenReturn(generatedId);
-        Mockito.when(productRepository.save(ArgumentMatchers.any(Product.class))).thenReturn(testProduct);
-        Mockito.when(categoryRepository.existsById(ArgumentMatchers.any(String.class))).thenReturn(true);
+        when(idService.generateId()).thenReturn(generatedId);
+        when(productRepository.save(ArgumentMatchers.any(Product.class))).thenReturn(testProduct);
+        when(categoryRepository.existsById(ArgumentMatchers.any(String.class))).thenReturn(true);
 
         // When
         ProductOutputDTO result = productService.addProduct(inputDTO);
@@ -64,8 +63,8 @@ class ProductServiceTest {
         assertEquals("cat-1", result.categoryId());
         assertEquals("10,00", result.price());
 
-        Mockito.verify(idService).generateId();
-        Mockito.verify(productRepository).save(any());
+        verify(idService).generateId();
+        verify(productRepository).save(any());
     }
 
     @Test
@@ -74,7 +73,7 @@ class ProductServiceTest {
         String missingCategoryId = "missing-category-id";
         ProductInputDTO inputDTO = new ProductInputDTO("Child Product", missingCategoryId, "10,00" );
 
-        Mockito.when(categoryRepository.existsById(missingCategoryId)).thenReturn(false);
+        when(categoryRepository.existsById(missingCategoryId)).thenReturn(false);
 
         // When / Then
         IllegalArgumentException ex = assertThrows(
@@ -83,7 +82,7 @@ class ProductServiceTest {
         );
         assertEquals("Category for categoryId missing-category-id does not exist", ex.getMessage());
 
-        Mockito.verify(categoryRepository).existsById(missingCategoryId);
+        verify(categoryRepository).existsById(missingCategoryId);
     }
 
     @Test
@@ -105,27 +104,27 @@ class ProductServiceTest {
                 new ProductOutputDTO("id2", "Prod2", "id1", "1,00")
         );
 
-        Mockito.when(productRepository.findAll()).thenReturn(products);
+        when(productRepository.findAll()).thenReturn(products);
 
         // When
         List<ProductOutputDTO> result = productService.getAllProducts();
 
         // Then
         assertEquals(outputDTOs, result);  // Hinweis: Hier wird verglichen, ob die Inhalte gleich sind. Die Konvertierung ist jetzt statisch im Service implementiert.
-        Mockito.verify(productRepository).findAll();
+        verify(productRepository).findAll();
     }
 
     @Test
     void getAllProducts_shouldReturnEmptyList_whenNoProductsExist() {
         // Given
-        Mockito.when(productRepository.findAll()).thenReturn(List.of());
+        when(productRepository.findAll()).thenReturn(List.of());
 
         // When
         List<ProductOutputDTO> result = productService.getAllProducts();
 
         // Then
         assertEquals(List.of(), result);
-        Mockito.verify(productRepository).findAll();
+        verify(productRepository).findAll();
     }
     @Test
     void getProductsByCategoryId_shouldReturnProductDtoList_whenProductsExist() {
@@ -139,31 +138,31 @@ class ProductServiceTest {
                 new ProductOutputDTO("id2", "Prod2", "cat-1", "1,00")
         );
 
-        Mockito.when(categoryRepository.existsById("cat-1")).thenReturn(true);
-        Mockito.when(productRepository.findAllByCategoryId("cat-1")).thenReturn(products);
+        when(categoryRepository.existsById("cat-1")).thenReturn(true);
+        when(productRepository.findAllByCategoryId("cat-1")).thenReturn(products);
 
         // When
         List<ProductOutputDTO> result = productService.getProductsByCategoryId("cat-1");
 
         // Then
         assertEquals(outputDTOs, result);  // Hinweis: Hier wird verglichen, ob die Inhalte gleich sind. Die Konvertierung ist jetzt statisch im Service implementiert.
-        Mockito.verify(productRepository).findAllByCategoryId("cat-1");
-        Mockito.verify(categoryRepository).existsById("cat-1");
+        verify(productRepository).findAllByCategoryId("cat-1");
+        verify(categoryRepository).existsById("cat-1");
     }
 
     @Test
     void getProductsByCategoryId_shouldReturnEmptyList_whenNoProductsExist() {
         // Given
-        Mockito.when(productRepository.findAllByCategoryId("cat-1")).thenReturn(List.of());
-        Mockito.when(categoryRepository.existsById("cat-1")).thenReturn(true);
+        when(productRepository.findAllByCategoryId("cat-1")).thenReturn(List.of());
+        when(categoryRepository.existsById("cat-1")).thenReturn(true);
 
         // When
         List<ProductOutputDTO> result = productService.getProductsByCategoryId("cat-1");
 
         // Then
         assertEquals(List.of(), result);
-        Mockito.verify(productRepository).findAllByCategoryId("cat-1");
-        Mockito.verify(categoryRepository).existsById("cat-1");
+        verify(productRepository).findAllByCategoryId("cat-1");
+        verify(categoryRepository).existsById("cat-1");
     }
 
     @Test
@@ -176,10 +175,100 @@ class ProductServiceTest {
     @Test
     void getProductsByCategoryId_shouldThrowIllegalArgumentsException_whenCategoryIdDoesNotExist() {
         // When
-        Mockito.when(categoryRepository.existsById("cat-1")).thenReturn(false);
+        when(categoryRepository.existsById("cat-1")).thenReturn(false);
 
         // When / Then
         assertThrows(IllegalArgumentException.class, () -> productService.getProductsByCategoryId("cat-1"));
-        Mockito.verify(categoryRepository).existsById("cat-1");
+        verify(categoryRepository).existsById("cat-1");
+    }
+
+    @Test
+    void updateProduct_shouldUpdateAndReturnProductOutputDTO() {
+        // Given
+        String productId = "1";
+        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        when(productRepository.existsById(productId)).thenReturn(true);
+        when(categoryRepository.existsById(anyString())).thenReturn(true);
+        when(inputDTO.name()).thenReturn("TestProduct");
+        when(inputDTO.categoryId()).thenReturn("cat1");
+        when(inputDTO.price()).thenReturn("10,00");
+        when(productRepository.save(any())).thenReturn(mock(Product.class));
+
+        // When
+        ProductOutputDTO result = productService.updateProduct(productId, inputDTO);
+
+        // Then
+        assertNotNull(result);
+        verify(productRepository).existsById(productId);
+        verify(categoryRepository).existsById("cat1");
+        verify(productRepository).save(any());
+    }
+
+    @Test
+    void updateProduct_shouldThrowIfProductDoesNotExist() {
+        // Given
+        String productId = "doesNotExist";
+        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        when(productRepository.existsById(productId)).thenReturn(false);
+
+        // When / Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                productService.updateProduct(productId, inputDTO)
+        );
+        assertTrue(ex.getMessage().contains(productId));
+    }
+
+    @Test
+    void updateProduct_shouldThrowIfCategoryDoesNotExist() {
+        // Given
+        String productId = "1";
+        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        when(productRepository.existsById(productId)).thenReturn(true);
+        when(inputDTO.categoryId()).thenReturn("invalidCat");
+        when(categoryRepository.existsById("invalidCat")).thenReturn(false);
+
+        // When / Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                productService.updateProduct(productId, inputDTO)
+        );
+        assertTrue(ex.getMessage().contains("invalidCat"));
+    }
+
+    @Test
+    void updateProduct_shouldThrowIfNameIsBlank() {
+        // Given
+        String productId = "1";
+        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        when(productRepository.existsById(productId)).thenReturn(true);
+        when(inputDTO.categoryId()).thenReturn("cat1");
+        when(categoryRepository.existsById("cat1")).thenReturn(true);
+        when(inputDTO.name()).thenReturn("   ");
+
+        // When / Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                productService.updateProduct(productId, inputDTO)
+        );
+        assertEquals("Name must not be blank", ex.getMessage());
+    }
+
+    @Test
+    void deleteProduct_shouldDeleteIfExists() {
+        String productId = "10";
+        when(productRepository.existsById(productId)).thenReturn(true);
+
+        productService.deleteProduct(productId);
+
+        verify(productRepository).deleteById(productId);
+    }
+
+    @Test
+    void deleteProduct_shouldThrowIfNotExist() {
+        String productId = "notfound";
+        when(productRepository.existsById(productId)).thenReturn(false);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                productService.deleteProduct(productId)
+        );
+        assertTrue(ex.getMessage().contains(productId));
     }
 }

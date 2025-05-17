@@ -38,6 +38,31 @@ public class ProductService {
         );
     }
 
+    public ProductOutputDTO updateProduct(@NonNull String id, @NonNull ProductInputDTO productInputDTO) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException(String.format("Product with id %s does not exist", id));
+        }
+        if (!categoryRepository.existsById(productInputDTO.categoryId())) {
+            throw new IllegalArgumentException(String.format("Category for categoryId %s does not exist", productInputDTO.categoryId()));
+        }
+        if (productInputDTO.name().isBlank()) {
+            throw new IllegalArgumentException("Name must not be blank");
+        }
+        return ProductOutputDTOConverter.convert(
+                productRepository.save(
+                        ProductConverter.convert(productInputDTO)
+                                .withId(id)
+                )
+        );
+    }
+
+    public void deleteProduct(@NonNull String id) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException(String.format("Product with id %s does not exist", id));
+        }
+        productRepository.deleteById(id);
+    }
+
     public List<ProductOutputDTO> getProductsByCategoryId(@NonNull String categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new IllegalArgumentException(String.format("Category for categoryId %s does not exist", categoryId));
