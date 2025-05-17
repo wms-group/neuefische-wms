@@ -1,8 +1,8 @@
-import LayoutContainer from "@/components/shared/layout-container.tsx";
-import { Hall } from "../types/hall";
-import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
-import { useHalls } from "../hooks/useHalls";
+import { NavLink } from "react-router-dom";
+import LayoutContainer from "@/components/shared/layout-container.tsx";
+import { Hall } from "@/types";
+import { useHalls } from "@/features/halls";
 
 const HallListPage = () => {
     const { halls, fetchHalls } = useHalls();

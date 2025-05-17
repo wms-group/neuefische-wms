@@ -8,12 +8,9 @@ import {OrderDetailPage, OrderListPage} from "@/features/orders";
 import {ProductDetailPage, ProductListPage} from "@/features/product";
 import {CategoryDetailPage, CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
+import {HallListPage, HallDetailPage, HallEditPage, HallProvider} from "@/features/halls";
 import {RootLayout} from "@/layouts";
 import CategoriesProductsLayout from './layouts/categories-products-layout.tsx';
-import HallListPage from './features/halls/pages/hall-list-page.tsx';
-import HallDetailPage from './features/halls/pages/hall-details-page.tsx';
-import { HallProvider } from './features/halls/contexts/hall-context.tsx';
-import HallEditPage from './features/halls/pages/hall-edit-page.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>

@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { HallContextType } from "../types/hall";
-import { HallContext } from "../contexts/hall-context";
+import { HallContextType } from "@/types";
+import { HallContext } from "@/features/halls/context/hall-context";
 
 export const useHalls = (): HallContextType => {
   const context = useContext(HallContext);

@@ -1,19 +1,15 @@
-import React, { createContext, useState, ReactNode } from 'react';
-import { Hall, HallContextType } from '../types/hall';
-import { useHallApi } from '../api/hall-api';
+import React, { useState, ReactNode } from 'react';
 import { AxiosError } from 'axios';
+import { Hall } from '@/types';
+import { useHallApi } from '@/features/halls';
+import { HallContext } from '@/features/halls/context/hall-context';
 
-// Create the context with a default value
-const HallContext = createContext<HallContextType | undefined>(undefined);
-
-// Props for the provider component
 interface HallProviderProps {
   children: ReactNode;
   initialHalls?: Hall[];
 }
 
-// Reusable HallProvider component
-const HallProvider: React.FC<HallProviderProps> = ({ children, initialHalls = [] }) => {
+export const HallProvider: React.FC<HallProviderProps> = ({ children, initialHalls = [] }) => {
   const [halls, setHalls] = useState<Hall[]>(initialHalls);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,6 +80,4 @@ const HallProvider: React.FC<HallProviderProps> = ({ children, initialHalls = []
   );
 };
 
-export {
-    HallContext, HallProvider
-}
+export default HallProvider;

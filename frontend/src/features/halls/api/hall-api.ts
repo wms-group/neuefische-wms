@@ -1,5 +1,5 @@
 import api from '@/api/axios';
-import { Hall } from '../types/hall';
+import { Hall } from '@/types';
 
 export const useHallApi = () => {
     const fetchHalls = async (): Promise<Hall[]> => {
