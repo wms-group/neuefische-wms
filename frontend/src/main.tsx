@@ -8,14 +8,14 @@ import {OrderDetailPage, OrderListPage} from "@/features/orders";
 import {ProductDetailPage, ProductListPage} from "@/features/product";
 import {CategoryDetailPage, CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
-import {HallListPage, HallDetailPage, HallEditPage, HallProvider} from "@/features/halls";
+import {HallListPage, HallDetailPage, HallEditPage} from "@/features/halls";
 import {RootLayout} from "@/layouts";
 import CategoriesProductsLayout from './layouts/categories-products-layout.tsx';
+import HallLayout from './layouts/hall-layout.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <SidebarProvider>
-            <HallProvider >
                 <BrowserRouter>
                     <Routes>
                         {/*APP RootLayout*/}
@@ -56,16 +56,15 @@ createRoot(document.getElementById('root')!).render(
                                 ...*/}
                             </Route>
 
-                            <Route path={"halls"}>
-                            <Route index element={<HallListPage />} />
-                            <Route path="new" element={<HallEditPage />} />
-                            <Route path=":id" element={<HallDetailPage />} />
-                            <Route path=":id/edit" element={<HallEditPage />} />
+                            <Route path={"halls"} element={<HallLayout />}>
+                                <Route index element={<HallListPage />} />
+                                <Route path="new" element={<HallEditPage />} />
+                                <Route path=":id" element={<HallDetailPage />} />
+                                <Route path=":id/edit" element={<HallEditPage />} />
                         </Route>
                         </Route>
                     </Routes>
                 </BrowserRouter>
-            </HallProvider>
         </SidebarProvider>
     </StrictMode>
 )
