@@ -39,6 +39,9 @@ public class ProductService {
     }
 
     public List<ProductOutputDTO> getProductsByCategoryId(@NonNull String categoryId) {
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new IllegalArgumentException(String.format("Category for categoryId %s does not exist", categoryId));
+        }
         return ProductOutputDTOConverter.convert(productRepository.findAllByCategoryId(categoryId));
     }
 }

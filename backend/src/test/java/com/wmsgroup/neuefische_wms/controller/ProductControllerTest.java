@@ -136,4 +136,42 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].price").value("1,00"))
                 ;
     }
+
+    @Test
+    void testGetProductsByCategoryId() throws Exception {
+        productRepository.save(Product.builder().id("1").name("Electronics").categoryId("cat-1").price(BigDecimal.TEN).build());
+        productRepository.save(Product.builder().id("2").name("Smartphones").categoryId("cat-1").price(BigDecimal.ONE).build());
+        productRepository.save(Product.builder().id("3").name("iPhone 13").categoryId("cat-2").price(BigDecimal.ONE).build());
+
+        mockMvc.perform(get("/api/products/category/cat-1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$.[?(@.name == 'Electronics')].id").value("1"))
+                .andExpect(jsonPath("$.[?(@.name == 'Electronics')].categoryId").value("cat-1"))
+                .andExpect(jsonPath("$.[?(@.name == 'Electronics')].price").value("10,00"))
+                .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].id").value("2"))
+                .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].categoryId").value("cat-1"))
+                .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].price").value("1,00"))
+                ;
+    }
+
+    @Test
+    void testGetProductsByCategoryIdReturnsEmptyListWhenNoProductsExistInCategory() throws Exception {
+        productRepository.save(Product.builder().id("3").name("iPhone 13").categoryId("cat-2").price(BigDecimal.ONE).build());
+
+        mockMvc.perform(get("/api/products/category/cat-1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(0))
+                ;
+    }
+
+    @Test
+    void testGetProductsByCategoryIdReturnsBadRequestWhenCategoryDoesNotExist() throws Exception {
+        mockMvc.perform(get("/api/products/category/cat-2"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+    }
 }
