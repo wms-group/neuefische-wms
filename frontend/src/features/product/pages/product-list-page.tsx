@@ -1,5 +1,5 @@
 import {CategoryOutputDTO, ProductInputDTO, ProductOutputDTO} from "@/types";
-import {ProductForm, ProductList} from "@/features/product";
+import {ProductNewFormCard, ProductList} from "@/features/product";
 import {toast, Toaster} from "sonner";
 import {AxiosError} from "axios";
 import {useProductContext} from "@/context/products/useProductContext.ts";
@@ -9,7 +9,7 @@ import {useEffect, useState} from "react";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 
 const ProductListPage = () => {
-    const {getProductsByCategoryId, addProduct} = useProductContext();
+    const {getProductsByCategoryId, addProduct, updateProduct, deleteProduct} = useProductContext();
 
     const categoryId = useParams().categoryId;
 
@@ -42,7 +42,7 @@ const ProductListPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 
-    const handleSubmitProduct = async (product: ProductInputDTO) => {
+    const handleSubmitNewProduct = async (product: ProductInputDTO) => {
         return toast.promise(addProduct(product)
                 .then(product => {
                     if (product) {
@@ -57,17 +57,44 @@ const ProductListPage = () => {
                 });
     }
 
+    const handleSubmitUpdatedProduct = async (product: ProductInputDTO, productId: string) => {
+        return toast.promise(updateProduct(product, productId)
+                .then(product => {
+                    if (product) {
+                        setProducts(prev => prev.map(p => p.id === productId ? product : p));
+                    }
+                    return product;
+                }),
+                {
+                    loading: "Speichere Produkt...",
+                    success: "Produkt erfolgreich gespeichert.",
+                    error: (reason: AxiosError) => "Speichern des Produkts fehlgeschlagen: " + reason.message
+                });
+    }
+
+    const handleDeleteProduct = async (productId: string) => {
+        return toast.promise(deleteProduct(productId)
+                .then(() => {
+                    setProducts(prev => prev.filter(p => p.id !== productId));
+                }),
+                {
+                    loading: "Lösche Produkt...",
+                    success: "Produkt erfolgreich gelöscht.",
+                    error: (reason: AxiosError) => "Löschen des Produkts fehlgeschlagen: " + reason.message
+                });
+    }
+
     return (
         <div className={"product-list-page p-2 flex flex-col gap-4"}>
             <h2>Produkte</h2>
             {category && <CategoryBreadcrumbs category={category} basePath={"/products/category"} rootName={"Produkte"} rootPath={"/products"}/>}
-            <ProductForm onSubmit={handleSubmitProduct} defaultCategoryId={categoryId ?? ""}/>
+            <ProductNewFormCard onSubmit={handleSubmitNewProduct} defaultCategoryId={categoryId ?? ""}/>
             <CategoryCardWithSubcategories category={category ?? null} basePath={"/products/category"}>
                 {products.length === 0 && "Keine Produkte"}
                 {products.length === 1 && "Ein Produkt"}
                 {products.length > 1 && products.length + " Produkte"}
             </CategoryCardWithSubcategories>
-            <ProductList products={products} categoryId={category?.id ?? null} />
+            <ProductList products={products} categoryId={category?.id ?? null} onSubmit={handleSubmitUpdatedProduct} onDelete={handleDeleteProduct}/>
             <Toaster />
         </div>
     )

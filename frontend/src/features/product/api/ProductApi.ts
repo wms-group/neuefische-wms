@@ -62,7 +62,7 @@ export const ProductApi = {
         this.cancelableUpdateProductRef[productId] = new AbortController();
 
         try {
-            const response = await axios.put(this.baseUrl, submittedProduct, {
+            const response = await axios.put(this.baseUrl + "/" + productId, submittedProduct, {
                 signal: this.cancelableUpdateProductRef[productId].signal
             });
             if (isProductOutputDTO(response.data)) {
@@ -77,24 +77,20 @@ export const ProductApi = {
         throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
     },
 
-    async deleteProduct(productId: string): Promise<ProductOutputDTO | null> {
+    async deleteProduct(productId: string): Promise<void> {
         this.cancelableDeleteProductRef[productId]?.abort();
         this.cancelableDeleteProductRef[productId] = new AbortController();
 
         try {
-            const response = await axios.delete(this.baseUrl, {
+            await axios.delete(this.baseUrl + "/" + productId, {
                 signal: this.cancelableDeleteProductRef[productId].signal
             });
-            if (isProductOutputDTO(response.data)) {
-                return response.data
-            }
         } catch (error) {
             if (axios.isCancel(error)) {
-                return null;
+                return;
             }
             this.throwErrorByResponse(error);
         }
-        throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
     },
 }
 
