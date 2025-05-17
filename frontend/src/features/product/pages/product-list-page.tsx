@@ -25,7 +25,6 @@ const ProductListPage = () => {
             setCategory(undefined);
             setProducts([]);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [categoryId, categories])
 
     useEffect(() => {
