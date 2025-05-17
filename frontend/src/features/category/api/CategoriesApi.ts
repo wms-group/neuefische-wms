@@ -1,8 +1,9 @@
-import axios from "axios";
+import api from "@/api/axios";
 import {CategoryInputDTO, CategoryOutputDTO, isCategoryOutputDTO, isErrorDTO} from "@/types";
+import axios from "axios";
 
 export const CategoriesApi = {
-    baseUrl: '/api/categories',
+    baseUrl: '/categories',
 
     cancelableGetAllRef: null as AbortController | null,
     cancelableSavePositionsRef: null as AbortController | null,
@@ -23,7 +24,7 @@ export const CategoriesApi = {
         this.cancelableGetAllRef = new AbortController();
 
         try {
-            const response = await axios.get(this.baseUrl, {
+            const response = await api.get(this.baseUrl, {
                 signal: this.cancelableGetAllRef.signal
             });
             if (Array.isArray(response.data) && response.data.every(isCategoryOutputDTO)) {
@@ -43,7 +44,7 @@ export const CategoriesApi = {
         this.cancelableSaveCategoryRef = new AbortController();
 
         try {
-            const response = await axios.post(this.baseUrl, submittedCategory, {
+            const response = await api.post(this.baseUrl, submittedCategory, {
                 signal: this.cancelableSaveCategoryRef.signal
             });
             if (isCategoryOutputDTO(response.data)) {
