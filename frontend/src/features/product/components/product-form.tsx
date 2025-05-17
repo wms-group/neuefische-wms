@@ -5,6 +5,7 @@ import {clsx} from "clsx";
 import Card from "@/components/shared/card.tsx";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import Button from "@/components/ui/button";
 
 type ProductFormProps = {
     onSubmit: (product: ProductInputDTO) => Promise<unknown>;
@@ -40,22 +41,21 @@ export default function ProductForm({ onSubmit, className, defaultCategoryId }: 
 
     const formRef = useRef<HTMLFormElement>(null);
 
-    const categories = useCategoriesContext().categories;
+    const {categories, loading} = useCategoriesContext();
 
     return (
         <Card
             title={"Neues Produkt"}
             className={cn(className, "max-w-2xl")}
-            /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-            actions={<button type="button" onClick={_e => formRef.current?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))} className="rounded w-fit h-fit bg-gray-600 px-4 py-2 text-sm text-white data-hover:bg-gray-500 data-hover:data-active:bg-gray-700">
+            actions={<Button onClick={() => formRef.current?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))}>
                 hinzufügen
-            </button>}
+            </Button>}
         >
             <form
                 ref={(ref) => {
                     formRef.current = ref
                 }}
-                className={cn("flex gap-1 flex-row justify-between items-end", className)}
+                className={cn("flex gap-1 flex-row justify-between items-endopacity-100 transition-opacity duration-200", className)} style={{ opacity: loading ? 0.5 : 1 }}
                 onSubmit={handleSubmit}>
                     <div className="h-full grow flex-basis-40">
                         <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
