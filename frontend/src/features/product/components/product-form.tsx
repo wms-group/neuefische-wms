@@ -12,7 +12,7 @@ type ProductFormProps = {
     className?: string;
 }
 
-export default function ProductForm({ onSubmit, className, defaultCategoryId }: ProductFormProps) {
+export default function ProductForm({ onSubmit, className, defaultCategoryId }: Readonly<ProductFormProps>) {
     const [product, setProduct] = useState<ProductInputDTO>({
         name: "",
         categoryId: defaultCategoryId,

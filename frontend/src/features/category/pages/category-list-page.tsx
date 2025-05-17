@@ -32,7 +32,7 @@ const CategoryListPage = () => {
             <h2 className={"flex flew-row"}>{category ? (<><Link to={"/categories/" + (category.parentId ?? "")}><ChevronLeft/></Link>{category?.name}</>) : (<>Kategorien</>)}</h2>
             {category && <CategoryBreadcrumbs category={category} />}
             <CategoryForm onSubmit={handleSubmitCategory} defaultParentId={categoryId ?? null}/>
-            <CategoryList parentId={category?.id || null} />
+            <CategoryList parentId={category?.id ?? null} />
             <Toaster />
         </div>
     )

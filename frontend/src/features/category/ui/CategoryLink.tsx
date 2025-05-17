@@ -12,11 +12,11 @@ type CategoryLinkProps = PropsWithChildren<{
 }>
 
 const CategoryLink = ({category, to, children, basePath, className, withBrackets}: CategoryLinkProps) => {
-    const path = (basePath || "/categories") + "/" + (category?.id ?? "");
+    const path = (basePath ?? "/categories") + "/" + (category?.id ?? "");
     const showBrackets = withBrackets === undefined ? true : withBrackets;
 
     return (
-        <Link to={to || path} className={cn("text-indigo-900 underline", showBrackets && "before:content-['['] after:content-[']']", className)}>{children ?? category?.name}</Link>
+        <Link to={to ?? path} className={cn("text-indigo-900 underline", showBrackets && "before:content-['['] after:content-[']']", className)}>{children ?? category?.name}</Link>
     )
 }
 

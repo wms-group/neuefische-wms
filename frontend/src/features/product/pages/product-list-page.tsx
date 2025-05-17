@@ -63,7 +63,9 @@ const ProductListPage = () => {
             {category && <CategoryBreadcrumbs category={category} basePath={"/products/category"} rootName={"Produkte"} rootPath={"/products"}/>}
             <ProductForm onSubmit={handleSubmitProduct} defaultCategoryId={categoryId ?? ""}/>
             <CategoryCardWithSubcategories category={category ?? null} basePath={"/products/category"}>
-                {products.length === 0 ? "Keine Produkte" : products.length + " Produkt" + (products.length > 1 ? "e" : "")}
+                {products.length === 0 && "Keine Produkte"}
+                {products.length === 1 && "Ein Produkt"}
+                {products.length > 1 && products.length + " Produkte"}
             </CategoryCardWithSubcategories>
             <ProductList products={products} categoryId={category?.id ?? null} />
             <Toaster />

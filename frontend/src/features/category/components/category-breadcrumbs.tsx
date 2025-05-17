@@ -20,10 +20,10 @@ export default function CategoryBreadcrumbs({category, rootName, rootPath, appen
         category.parentId === null ? (
             <div className={cn("flex items-center breadcrumbs text-sm", className)}>
                 <span><CategoryLink
-                    basePath={rootPath || basePath}
+                    basePath={rootPath ?? basePath}
                     withBrackets={false}
                 >
-                    {rootName || "Kategorien"}
+                    {rootName ?? "Kategorien"}
                 </CategoryLink></span>
                 <span>&nbsp;&gt;&nbsp;</span>
                 <span><CategoryLink
