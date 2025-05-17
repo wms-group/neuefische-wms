@@ -3,7 +3,6 @@ package com.wmsgroup.neuefische_wms.controller;
 import com.wmsgroup.neuefische_wms.model.user.User;
 import com.wmsgroup.neuefische_wms.model.user.dto.UserRequestDto;
 import com.wmsgroup.neuefische_wms.model.user.dto.UserResponseDto;
-import com.wmsgroup.neuefische_wms.exception.UserAlreadyExistException;
 import com.wmsgroup.neuefische_wms.exception.UserNotFoundException;
 import com.wmsgroup.neuefische_wms.model.user.dto.UserDto;
 import com.wmsgroup.neuefische_wms.service.IdService;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
