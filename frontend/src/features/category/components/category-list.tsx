@@ -1,25 +1,24 @@
-import {CategoryOutputDTO} from "@/types";
 import {CategoryCard} from "@/features/category";
 import {cn} from "@/utils";
+import { useCategoriesContext } from "@/context/CategoriesContext";
 
 export type CategoryListProps = {
-    categories: CategoryOutputDTO[]
     className?: string;
     parentId?: string | null;
 };
 
-export default function CategoryList({categories, parentId, className}: CategoryListProps = {
-    categories: []
-}) {
+export default function CategoryList({parentId, className}: CategoryListProps) {
+    const {getCategoriesByParentId} = useCategoriesContext();
+    const categories = getCategoriesByParentId(parentId ?? null);
+
     return (
-        <div className={cn("category-list flex flex-col gap-2", className)}>
+        categories && <div className={cn("category-list flex flex-col gap-2", className)}>
             { categories
-                .filter(category => parentId === undefined || category.parentId === parentId)
                 .map(category => (
                         <div key={category.id} className="category-list-item">
                             <CategoryCard
                                 category={category}
-                                countSubCategories={categories.filter(subCategory => subCategory.parentId === category.id).length}
+                                countSubCategories={getCategoriesByParentId(category.id).length}
                             />
                         </div>
                 )

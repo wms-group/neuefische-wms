@@ -25,6 +25,10 @@ export default function useCategories() {
         setState(prev => ({ ...prev, categories: categoriesOrSetter(prev.categories) }));
     }
 
+    function getCategoriesByParentId(parentId: string | null): CategoryOutputDTO[] {
+        return state.categories.filter(c => c.parentId === parentId);
+    }
+
     function setError(error: string | null) {
         setState(prev => ({ ...prev, error }));
     }
@@ -66,6 +70,7 @@ export default function useCategories() {
 
     return {
         categories: state.categories,
+        getCategoriesByParentId,
         loading: state.loading,
         error: state.error,
         addCategory,

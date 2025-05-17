@@ -73,6 +73,7 @@ export type UserDto = {
     role: Role;
     password?: string;
 };
+
 export interface CategoryOutputDTO {
     id: string;
     name: string;
@@ -93,6 +94,28 @@ export function isCategoryOutputDTO(obj: unknown): obj is CategoryOutputDTO {
 export interface CategoryInputDTO {
     name: string;
     parentId?: string | null;
+}
+
+export interface ProductOutputDTO {
+    id: string;
+    name: string;
+    categoryId: string;
+    price: string;
+}
+
+export function isProductOutputDTO(obj: unknown): obj is ProductOutputDTO {
+    return typeof obj === "object" && obj !== null &&
+        "id" in obj && "name" in obj && "categoryId" in obj && "price" in obj &&
+        typeof obj.id === "string" &&
+        typeof obj.name === "string" &&
+        typeof obj.categoryId === "string" &&
+        typeof obj.price === "string";
+}
+
+export interface ProductInputDTO {
+    name: string;
+    categoryId: string;
+    price: string;
 }
 
 export interface SelectOption {

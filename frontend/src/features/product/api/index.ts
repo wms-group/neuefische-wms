@@ -1,4 +1,1 @@
-/*
-* fetchProducts
-* getProductById
-* */
+export { default as CategoriesApi } from "./ProductApi.ts";

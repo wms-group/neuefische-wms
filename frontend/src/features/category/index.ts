@@ -1,4 +1,3 @@
-export { default as CategoryDetailPage } from "./pages/category-detail-page.tsx";
 export { default as CategoryListPage } from "./pages/category-list-page.tsx";
 export { default as CategoryCard } from "./components/category-card.tsx";
 export { default as CategoryCardWithSubcategories } from "./components/category-card-with-subcategories.tsx";
