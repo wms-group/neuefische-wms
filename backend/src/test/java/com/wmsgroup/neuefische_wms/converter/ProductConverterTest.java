@@ -4,6 +4,8 @@ import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.ProductInputDTO;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductConverterTest {
@@ -43,5 +45,19 @@ class ProductConverterTest {
         // Das Lombok-@NonNull auf dem name-Parameter erzeugt bei Übergabe von null automatisch eine NullPointerException
         //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> new ProductInputDTO(null, null, "10.00"));
+    }
+
+    @Test
+    void testInstantiationFails() {
+        InvocationTargetException exception = assertThrows(
+                InvocationTargetException.class,
+                () -> {
+                    // via Reflection Instanziierung erzwingen, da Konstruktor privat ist
+                    var constructor = ProductConverter.class.getDeclaredConstructor();
+                    constructor.setAccessible(true);
+                    constructor.newInstance();
+                }
+        );
+        assertInstanceOf(UnsupportedOperationException.class, exception.getCause());
     }
 }

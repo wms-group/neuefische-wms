@@ -4,6 +4,7 @@ import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,4 +81,17 @@ class CategoryOutputDTOConverterTest {
             CategoryOutputDTOConverter.convert((List<Category>) null); });
     }
 
+    @Test
+    void testInstantiationFails() {
+        InvocationTargetException exception = assertThrows(
+                InvocationTargetException.class,
+                () -> {
+                    // via Reflection Instanziierung erzwingen, da Konstruktor privat ist
+                    var constructor = CategoryOutputDTOConverter.class.getDeclaredConstructor();
+                    constructor.setAccessible(true);
+                    constructor.newInstance();
+                }
+        );
+        assertInstanceOf(UnsupportedOperationException.class, exception.getCause());
+    }
 }

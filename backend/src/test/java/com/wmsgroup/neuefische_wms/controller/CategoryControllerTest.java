@@ -5,6 +5,7 @@ import com.wmsgroup.neuefische_wms.converter.CategoryOutputDTOConverter;
 import com.wmsgroup.neuefische_wms.model.Category;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
+import com.wmsgroup.neuefische_wms.model.dto.ErrorDTO;
 import com.wmsgroup.neuefische_wms.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,6 +72,25 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testAddCategoryWithNoName() throws Exception {
+        Map<String, String> inputDTO = Map.of(
+                "parentId", "2"
+        );
+
+        String jsonString = mockMvc.perform(post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(inputDTO)))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        ErrorDTO result = objectMapper.readValue(jsonString, ErrorDTO.class);
+
+        assertThat(result)
+                .isNotNull()
+                .hasFieldOrPropertyWithValue("error", "NullPointerException")
+                .hasFieldOrPropertyWithValue("message", "name is marked non-null but is null");
     }
 
     @Test
