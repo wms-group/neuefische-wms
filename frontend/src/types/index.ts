@@ -106,20 +106,38 @@ export interface SelectGroup {
 }
 
 export interface Hall {
-  id: string;
-  name: string;
-  aisleIds: string[];
+    id: string;
+    name: string;
+    aisleIds: string[];
 }
 
 export interface HallContextType {
-  halls: Hall[];
-  isLoading: boolean;
-  error: string | null;
+    halls: Hall[];
+    isLoading: boolean;
+    error: string | null;
     fetchHalls: () => Promise<Hall[] | undefined>;
     fetchHall: (id: string) => Promise<Hall | undefined>;
     addHall: (hall: Omit<Hall, 'id'>) => Promise<Hall | undefined>;
     updateHall: (updatedHall: Partial<Hall>) => Promise<Hall | undefined>;
-  removeHall: (id: string) => Promise<void>;
+    removeHall: (id: string) => Promise<void>;
+}
+
+export type Aisle = {
+    id: string;
+    name: string;
+    categoryIds: string[];
+    stockIds: string[];
+}
+
+export interface AisleContextType {
+    aisles: Aisle[];
+    isLoading: boolean;
+    error: string | null;
+    fetchAisles: () => Promise<Aisle[] | undefined>;
+    fetchAisle: (id: string) => Promise<Aisle | undefined>;
+    addAisle: (aisle: Omit<Aisle, 'id'>) => Promise<Aisle | undefined>;
+    updateAisle: (updatedAisle: Partial<Aisle>) => Promise<Aisle | undefined>;
+    removeAisle: (id: string) => Promise<void>;
 }
 
 export interface ErrorDTO {
