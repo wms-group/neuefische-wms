@@ -115,9 +115,10 @@ export interface HallContextType {
   halls: Hall[];
   isLoading: boolean;
   error: string | null;
-  fetchHalls: () => Promise<void>;
-  addHall: (hall: Omit<Hall, 'id'>) => Promise<void>;
-  updateHall: (updatedHall: Partial<Hall>) => Promise<void>;
+    fetchHalls: () => Promise<Hall[] | undefined>;
+    fetchHall: (id: string) => Promise<Hall | undefined>;
+    addHall: (hall: Omit<Hall, 'id'>) => Promise<Hall | undefined>;
+    updateHall: (updatedHall: Partial<Hall>) => Promise<Hall | undefined>;
   removeHall: (id: string) => Promise<void>;
 }
 

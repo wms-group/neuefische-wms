@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Hall } from "@/types";
 import { useNavigate, useParams } from "react-router-dom";
 import LayoutContainer from "@/components/shared/layout-container.tsx";
 import { Hall } from "@/types";
@@ -6,13 +7,30 @@ import { useHalls } from "@/features/halls";
 
 
 const HallEditPage = () => {
-    const { halls, addHall, updateHall } = useHalls();
+    const { addHall, updateHall, fetchHall } = useHalls();
     const { id } = useParams();
     const navigate = useNavigate();
 
     const isCreationPage = id === undefined;
     
-    const hall = halls.find((h) => h.id === id) ?? {id: "", name: "", aisleIds: [] };
+    const [hall, setHall] = useState<Hall>(
+         { id: "", name: "", aisleIds: [] }
+    );
+    const [loading, setLoading] = useState(!isCreationPage);
+
+    useEffect(() => {
+        if (!isCreationPage && id) {
+            setLoading(true);
+            fetchHall(id)
+                .then((fetchedHall: Hall | undefined) => {
+                    if (fetchedHall) {
+                        setHall(fetchedHall);
+                    }
+                })
+                .finally(() => setLoading(false));
+        }
+    }, [id, isCreationPage, fetchHall]);
+
 
     const [ editedHall, setEditedHall ] = useState<Hall>(hall);
 
@@ -28,34 +46,42 @@ const HallEditPage = () => {
     }
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        
-        setEditedHall({ ...editedHall, name: event.target.value });
+        setHall({ ...hall, name: event.target.value });
     };
 
-    return <LayoutContainer>
+    if (loading) {
+        return (
+            <LayoutContainer>
+                <div>Loading...</div>
+            </LayoutContainer>
+        );
+    }
+
+    return (
+        <LayoutContainer>
         <form className="flex-col" onSubmit={handleSubmit}>
-            <h2 className="text-xl mb-4">New Hall</h2>
+                <h2 className="text-xl mb-4">{isCreationPage ? "New Hall" : "Edit Hall"}</h2>
             <label>
             Hall Name: 
-                <input value={editedHall.name} 
+                    <input
+                        value={hall.name}
                     onChange={handleNameChange}
-                    className="mb-4 px-2 py-1 border rounded">
-                    
-                </input>
+                        className="mb-4 px-2 py-1 border rounded"
+                    />
             </label>
 
             {/* TODO: Aisle editing will go here */}
 
-            <button type="submit" 
+                <button
+                    type="submit"
             className="mb-4 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-blue-300"
-            disabled={editedHall.name === ""}>
-                { isCreationPage ? "AddHall" : "Edit" }
+                    disabled={hall.name === ""}
+                >
+                    {isCreationPage ? "Add" : "Apply Changes"}
             </button>
-
-
         </form>
-
-    </LayoutContainer>;
+        </LayoutContainer>
+    );
 };
 
 export default HallEditPage;

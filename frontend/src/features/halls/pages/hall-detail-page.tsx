@@ -1,11 +1,21 @@
+import { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
+import { Hall } from "@/types";
 import LayoutContainer from "@/components/shared/layout-container.tsx";
 import { useHalls } from "@/features/halls";
 
 const HallDetailPage = () => {
-    const { halls } = useHalls();
+    const { fetchHall } = useHalls();
     const { id } = useParams();
-    const hall = halls.find((h) => h.id === id);
+    const [hall, setHall] = useState<Hall | undefined>(undefined);
+
+    useEffect(() => {
+        const fetch = async () => {
+            const result = await fetchHall(id || "");
+            setHall(result);
+        };
+        fetch();
+    }, [fetchHall, id]);
 
     return <LayoutContainer>
         <div className="flex justify-between h-max">
