@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -143,5 +142,99 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].id").value("2"))
                 .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].parentId").value("1"))
                 ;
+    }
+
+    @Test
+    void testUpdateCategoryWithValidInput() throws Exception {
+        categoryRepository.save(Category.builder().id("9").name("Laptops").build());
+
+        CategoryInputDTO updateDTO = new CategoryInputDTO("Notebooks", null);
+
+        String jsonString = mockMvc.perform(put("/api/categories/9")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value("9"))
+                .andExpect(jsonPath("$.name").value("Notebooks"))
+                .andReturn().getResponse().getContentAsString();
+
+        CategoryOutputDTO result = objectMapper.readValue(jsonString, CategoryOutputDTO.class);
+        Category category = categoryRepository.findById(result.id()).orElse(null);
+
+        assertThat(category)
+                .isNotNull()
+                .matches(c -> c.getName().equals("Notebooks"));
+    }
+
+    @Test
+    void testUpdateCategoryWithNonExistingId_shouldReturnBadRequest() throws Exception {
+        CategoryInputDTO updateDTO = new CategoryInputDTO("NonExistent", null);
+
+        String jsonString = mockMvc.perform(put("/api/categories/777")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        ErrorDTO result = objectMapper.readValue(jsonString, ErrorDTO.class);
+
+        assertThat(result)
+                .isNotNull()
+                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+    }
+
+    @Test
+    void testUpdateCategoryWithNonExistingParentId_shouldReturnBadRequest() throws Exception {
+        categoryRepository.save(Category.builder().id("1").name("Electronics").build());
+
+        CategoryInputDTO updateDTO = new CategoryInputDTO("Changed Name", "777");
+
+        String jsonString = mockMvc.perform(put("/api/categories/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        ErrorDTO result = objectMapper.readValue(jsonString, ErrorDTO.class);
+
+        assertThat(result)
+                .isNotNull()
+                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+    }
+
+    @Test
+    void testUpdateCategoryWithInvalidName_shouldReturnBadRequest() throws Exception {
+        categoryRepository.save(Category.builder().id("3").name("Haushalt").build());
+
+        CategoryInputDTO updateDTO = new CategoryInputDTO("", null);
+
+        mockMvc.perform(put("/api/categories/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testDeleteCategoryWithExistingId() throws Exception {
+        categoryRepository.save(Category.builder().id("15").name("Bücher").build());
+
+        mockMvc.perform(delete("/api/categories/15"))
+                .andExpect(status().isNoContent());
+
+        assertThat(categoryRepository.findById("15")).isEmpty();
+    }
+
+    @Test
+    void testDeleteCategoryWithNonExistingId_shouldReturnBadRequest() throws Exception {
+        String jsonString = mockMvc.perform(delete("/api/categories/654"))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        ErrorDTO result = objectMapper.readValue(jsonString, ErrorDTO.class);
+
+        assertThat(result)
+                .isNotNull()
+                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
     }
 }
