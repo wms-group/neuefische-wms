@@ -15,7 +15,8 @@ const HallDetailPage = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const result = await fetchHall(id || "");
+            const hallId = id === undefined ? "" : id;
+            const result = await fetchHall(hallId);
             setHall(result);
         };
         fetch();

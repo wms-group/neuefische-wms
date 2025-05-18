@@ -28,7 +28,7 @@ const HallListPage = () => {
 
             <ul className="flex flex-col gap-2">
                 {halls.map((h: Hall) => 
-                    <Card title={(<NavLink to={h.id} key={h.id}>{h.name}</NavLink>)} 
+                    <Card key={h.id} title={(<NavLink to={h.id} key={h.id}>{h.name}</NavLink>)} 
                         actions={(<Button label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}
                     >
                         <div>Aisle Count: {h.aisleIds.length}</div>

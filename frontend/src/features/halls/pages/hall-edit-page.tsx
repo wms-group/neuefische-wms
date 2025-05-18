@@ -13,11 +13,9 @@ const HallEditPage = () => {
 
     const isCreationPage = id === undefined;
 
-    const [hall, setHall] = useState<Hall>(
-        isCreationPage
-            ? { id: "", name: "", aisleIds: [] }
-            : { id: "", name: "", aisleIds: [] }
-    );
+    const [hall, setHall] = useState<Hall>({ 
+        id: "", name: "", aisleIds: [] 
+    });
     const [loading, setLoading] = useState(!isCreationPage);
 
     useEffect(() => {
@@ -58,9 +56,10 @@ const HallEditPage = () => {
     const setAisles = (aisles: Aisle[]) => {
         const newAisleIds = aisles.map(a => a.id);
         const hasDiff =
-            hall.aisleIds.length !== newAisleIds.length ||
-            hall.aisleIds.some(id => !newAisleIds.includes(id)) ||
-            newAisleIds.some(id => !hall.aisleIds.includes(id));
+            (hall.aisleIds?.length ?? 0) !== (newAisleIds?.length ?? 0) ||
+            (hall.aisleIds ?? []).some(id => !(newAisleIds ?? []).includes(id)) ||
+            (newAisleIds ?? []).some(id => !(hall.aisleIds ?? []).includes(id));
+            
         if (hasDiff) {
             setHall({ ...hall, aisleIds: newAisleIds });
             setHallAisles(aisles);

@@ -26,18 +26,18 @@ const CategoryPill = ({category, navigates, actions}: CategoryPillProps) => {
         }
     };
   return (
-    <span
+    <button
       className={`inline-flex items-center rounded-full bg-gray-100 text-gray-800 px-3 py-1 font-medium mr-2 select-none transition
         ${navigates ? 'cursor-pointer hover:bg-gray-200 focus:ring-2 focus:ring-gray-400' : 'cursor-default'}
       `}
       onClick={navigates ? handleClick : undefined}
       tabIndex={navigates ? 0 : -1}
-      role={navigates ? "button" : undefined}
+      disabled={!navigates}
       aria-label={category.name}
     >
       {category.name}
       {actions && <span className="ml-2 flex items-center">{actions}</span>}
-    </span>
+    </button>
   )
 }
 
