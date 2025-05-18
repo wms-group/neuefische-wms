@@ -37,7 +37,7 @@ class AisleManagementServiceTest {
 	@Test
 	void createAisle_returnsAisle_withCorrectDTO() {
 		String id = "A1";
-		AisleCreationDTO dto = new AisleCreationDTO("New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+		AisleCreationDTO dto = new AisleCreationDTO("New Aisle", List.of("C1", "C2"));
 		Aisle expected = Aisle.of(dto).withId(id);
 
 		when(idService.generateId()).thenReturn(id);

@@ -70,7 +70,7 @@ class AisleControllerTest {
 
 	@Test
 	void createAisle_createsAisle_whenCalled() throws Exception {
-		AisleCreationDTO creationDto = new AisleCreationDTO("New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+		AisleCreationDTO creationDto = new AisleCreationDTO("New Aisle", List.of("C1", "C2"));
 
 		String response = mvc.perform(post(uri)
 				.contentType(MediaType.APPLICATION_JSON)
