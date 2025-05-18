@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -134,6 +133,26 @@ class CategoryServiceTest {
         );
         assertEquals("Category with id notFound does not exist", ex.getMessage());
         verify(categoryRepository).existsById(categoryId);
+        verify(categoryRepository, never()).save(any());
+    }
+
+    @Test
+    void updateCategory_shouldThrowIllegalArgumentException_whenParentCategoryDoesNotExist() {
+        // Given
+        String categoryId = "cat-1";
+        String parentCategoryId = "not-found";
+        CategoryInputDTO inputDTO = new CategoryInputDTO("newname", parentCategoryId);
+
+        when(categoryRepository.existsById(categoryId)).thenReturn(true);
+        when(categoryRepository.existsById(parentCategoryId)).thenReturn(false);
+
+        // When/Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> categoryService.updateCategory(categoryId, inputDTO)
+        );
+        assertEquals("Parent category with id not-found does not exist", ex.getMessage());
+        verify(categoryRepository).existsById(categoryId);
+        verify(categoryRepository).existsById(parentCategoryId);
         verify(categoryRepository, never()).save(any());
     }
 

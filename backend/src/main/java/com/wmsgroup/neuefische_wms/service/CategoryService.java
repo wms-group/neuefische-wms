@@ -40,6 +40,9 @@ public class CategoryService {
         if (!categoryRepository.existsById(id)) {
             throw new IllegalArgumentException(String.format("Category with id %s does not exist", id));
         }
+        if (categoryInputDTO.parentId() != null && !categoryRepository.existsById(categoryInputDTO.parentId())) {
+            throw new IllegalArgumentException(String.format("Parent category with id %s does not exist", categoryInputDTO.parentId()));
+        }
         if (categoryInputDTO.name().isBlank()) {
             throw new IllegalArgumentException("Name must not be blank");
         }
