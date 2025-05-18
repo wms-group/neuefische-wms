@@ -9,7 +9,7 @@ import Button from '@/components/ui/button';
 type CreationProps = {
     aisle: Aisle,
     categories: CategoryOutputDTO[],
-    onSubmit: (aisle: Aisle) => Promise<Aisle | unknown>,
+    onSubmit: (aisle: Aisle) => Promise<Aisle>,
     creates: true,
     actions?: ReactNode
 }
@@ -17,7 +17,7 @@ type CreationProps = {
 type UpdateProps = {
     aisle: Aisle,
     categories: CategoryOutputDTO[],
-    onSubmit: (aisle: Aisle) => Promise<Aisle | unknown>,
+    onSubmit: (aisle: Aisle) => Promise<Aisle>,
     creates?: boolean,
     actions?: ReactNode
 }
@@ -116,13 +116,14 @@ const EditableAisleCard = ({ aisle, categories, onSubmit, creates, actions }: Pr
                             </div>
 
                             <div className="h-full grow flex-basis-60">
-                                <label className={cn("text-sm/6 font-medium text-gray")}>Kategorie hinzufügen:</label>
-                                <SearchableSelect
-                                            name="categoryId"
-                                            options={selectGroupsFromCategoryOutputDTOs(categories)}
-                                            onChange={(newValue) => handleSelect({target: {name: 'parentId', value: newValue?.value}} as unknown as React.ChangeEvent<HTMLInputElement>)}
-                                            value={""}
-                                            />
+                                <label className={cn("text-sm/6 font-medium text-gray")}>Kategorie hinzufügen:
+                                    <SearchableSelect
+                                                name="categoryId"
+                                                options={selectGroupsFromCategoryOutputDTOs(categories)}
+                                                onChange={(newValue) => handleSelect({target: {name: 'parentId', value: newValue?.value}} as unknown as React.ChangeEvent<HTMLInputElement>)}
+                                                value={""}
+                                                />
+                                </label>
                             </div>
                     </form>
                     <div className='flex flex-wrap gap-0.5'> 

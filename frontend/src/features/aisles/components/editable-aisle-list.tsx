@@ -27,20 +27,24 @@ const EditableAisleList = ({ aisles, setAisles }: EditableListProps) => {
         ]);
     }
 
-    const handleEditSubmit = async (aisle: Aisle): Promise<Aisle | undefined> => {
-        return await updateAisle(aisle);
+    const handleEditSubmit = async (aisle: Aisle): Promise<Aisle> => {
+        const updatedAisle = await updateAisle(aisle);
+        if (!updatedAisle) {
+            throw new Error("Failed to update aisle");
+        }
+        return updatedAisle;    
     }
 
-    const handleCreateSubmit = async (aisle: Aisle): Promise<Aisle | undefined> => {
+    const handleCreateSubmit = async (aisle: Aisle): Promise<Aisle> => {
         const createdAisle = await addAisle(aisle);
-        if(createdAisle === undefined) {
-            return createdAisle;
+        if (!createdAisle) {
+            throw new Error("Failed to create aisle");
         }
-
         setAisles([
             createdAisle,
             ...aisles
         ]);
+        return createdAisle;
     }
 
     return (
