@@ -22,11 +22,11 @@ public class CategoryService {
     }
 
     public CategoryOutputDTO addCategory(@NonNull CategoryInputDTO categoryInputDTO) {
-        if (categoryInputDTO.parentId() != null && !categoryRepository.existsById(categoryInputDTO.parentId())) {
-            throw new IllegalArgumentException(String.format("Category for parentId %s does not exist", categoryInputDTO.parentId()));
-        }
         if (categoryInputDTO.name().isBlank()) {
             throw new IllegalArgumentException("Name must not be blank");
+        }
+        if (categoryInputDTO.parentId() != null && !categoryRepository.existsById(categoryInputDTO.parentId())) {
+            throw new IllegalArgumentException(String.format("Parent category with id %s does not exist", categoryInputDTO.parentId()));
         }
         return CategoryOutputDTOConverter.convert(
                 categoryRepository.save(
@@ -34,5 +34,27 @@ public class CategoryService {
                                 .withId(idService.generateId())
                 )
         );
+    }
+
+    public CategoryOutputDTO updateCategory(@NonNull String id, @NonNull CategoryInputDTO categoryInputDTO) {
+        if (!categoryRepository.existsById(id)) {
+            throw new IllegalArgumentException(String.format("Category with id %s does not exist", id));
+        }
+        if (categoryInputDTO.name().isBlank()) {
+            throw new IllegalArgumentException("Name must not be blank");
+        }
+        return CategoryOutputDTOConverter.convert(
+                categoryRepository.save(
+                        CategoryConverter.convert(categoryInputDTO)
+                                .withId(id)
+                )
+        );
+    }
+
+    public void deleteCategory(@NonNull String id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new IllegalArgumentException(String.format("Category with id %s does not exist", id));
+        }
+        categoryRepository.deleteById(id);
     }
 }
