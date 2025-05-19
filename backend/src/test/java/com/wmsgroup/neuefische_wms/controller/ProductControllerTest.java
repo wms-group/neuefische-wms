@@ -121,19 +121,19 @@ class ProductControllerTest {
 
     @Test
     void testGetAllProducts() throws Exception {
-        productRepository.save(Product.builder().id("1").name("Electronics").categoryId("cat-1").price(BigDecimal.TEN).build());
-        productRepository.save(Product.builder().id("2").name("Smartphones").categoryId("cat-1").price(BigDecimal.ONE).build());
+        Product product1 = Product.builder().id("1").name("Electronics").categoryId("cat-1").price(BigDecimal.TEN).build();
+        Product product2 = Product.builder().id("2").name("Smartphones").categoryId("cat-1").price(BigDecimal.ONE).build();
+        productRepository.save(product1);
+        productRepository.save(product2);
 
-        mockMvc.perform(get("/api/products"))
+        string response = mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$.[?(@.name == 'Electronics')].id").value("1"))
-                .andExpect(jsonPath("$.[?(@.name == 'Electronics')].categoryId").value("cat-1"))
-                .andExpect(jsonPath("$.[?(@.name == 'Electronics')].price").value("10,00"))
-                .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].id").value("2"))
-                .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].categoryId").value("cat-1"))
-                .andExpect(jsonPath("$.[?(@.name == 'Smartphones')].price").value("1,00"))
-                ;
+                .andReturn().getResponse().getContentAsString();
+                
+        List<Product> expected = List.of(product1, product2);
+        List<Product> actual = objectMapper.readValue(response, new TypeReference<List<Product>>() {});
+        assertThat(actual).
+             containsExactlyInAnyOrderElementsOf(expected);
     }
 }
