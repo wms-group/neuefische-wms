@@ -22,13 +22,13 @@ const ButtonWithSelect: React.FC<ButtonWithSelectProps> = ({
 
     return (
         <div className={ "flex flex-row gap-0 m-0 p-0 flex-nowrap relative"}>
-            {label && <div className={cn("absolute w-54 z-1 text-xs text-black/30 px-2.5 text-nowrap")}>{label}</div>}
             <SearchableSelect
-                className={cn("rounded-e-none z-0 py-2.5 h-full grow basis-full min-w-54", selectClassName)}
+                className={cn("rounded-e-none py-2.5 h-full grow basis-full min-w-54", selectClassName)}
                 emptyLabel={emptyLabel}
                 onChange={onChange}
                 value={selectValue}
                 {...props} />
+            {label && <div className={cn("absolute w-54 text-xs text-black/30 px-2.5 text-nowrap")}>{label}</div>}
             <Button
                 className={cn("rounded-s-none shrink", className)}
                 onClick={onClick}
