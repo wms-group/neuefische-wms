@@ -21,10 +21,17 @@ public class CategoryService {
     private final ProductRepository productRepository;
     private final IdService idService;
 
-    private static final String CATEGORY_NOT_FOUND_MESSAGE = "Category with id %s not found";
+    private static final String CATEGORY_NOT_FOUND_MESSAGE = "Category with id %s does not exist";
 
     public List<CategoryOutputDTO> getAllCategories() {
-        return CategoryOutputDTOConverter.convert(categoryRepository.findAll());
+        return CategoryOutputDTOConverter.convert(categoryRepository.findAll())
+                .stream()
+                .map(categoryOutputDTO ->
+                        categoryOutputDTO
+                                .withCountSubCategories(categoryRepository.countByParentId(categoryOutputDTO.id()))
+                                .withCountProducts(productRepository.countByCategoryId(categoryOutputDTO.id()))
+
+                ).toList();
     }
 
     public CategoryOutputDTO addCategory(@NonNull CategoryInputDTO categoryInputDTO) {

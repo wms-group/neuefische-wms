@@ -137,6 +137,10 @@ export default function useProduct() {
             .finally(() => setLoading(false));
     }
 
+    const flushProducts = () => {
+        setProducts([]);
+    }
+
     return {
         products: state.products,
         getProductsByCategoryId,
@@ -144,6 +148,7 @@ export default function useProduct() {
         error: state.error,
         addProduct,
         updateProduct,
-        deleteProduct
+        deleteProduct,
+        flushProducts,
     };
 }

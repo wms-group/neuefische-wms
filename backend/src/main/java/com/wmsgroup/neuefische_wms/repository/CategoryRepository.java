@@ -8,4 +8,5 @@ import java.util.List;
 public interface CategoryRepository extends MongoRepository<Category, String> {
     List<Category> findAllByParentId(String parentId);
     void deleteAllByParentId(String parentId);
+    int countByParentId(String parentId);
 }

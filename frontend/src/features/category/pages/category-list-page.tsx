@@ -6,13 +6,15 @@ import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 import {Link, useParams} from "react-router-dom";
 import {ChevronLeft} from "lucide-react";
 import {useEffect, useState} from "react";
+import {useProductContext} from "@/context/products/useProductContext.ts";
 
 const CategoryListPage = () => {
     const categoryId = useParams().categoryId;
 
     const [category, setCategory] = useState<CategoryOutputDTO | undefined>(undefined);
 
-    const {categories, addCategory, updateCategory, deleteCategory} = useCategoriesContext();
+    const {categories, addCategory, updateCategory, deleteCategory, flushCategories} = useCategoriesContext();
+    const {flushProducts} = useProductContext();
 
     const handleSubmitNewCategory = async (category: CategoryInputDTO) => {
         return toast.promise(addCategory(category),
@@ -26,18 +28,22 @@ const CategoryListPage = () => {
     const handleSubmitUpdatedCategory = async (category: CategoryInputDTO, categoryId: string) => {
         return toast.promise(updateCategory(category, categoryId),
             {
-                loading: "Speichere Produkt...",
-                success: "Produkt erfolgreich gespeichert.",
-                error: (reason: AxiosError) => "Speichern des Produkts fehlgeschlagen: " + reason.message
+                loading: "Speichere Kategorie...",
+                success: "Kategorie erfolgreich gespeichert.",
+                error: (reason: AxiosError) => "Speichern der Kategorie fehlgeschlagen: " + reason.message
             });
     }
 
     const handleDeleteCategory = async (categoryId: string, moveToCategory?: string) => {
-        return toast.promise(deleteCategory(categoryId, moveToCategory),
+        return toast.promise(deleteCategory(categoryId, moveToCategory)
+                .then(() => {
+                    flushCategories();
+                    flushProducts();
+                }),
             {
-                loading: "Lösche Produkt...",
-                success: "Produkt erfolgreich gelöscht.",
-                error: (reason: AxiosError) => "Löschen des Produkts fehlgeschlagen: " + reason.message
+                loading: "Lösche Kategorie...",
+                success: "Kategorie erfolgreich gelöscht.",
+                error: (reason: AxiosError) => "Löschen der Kategorie fehlgeschlagen: " + reason.message
             });
     }
     useEffect(() => {

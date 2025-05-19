@@ -49,7 +49,7 @@ class CategoryControllerTest {
     @Test
     void testAddCategoryWithValidInput() throws Exception {
         CategoryInputDTO inputDTO = new CategoryInputDTO("Electronics", null);
-        CategoryOutputDTO expectedResult = new CategoryOutputDTO("2", "Electronics", null);
+        CategoryOutputDTO expectedResult = new CategoryOutputDTO("2", "Electronics", null, 0, 0);
 
         String jsonString = mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +116,7 @@ class CategoryControllerTest {
         categoryRepository.save(Category.builder().id("2").name("Smartphones").build());
 
         CategoryInputDTO inputDTO = new CategoryInputDTO("Smartphones with Android", "2");
-        CategoryOutputDTO expectedResult = new CategoryOutputDTO("2", "Smartphones with Android", "2");
+        CategoryOutputDTO expectedResult = new CategoryOutputDTO("2", "Smartphones with Android", "2", 0, 0);
 
         String jsonString = mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -21,7 +21,7 @@ export default function CategoryList({parentId, className, onSubmit, onDelete}: 
                         <div key={category.id} className="category-list-item">
                             <CategoryCard
                                 category={category}
-                                countSubCategories={getCategoriesByParentId(category.id).length}
+                                countSubCategories={category.countSubCategories}
                                 onSubmit={onSubmit}
                                 onDelete={onDelete}
                             />

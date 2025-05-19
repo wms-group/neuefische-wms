@@ -78,12 +78,17 @@ export interface CategoryOutputDTO {
     id: string;
     name: string;
     parentId: string | null;
+    countSubCategories: number;
+    countProducts: number;
 }
 
 export function isCategoryOutputDTO(obj: unknown): obj is CategoryOutputDTO {
     return typeof obj === "object" && obj !== null &&
         "id" in obj && "name" in obj && "parentId" in obj &&
+        "countSubCategories" in obj && "countProducts" in obj &&
         typeof obj.id === "string" &&
+        typeof obj.countSubCategories === "number" &&
+        typeof obj.countProducts === "number" &&
         typeof obj.name === "string" &&
         (
             typeof obj.parentId === "string" ||

@@ -37,14 +37,6 @@ export default function useCategories() {
         setState(prev => ({ ...prev, loading }));
     }
 
-    useEffect(() => {
-        setLoading(true);
-        CategoriesApi.getAllCategories()
-            .then(setCategories)
-            .catch((e: { message: string | null; }) => setError(e.message))
-            .finally(() => setLoading(false));
-    }, []);
-
     const withAddedCategoryAtFirst = (categories: CategoryOutputDTO[], category: CategoryOutputDTO) => {
         return [category, ...categories.filter(d => d.id !== category.id)];
     }
@@ -109,6 +101,19 @@ export default function useCategories() {
             .finally(() => setLoading(false));
     }
 
+    const flushCategories = () => {
+        setLoading(true);
+        CategoriesApi.getAllCategories()
+            .then(setCategories)
+            .catch((e: { message: string | null; }) => setError(e.message))
+            .finally(() => setLoading(false));
+    }
+
+    useEffect(() => {
+        flushCategories()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return {
         categories: state.categories,
         getCategoriesByParentId,
@@ -116,6 +121,7 @@ export default function useCategories() {
         error: state.error,
         addCategory,
         deleteCategory,
-        updateCategory
+        updateCategory,
+        flushCategories
     };
 }

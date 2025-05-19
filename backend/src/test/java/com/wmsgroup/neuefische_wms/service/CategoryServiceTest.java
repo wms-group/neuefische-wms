@@ -41,7 +41,7 @@ class CategoryServiceTest {
         String generatedId = "new-id";
         Category testCategory = Category.builder().id(generatedId).name("Test Category").build();
         CategoryInputDTO inputDTO = new CategoryInputDTO("Test Category", null);
-        CategoryOutputDTO outputDTO = new CategoryOutputDTO(generatedId, "Test Category", null);
+        CategoryOutputDTO outputDTO = new CategoryOutputDTO(generatedId, "Test Category", null, 0, 0);
 
         when(idService.generateId()).thenReturn(generatedId);
         when(categoryRepository.save(any(Category.class))).thenReturn(testCategory);
@@ -91,11 +91,15 @@ class CategoryServiceTest {
                 Category.builder().id("id2").name("Cat2").parentId("id1").build()
         );
         List<CategoryOutputDTO> outputDTOs = List.of(
-                new CategoryOutputDTO("id1", "Cat1", null),
-                new CategoryOutputDTO("id2", "Cat2", "id1")
+                new CategoryOutputDTO("id1", "Cat1", null, 3, 1),
+                new CategoryOutputDTO("id2", "Cat2", "id1", 2, 0)
         );
 
         when(categoryRepository.findAll()).thenReturn(categories);
+        when(productRepository.countByCategoryId("id1")).thenReturn(3);
+        when(productRepository.countByCategoryId("id2")).thenReturn(2);
+        when(categoryRepository.countByParentId("id1")).thenReturn(1);
+        when(categoryRepository.countByParentId("id2")).thenReturn(0);
 
         // When
         List<CategoryOutputDTO> result = categoryService.getAllCategories();
@@ -111,7 +115,7 @@ class CategoryServiceTest {
         String categoryId = "cat-1";
         CategoryInputDTO inputDTO = new CategoryInputDTO("Updated", null);
         Category updatedCategory = Category.builder().id(categoryId).name("Updated").build();
-        CategoryOutputDTO outputDTO = new CategoryOutputDTO(categoryId, "Updated", null);
+        CategoryOutputDTO outputDTO = new CategoryOutputDTO(categoryId, "Updated", null, 0, 0);
 
         when(categoryRepository.existsById(categoryId)).thenReturn(true);
         when(categoryRepository.save(any(Category.class))).thenReturn(updatedCategory);

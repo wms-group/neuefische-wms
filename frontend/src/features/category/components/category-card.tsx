@@ -4,7 +4,6 @@ import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import Button from "@/components/ui/button.tsx";
 import {useEffect, useRef, useState} from "react";
 import CategoryLink from "@/features/category/ui/CategoryLink.tsx";
-import {useProductContext} from "@/context/products/useProductContext.ts";
 import {CategoryForm} from "@/features/category";
 import ButtonWithSelect from "@/components/ui/ButtonWithSelect.tsx";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
@@ -26,10 +25,11 @@ type CategoryActionsProps = {
     handleDelete: () => void;
     handleMoveTo: (value: SelectOption | null) => void;
     handleSubmitClicked: () => void;
+    value: string | null;
     categories: CategoryOutputDTO[];
 }
 
-const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, handleDelete, handleMoveTo, handleSubmitClicked, categories}: CategoryActionsProps)=> (
+const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, handleDelete, handleMoveTo, handleSubmitClicked, value, categories}: CategoryActionsProps)=> (
     <>
         <>{onSubmit && <EditOrSubmitButton
             isEditing={isEditing}
@@ -42,6 +42,7 @@ const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, h
             onClick={handleDelete}
             onChange={handleMoveTo}
             defaultValue={category.parentId ?? ""}
+            value={value}
             emptyLabel="Unterelemente löschen"
             options={selectGroupsFromCategoryOutputDTOs(categories.filter(c => c.id !== category.id))}
             className={cn("bg-red-300 text-white/90")}>
@@ -88,36 +89,31 @@ const CategoryContent = ({category, countSubCategories, countProducts}: Category
         </CategoryLink></>
 )
 
-const CategoryCard = ({category, countSubCategories, onDelete, onSubmit, className}: CategoryCardProps) => {
-    const {getProductsByCategoryId} = useProductContext();
-
+const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardProps) => {
     const {categories} = useCategoriesContext();
 
-    const [countProducts, setCountProducts] = useState<number>(0);
-
     useEffect(() => {
-        getProductsByCategoryId(category.id).then(products => setCountProducts(products.length));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        setMoveTo(category.parentId ?? null);
     }, [category]);
 
     const [isEditing, setIsEditing] = useState(false);
-    const [moveTo, setMoveTo] = useState<SelectOption | null>(null);
+    const [moveTo, setMoveTo] = useState<string | null>(null);
 
     const formRef = useRef<HTMLFormElement>(null);
 
     const handleDelete = () => {
         if (!onDelete) return Promise.resolve();
         setIsEditing(false);
-        if (!moveTo?.value || moveTo.value === "") return onDelete(category.id);
-        return onDelete(category.id, moveTo?.value);
+        if (!moveTo || moveTo === "") return onDelete(category.id);
+        return onDelete(category.id, moveTo);
     }
 
     const handleEdit = () => {
         setIsEditing(!isEditing);
     }
 
-    const handleMoveTo = (value: SelectOption | null) => {
-        setMoveTo(value);
+    const handleMoveTo = (option: SelectOption | null) => {
+        setMoveTo(option?.value ?? null);
     }
 
     const handleSubmitClicked = () => {
@@ -143,6 +139,7 @@ const CategoryCard = ({category, countSubCategories, onDelete, onSubmit, classNa
             handleDelete={handleDelete}
             handleMoveTo={handleMoveTo}
             handleSubmitClicked={handleSubmitClicked}
+            value={moveTo}
             categories={categories}
         />} className={cn(className, "max-w-2xl")}>
             {isEditing ?
@@ -153,8 +150,8 @@ const CategoryCard = ({category, countSubCategories, onDelete, onSubmit, classNa
                 /> :
                 <CategoryContent
                     category={category}
-                    countSubCategories={countSubCategories}
-                    countProducts={countProducts}
+                    countSubCategories={category.countSubCategories}
+                    countProducts={category.countProducts}
             />}
         </Card>
     )
