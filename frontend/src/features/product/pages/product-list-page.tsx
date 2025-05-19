@@ -57,11 +57,15 @@ const ProductListPage = () => {
                 });
     }
 
+    function withUpdatedProduct(products: ProductOutputDTO[], product: ProductOutputDTO) {
+        return products.map(p => p.id === product.id ? product : p);
+    }
+
     const handleSubmitUpdatedProduct = async (product: ProductInputDTO, productId: string) => {
         return toast.promise(updateProduct(product, productId)
                 .then(product => {
                     if (product) {
-                        setProducts(prev => prev.map(p => p.id === productId ? product : p));
+                        setProducts(prev => withUpdatedProduct(prev, product));
                     }
                     return product;
                 }),
@@ -72,10 +76,14 @@ const ProductListPage = () => {
                 });
     }
 
+    function withRemovedProduct(products: ProductOutputDTO[], productId: string) {
+        return products.filter(p => p.id !== productId);
+    }
+
     const handleDeleteProduct = async (productId: string) => {
         return toast.promise(deleteProduct(productId)
                 .then(() => {
-                    setProducts(prev => prev.filter(p => p.id !== productId));
+                    setProducts(prev => withRemovedProduct(prev, productId));
                 }),
                 {
                     loading: "Lösche Produkt...",
