@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findAllByCategoryId(String categoryId);
+    boolean existsByCategoryId(String categoryId);
+    void deleteAllByCategoryId(String categoryId);
+    int countByCategoryId(String categoryId);
 }

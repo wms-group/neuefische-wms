@@ -1,12 +1,15 @@
 import {CategoryCard} from "@/features/category";
 import {useCategoriesContext} from "@/context/CategoriesContext";
+import {CategoryInputDTO} from "@/types";
 
 export type CategoryListProps = {
+    onSubmit?: (submittedCategory: CategoryInputDTO, categoryId: string) => Promise<unknown>;
+    onDelete?: (categoryId: string, moveToCategory?: string) => Promise<unknown>;
     className?: string;
     parentId?: string | null;
 };
 
-export default function CategoryList({parentId}: CategoryListProps) {
+export default function CategoryList({parentId, onSubmit, onDelete}: CategoryListProps) {
     const {getCategoriesByParentId} = useCategoriesContext();
     const categories = getCategoriesByParentId(parentId ?? null);
     return (
@@ -18,7 +21,9 @@ export default function CategoryList({parentId}: CategoryListProps) {
                                 key={category.id}
                                 category={category}
                                 countSubCategories={
-                                    getCategoriesByParentId(category.id).length
+                                    category.countSubCategories}
+                                onSubmit={onSubmit}
+                                onDelete={onDelete
                                 }
                             />
                         )

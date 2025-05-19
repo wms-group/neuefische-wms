@@ -79,12 +79,17 @@ export interface CategoryOutputDTO {
     id: string;
     name: string;
     parentId: string | null;
+    countSubCategories: number;
+    countProducts: number;
 }
 
 export function isCategoryOutputDTO(obj: unknown): obj is CategoryOutputDTO {
     return typeof obj === "object" && obj !== null &&
         "id" in obj && "name" in obj && "parentId" in obj &&
+        "countSubCategories" in obj && "countProducts" in obj &&
         typeof obj.id === "string" &&
+        typeof obj.countSubCategories === "number" &&
+        typeof obj.countProducts === "number" &&
         typeof obj.name === "string" &&
         (
             typeof obj.parentId === "string" ||
@@ -198,4 +203,23 @@ export type GridLayoutProps = {
         xl: number;
         '2xl'?: number;
     }>
+}
+
+export type SearchableSelectProps = {
+    name: string;
+    options: SelectOption[] & SelectGroup[];
+    value?: string | null;
+    onChange: (newValue: SelectOption | null) => void;
+    emptyLabel?: string;
+    defaultValue?: string | null;
+    mandatory?: boolean;
+    disabled?: boolean;
+    error?: string | null;
+    className?: string;
+    placeholder?: string;
+    isMulti?: boolean;
+    isSearchable?: boolean;
+    isClearable?: boolean;
+    isDisabled?: boolean;
+    isInvalid?: boolean;
 }

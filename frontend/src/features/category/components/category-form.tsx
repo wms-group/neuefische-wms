@@ -1,71 +1,55 @@
-import {useEffect, useRef, useState} from "react";
-import {ButtonType, CategoryInputDTO} from "@/types";
+import {useEffect, useState} from "react";
+import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
-import {clsx} from "clsx";
-import Card from "@/components/shared/card.tsx";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
-import {useCategoriesContext} from "@/context/CategoriesContext";
-import {Button, InputWithLabel} from "@/components/ui";
+import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import {InputWithLabel} from "@/components/ui";
 
 type CategoryFormProps = {
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
-    defaultParentId?: string | null;
+    value?: CategoryOutputDTO;
+    defaultParentId: string;
     className?: string;
+    formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-export default function CategoryForm({onSubmit, className, defaultParentId}: CategoryFormProps) {
+const CategoryForm =({onSubmit, value, defaultParentId, className, formRef}: CategoryFormProps) => {
     const [category, setCategory] = useState<CategoryInputDTO>({
-        name: "",
-        parentId: defaultParentId ?? null,
+        name: value?.name ?? "",
+        parentId: value?.parentId ?? defaultParentId,
     });
-
-    const {categories} = useCategoriesContext();
 
     useEffect(() => {
         setCategory(prev => {
-            return {...prev, parentId: defaultParentId ?? null}
+            return {...prev, parentId: defaultParentId}
         });
     }, [defaultParentId]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await onSubmit(category);
-        setCategory({
-            name: "",
-            parentId: defaultParentId ?? null,
-        });
+        const savedCategory = await onSubmit(category);
+        if (!value) {
+            setCategory({
+                name: "",
+                parentId: defaultParentId,
+            });
+        }
+        return savedCategory;
     }
+
+    const categories = useCategoriesContext().categories;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setCategory({...category, [name]: value});
     }
 
-    const formRef = useRef<HTMLFormElement>(null);
-
     return (
-        <Card
-            title={"Neue Kategorie"}
-            className={className}
-            actions={
-                <Button
-                    type={ButtonType.submit}
-                    disabled={!category.name}
-                    onClick={() =>
-                        formRef.current?.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}))
-                    }
-                    className={cn(
-                        "rounded self-end flex-grow-0 bg-gray-600 px-4 py-2 text-sm text-white hover:active:bg-gray-700",
-                        category.name && "hover:bg-gray-500", !category.name && "bg-gray-600/50 "
-                    )}>
-                    hinzufügen
-                </Button>
-            }
-        >
-            <form
-                ref={(ref) => {
+        <form
+            ref={(ref) => {
+                if (formRef) {
                     formRef.current = ref
-                }}
+                }}}
                 className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className)}
                 onSubmit={handleSubmit}>
                 <div className="h-full w-full">
@@ -102,3 +86,5 @@ export default function CategoryForm({onSubmit, className, defaultParentId}: Cat
         </Card>
     )
 }
+
+export default CategoryForm;

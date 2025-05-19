@@ -1,14 +1,16 @@
-import {ProductOutputDTO} from "@/types";
+import {ProductInputDTO, ProductOutputDTO} from "@/types";
 import {ProductCard} from "@/features/product";
 
 
 export type ProductListProps = {
     products: ProductOutputDTO[]
+    onSubmit?: (submittedProduct: ProductInputDTO, productId: string) => Promise<unknown>;
+    onDelete?: (productId: string) => Promise<unknown>;
     className?: string;
     categoryId?: string | null;
 };
 
-export default function ProductList({products, categoryId}: ProductListProps = {
+export default function ProductList({products, onSubmit, onDelete, categoryId}: ProductListProps = {
     products: []
 }) {
     return (
@@ -19,7 +21,8 @@ export default function ProductList({products, categoryId}: ProductListProps = {
                         <div key={product.id} className="product-list-item">
                             <ProductCard
                                 product={product}
-                                className={"max-w-none"}
+                                onSubmit={onSubmit}
+                                onDelete={onDelete}
                             />
                         </div>
                     )
