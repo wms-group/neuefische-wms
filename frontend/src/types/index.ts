@@ -58,6 +58,7 @@ export type ButtonProps = {
 export type UserAvatarProps = {
     userName: string;
     onLogout?: () => void;
+    btnClassName?: string;
 };
 
 export enum Role {
@@ -105,6 +106,22 @@ export interface SelectGroup {
     options: SelectOption[];
 }
 
+export interface Hall {
+  id: string;
+  name: string;
+  aisleIds: string[];
+}
+
+export interface HallContextType {
+  halls: Hall[];
+  isLoading: boolean;
+  error: string | null;
+  fetchHalls: () => Promise<void>;
+  addHall: (hall: Omit<Hall, 'id'>) => Promise<void>;
+  updateHall: (updatedHall: Partial<Hall>) => Promise<void>;
+  removeHall: (id: string) => Promise<void>;
+}
+
 export interface ErrorDTO {
     error: string;
     cause: string | null;
@@ -144,4 +161,18 @@ export type InputWithLabelProps = {
     className?: string
     error?: string
     disabled?: boolean
+}
+
+export type GridLayoutProps = {
+    children: ReactNode;
+    className?: string;
+    gap?: string;
+    gridCols?: Partial<{
+        base: number;
+        sm: number;
+        md: number;
+        lg: number;
+        xl: number;
+        '2xl': number;
+    }>
 }

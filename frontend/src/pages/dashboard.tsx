@@ -2,7 +2,7 @@ import LayoutContainer from "@/components/shared/layout-container.tsx";
 
 const Dashboard = () => {
     return (
-        <LayoutContainer>
+        <LayoutContainer className={"h-full"}>
             Dashboard
         </LayoutContainer>
     )

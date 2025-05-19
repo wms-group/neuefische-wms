@@ -39,8 +39,8 @@ const InputWithLabel = forwardRef<HTMLInputElement, InputWithLabelProps>(
                     ref={ref}
                     className={cn(
                         "rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2",
-                        error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500",
-                        disabled && "bg-gray-200 cursor-not-allowed",
+                        error ? "border-red-500 focus:ring-red-500" : "border-secondary focus:ring-blue-500",
+                        disabled && "bg-primary cursor-not-allowed",
                         className
                     )}
                 />

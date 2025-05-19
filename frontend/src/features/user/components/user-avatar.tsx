@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {UserAvatarProps} from "@/types";
 import {Button} from "@/components/ui";
 import {LogOut, UserRoundIcon} from "lucide-react";
 import {cn} from "@/utils";
 
-const UserAvatar = ({userName = 'Max Mustermann', onLogout}: UserAvatarProps) => {
+const UserAvatar = ({userName = 'Max Mustermann', onLogout, btnClassName}: UserAvatarProps) => {
     const [open, setOpen] = useState(false);
 
     const initials = userName
@@ -18,10 +18,15 @@ const UserAvatar = ({userName = 'Max Mustermann', onLogout}: UserAvatarProps) =>
         <>
             <Button
                 onClick={() => setOpen(!open)}
-                className="relative inline-block text-left bg-transparent border-0 focus-visible:border-0 w-full">
+                className={cn(
+                    "relative inline-block text-left bg-transparent border-0 focus-visible:border-0 w-full",
+                    btnClassName
+                )
+                }>
                 <div className="flex items-center justify-center gap-4">
                     <div
-                        className="w-10 h-10 bg-slate-500 text-white font-medium flex items-center justify-center rounded-full cursor-pointer select-none"
+                        className="w-10 h-10 bg-slate-500 text-white font-medium flex
+                        items-center justify-center rounded-full cursor-pointer select-none"
                     >
                         {initials}
                     </div>
@@ -30,15 +35,21 @@ const UserAvatar = ({userName = 'Max Mustermann', onLogout}: UserAvatarProps) =>
             </Button>
             {open && (
                 <div className={cn(
-                    "absolute -top-32 left-1/2 -translate-x-1/2 w-60 lg:w-52 rounded-xl shadow-lg z-30 p-4 bg-gray-100 border border-gray-300 transition-all duration-300 ease-in-out"
+                    "absolute -top-32 left-1/2 -translate-x-1/2 w-60 lg:w-52 rounded-xl shadow-lg z-30 p-4",
+                    "bg-element-bg border border-secondary transition-all duration-300 ease-in-out"
                 )}>
-                    <Link
+                    <NavLink
                         to="/users/user-profile"
-                        className="block px-5 py-2 text-base text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+                        className={({isActive}) => cn(
+                            "block px-5 py-2 text-base text-slate-600 hover:bg-primary rounded-lg transition-colors group",
+                            isActive && "bg-primary text-slate-800 font-medium link-item"
+                        )}
                         onClick={() => setOpen(false)}
                     >
-                        <span className={"flex justify-between items-center w-full"}>Profile <UserRoundIcon/></span>
-                    </Link>
+                        <span className={"flex justify-between items-center w-full"}>
+                            Profile <UserRoundIcon className="group-[.link-item]:text-indigo-500"/>
+                        </span>
+                    </NavLink>
                     <Button
                         onClick={() => {
                             setOpen(false);

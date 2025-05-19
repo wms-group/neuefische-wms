@@ -11,9 +11,9 @@ const RootLayout: FC<PropsWithChildren> = () => {
     return (
         <>
             <Sidebar sidebarItems={sidebarItemsConfig} />
-            <LayoutContainer className={"relative"}>
+            <LayoutContainer className={"relative bg-white"}>
                 <Header />
-                <main className={"flex-1 relative p-4 mt-16"}>
+                <main className={"flex-1 relative p-4 mt-16 h-full"}>
                     <Outlet/>
                 </main>
                 <Footer footerItems={footerConfig}/>

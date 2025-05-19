@@ -1,8 +1,9 @@
 import {CategoryInputDTO} from "@/types";
 import {CategoryForm, CategoryList} from "@/features/category";
-import {toast, Toaster} from "sonner";
+import {toast} from "sonner";
 import {AxiosError} from "axios";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import LayoutContainer from "@/components/shared/layout-container.tsx";
 
 const CategoryListPage = () => {
     const {categories, addCategory} = useCategoriesContext();
@@ -17,12 +18,12 @@ const CategoryListPage = () => {
     }
 
     return (
-        <div className={"category-list-page p-2 flex flex-col flex-1 gap-4"}>
-            <h2>Kategorien</h2>
+        <LayoutContainer className={"category-list-page flex flex-col flex-1 gap-4 z-1"}>
+            <h2>Neue Kategorie</h2>
             <CategoryForm onSubmit={handleSubmitCategory} categories={categories} />
-            <CategoryList categories={categories} parentId={null} />
-            <Toaster />
-        </div>
+            <h2>Kategorien</h2>
+            <CategoryList categories={categories} parentId={null} gridCols={{ base: 1, sm: 2, xl: 3 }} />
+        </LayoutContainer>
     )
 }
 

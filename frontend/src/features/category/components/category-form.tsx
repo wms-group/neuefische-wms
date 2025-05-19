@@ -4,7 +4,7 @@ import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import {clsx} from "clsx";
 import Card from "@/components/shared/card.tsx";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
-import {Button} from "@/components/ui";
+import {Button, InputWithLabel} from "@/components/ui";
 
 type CategoryFormProps = {
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
@@ -46,7 +46,10 @@ export default function CategoryForm({categories, onSubmit, className, defaultPa
                     onClick={() =>
                         formRef.current?.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}))
                     }
-                    className="rounded self-end flex-grow-0 bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-500 hover:data-active:bg-gray-700">
+                    className={cn(
+                        "rounded self-end flex-grow-0 bg-gray-600 px-4 py-2 text-sm text-white hover:active:bg-gray-700",
+                        category.name && "hover:bg-gray-500", !category.name && "bg-gray-600/50 "
+                    )}>
                     hinzufügen
                 </Button>
             }
@@ -58,16 +61,17 @@ export default function CategoryForm({categories, onSubmit, className, defaultPa
                 className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className)}
                 onSubmit={handleSubmit}>
                 <div className="h-full w-full">
-                    <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
-                    <input
-                        name="name"
+                    <InputWithLabel
+                        label={"Name"}
                         value={category.name}
+                        onChange={handleChange}
+                        onBlur={handleChange}
+                        name={"name"}
                         placeholder={"Category Name..."}
                         className={cn(
                             'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
                             'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
                         )}
-                        onChange={handleChange}
                     />
                 </div>
                 <div className="h-full w-full">

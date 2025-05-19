@@ -1,29 +1,34 @@
-import {CategoryOutputDTO} from "@/types";
+import {CategoryOutputDTO, GridLayoutProps} from "@/types";
 import {CategoryCard} from "@/features/category";
-import {cn} from "@/utils";
+import GridLayout from "@/components/shared/grid-layout.tsx";
 
 export type CategoryListProps = {
     categories: CategoryOutputDTO[]
     className?: string;
     parentId?: string | null;
+    gridCols?: GridLayoutProps["gridCols"];
 };
 
-export default function CategoryList({categories, parentId, className}: CategoryListProps = {
+export default function CategoryList({categories, parentId, gridCols, className}: CategoryListProps = {
     categories: []
 }) {
     return (
-        <div className={cn("category-list flex flex-col gap-2", className)}>
-            { categories
-                .filter(category => parentId === undefined || category.parentId === parentId)
-                .map(category => (
-                        <div key={category.id} className="category-list-item">
+        <GridLayout className={className} gridCols={gridCols}>
+            {categories.length > 0
+                ? categories
+                    .filter(category => parentId === undefined || category.parentId === parentId)
+                    .map(category => (
                             <CategoryCard
+                                key={category.id}
                                 category={category}
-                                countSubCategories={categories.filter(subCategory => subCategory.parentId === category.id).length}
+                                countSubCategories={
+                                    categories
+                                        .filter(subCategory => subCategory.parentId === category.id).length
+                                }
                             />
-                        </div>
-                )
-                )}
-        </div>
+                        )
+                    )
+                : <h3 className="text-center">Keine Kategorien</h3>}
+        </GridLayout>
     )
 }

@@ -4,7 +4,7 @@ import {cn} from "@/utils";
 
 const LayoutContainer: FC<ILayoutContainer> = ({ children, className}) => {
     return (
-        <div className={cn("flex flex-col flex-1 w-full", className)}>
+        <div className={cn("flex flex-col flex-1 w-full relative", className)}>
             {children}
         </div>
     )

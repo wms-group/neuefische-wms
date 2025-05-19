@@ -1,14 +1,17 @@
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {SidebarProvider} from "@/provider/sidebar-provider.tsx";
 import {OrderDetailPage, OrderListPage} from "@/features/orders";
 import {ProductDetailPage, ProductListPage} from "@/features/product";
 import {CategoryDetailPage, CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
-import {CategoriesProductsLayout, RootLayout} from "@/layouts";
+import {HallDetailPage, HallEditPage, HallListPage} from "@/features/halls";
+import {DashboardLayoutPage, RootLayout} from "@/layouts";
+import CategoriesProductsLayout from './layouts/categories-products-layout.tsx';
+import HallLayout from './layouts/hall-layout.tsx';
+import Dashboard from "@/pages/dashboard.tsx";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -18,7 +21,10 @@ createRoot(document.getElementById('root')!).render(
                     {/*APP RootLayout*/}
                     <Route element={<RootLayout/>}>
                         {/*APP Entry point*/}
-                        <Route path={"/"} element={<App/>}/>
+                        <Route element={<DashboardLayoutPage/>}>
+                            <Route path={"/"} element={<Dashboard/>}/>
+                        </Route>
+
 
                         {/*Relative routing for products*/}
                         <Route path={"products"}>
@@ -48,9 +54,16 @@ createRoot(document.getElementById('root')!).render(
                             <Route path={"user-profile"} element={<UserProfilePage/>}/>
                             <Route path={"create-user"} element={<UserCreatePage/>}/>
                             {/* rotes can be extend to
-                            users:id
-                            users:id/edit
-                            ...*/}
+                                users:id
+                                users:id/edit
+                                ...*/}
+                        </Route>
+
+                        <Route path={"halls"} element={<HallLayout/>}>
+                            <Route index element={<HallListPage/>}/>
+                            <Route path="new" element={<HallEditPage/>}/>
+                            <Route path=":id" element={<HallDetailPage/>}/>
+                            <Route path=":id/edit" element={<HallEditPage/>}/>
                         </Route>
                     </Route>
                 </Routes>

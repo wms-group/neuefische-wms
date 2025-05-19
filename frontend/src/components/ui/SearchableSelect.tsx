@@ -1,7 +1,7 @@
 import {SelectGroup, SelectOption} from "@/types";
 import Select from "react-select";
-import {clsx} from "clsx";
 import {FC} from "react";
+import {cn} from "@/utils";
 
 type SearchableSelectProps = {
     name: string;
@@ -20,11 +20,11 @@ const SearchableSelect: FC<SearchableSelectProps> = (props) => {
             name={props.name}
             unstyled={true}
             classNames={{
-                container: () => clsx('text-gray-900'),
-                control: ({isFocused}) => clsx('rounded bg-white/95 m-0 px-3 py-1.5', isFocused && 'outline-2 outline-'),
-                menu: () => clsx('rounded mt-1 bg-gray-100 m-0 p-0'),
-                groupHeading: () => clsx('text-gray-400 bg-gray-100 text-xs border-b border-gray-200 px-4 pt-1 pb-0.5 z-100'),
-                option: ({isFocused, isSelected}) => clsx("text-gray-600 whitespace-nowrap px-2 py-1 m-0", isFocused && 'bg-white/45 text-gray-400', isSelected && 'bg-white/80 text-gray-700'),
+                container: () => cn('text-gray-900'),
+                control: ({isFocused}) => cn('rounded bg-white/95 m-0 px-3 py-1.5', isFocused && 'outline-2 outline-'),
+                menu: () => cn('rounded mt-1 bg-element-bg m-0 p-0'),
+                groupHeading: () => cn('text-gray-400 bg-element-bg text-xs border-b border-gray-200 px-4 pt-1 pb-0.5 z-100'),
+                option: ({isFocused, isSelected}) => cn("text-gray-600 whitespace-nowrap px-2 py-1 m-0", isFocused && 'bg-primary', isSelected && 'bg-gray-500 text-white'),
             }}
             value={{
                 'label': flatOptions.find(o => o.value === (props.value ?? props.defaultValue))?.label ?? props.emptyLabel ?? "- keine -",
