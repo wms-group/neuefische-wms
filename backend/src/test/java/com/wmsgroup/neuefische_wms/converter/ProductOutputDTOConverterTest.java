@@ -5,6 +5,7 @@ import com.wmsgroup.neuefische_wms.model.dto.ProductOutputDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
@@ -101,4 +102,17 @@ class ProductOutputDTOConverterTest {
             ProductOutputDTOConverter.convert((List<Product>) null); });
     }
 
+    @Test
+    void testInstantiationFails() {
+        InvocationTargetException exception = assertThrows(
+                InvocationTargetException.class,
+                () -> {
+                    // via Reflection Instanziierung erzwingen, da Konstruktor privat ist
+                    var constructor = ProductOutputDTOConverter.class.getDeclaredConstructor();
+                    constructor.setAccessible(true);
+                    constructor.newInstance();
+                }
+        );
+        assertInstanceOf(UnsupportedOperationException.class, exception.getCause());
+    }
 }

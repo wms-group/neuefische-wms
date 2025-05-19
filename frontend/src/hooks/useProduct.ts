@@ -26,6 +26,14 @@ export default function useProduct() {
             ];
     }
 
+    function withReplacedProduct(existingProducts: ProductOutputDTO[], product: ProductOutputDTO) {
+        return existingProducts.map(p => p.id === product.id ? product : p);
+    }
+
+    function withRemovedProduct(existingProducts: ProductOutputDTO[], productId: string) {
+        return existingProducts.filter(p => p.id !== productId);
+    }
+
     function setProducts(productsOrSetter: ProductOutputDTO[] | ((prev: ProductOutputDTO[]) => ProductOutputDTO[])) {
         if (Array.isArray(productsOrSetter)) {
             setState(prev => ({ ...prev, products: productsOrSetter }));
@@ -86,8 +94,8 @@ export default function useProduct() {
                     setProducts(prev => withAddedProductAtFirst(prev, savedProduct));
                     return savedProduct;
                 }
-                setError("Ungültige Antwort beim Speichern des Gerichts")
-                throw new TypeError("Ungültige Antwort beim Speichern des Gerichts");
+                setError("Ungültige Antwort beim Speichern des Produktes")
+                throw new TypeError("Ungültige Antwort beim Speichern des Produktes");
             })
             .catch(e => {
                 setError(e.message);
@@ -96,11 +104,51 @@ export default function useProduct() {
             .finally(() => setLoading(false));
     }
 
+    const updateProduct = (changedProduct: ProductInputDTO, productId: string) => {
+        setLoading(true);
+        setError(null);
+        return ProductApi.updateProduct(changedProduct, productId)
+            .then((updatedProduct) => {
+                if (updatedProduct && isProductOutputDTO(updatedProduct)) {
+                    setProducts(prev => withReplacedProduct(prev, updatedProduct));
+                    return updatedProduct;
+                }
+                setError("Ungültige Antwort beim Speichern des Produktes")
+                throw new TypeError("Ungültige Antwort beim Speichern des Produktes");
+            })
+            .catch(e => {
+                setError(e.message);
+                throw e;
+            })
+            .finally(() => setLoading(false));
+    }
+
+    const deleteProduct = (productId: string) => {
+        setLoading(true);
+        setError(null);
+        return ProductApi.deleteProduct(productId)
+            .then(() => {
+                setProducts(prev => withRemovedProduct(prev, productId));
+            })
+            .catch(e => {
+                setError(e.message);
+                throw e;
+            })
+            .finally(() => setLoading(false));
+    }
+
+    const flushProducts = () => {
+        setProducts([]);
+    }
+
     return {
         products: state.products,
         getProductsByCategoryId,
         loading: state.loading,
         error: state.error,
         addProduct,
+        updateProduct,
+        deleteProduct,
+        flushProducts,
     };
 }

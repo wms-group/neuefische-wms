@@ -6,6 +6,10 @@ public record CategoryOutputDTO(
         @With
         String id,
         String name,
-        String parentId
+        String parentId,
+        @With
+        int countProducts,
+        @With
+        int countSubCategories
 ) {
 }

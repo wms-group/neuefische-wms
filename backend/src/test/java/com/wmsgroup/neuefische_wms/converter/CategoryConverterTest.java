@@ -4,6 +4,8 @@ import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryConverterTest {
@@ -50,5 +52,19 @@ class CategoryConverterTest {
         // Das Lombok-@NonNull auf dem name-Parameter erzeugt bei Übergabe von null automatisch eine NullPointerException
         //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> new CategoryInputDTO(null, null));
+    }
+
+    @Test
+    void testInstantiationFails() {
+        InvocationTargetException exception = assertThrows(
+                InvocationTargetException.class,
+                () -> {
+                    // via Reflection Instanziierung erzwingen, da Konstruktor privat ist
+                    var constructor = CategoryConverter.class.getDeclaredConstructor();
+                    constructor.setAccessible(true);
+                    constructor.newInstance();
+                }
+        );
+        assertInstanceOf(UnsupportedOperationException.class, exception.getCause());
     }
 }
