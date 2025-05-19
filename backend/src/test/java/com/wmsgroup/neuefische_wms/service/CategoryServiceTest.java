@@ -1,15 +1,18 @@
 package com.wmsgroup.neuefische_wms.service;
 
+import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.Category;
 import com.wmsgroup.neuefische_wms.repository.CategoryRepository;
+import com.wmsgroup.neuefische_wms.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,6 +25,9 @@ class CategoryServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private ProductRepository productRepository;
 
     @Mock
     private IdService idService;
@@ -184,6 +190,8 @@ class CategoryServiceTest {
 
         // Then
         verify(categoryRepository).existsById(categoryId);
+        verify(productRepository).deleteAllByCategoryId(categoryId);
+        verify(categoryRepository).deleteAllByParentId(categoryId);
         verify(categoryRepository).deleteById(categoryId);
     }
 
@@ -200,5 +208,103 @@ class CategoryServiceTest {
         assertEquals("Category with id notExist does not exist", ex.getMessage());
         verify(categoryRepository).existsById(categoryId);
         verify(categoryRepository, never()).deleteById(anyString());
+    }
+
+    @Test
+    void deleteCategoryAndMoveChildren_shouldDelete_whenChildrenExist() {
+        // Given
+        String categoryId = "cat-del";
+        String moveToCategoryId = "cat-move";
+        when(categoryRepository.existsById(categoryId)).thenReturn(true);
+        when(categoryRepository.existsById(moveToCategoryId)).thenReturn(true);
+        when(categoryRepository.findAllByParentId(categoryId))
+                .thenReturn(
+                        List.of(Category.builder()
+                                .id("child-1")
+                                .name("child-1")
+                                .parentId(categoryId)
+                                .build(),
+                            Category.builder()
+                                .id("child-2")
+                                .name("child-2")
+                                .parentId(categoryId)
+                                .build()
+                        ));
+        when(productRepository.findAllByCategoryId(categoryId)).thenReturn(List.of(
+                Product.builder().id("product-1").name("product-1").price(BigDecimal.ONE).categoryId(categoryId).build(),
+                Product.builder().id("product-2").name("product-2").price(BigDecimal.TEN).categoryId("child-1").build(),
+                Product.builder().id("product-3").name("product-3").price(BigDecimal.TEN).categoryId("child-1").build()
+        ));
+
+        // When
+        categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId);
+
+        // Then
+        verify(categoryRepository).existsById(categoryId);
+        verify(categoryRepository).findAllByParentId(categoryId);
+        verify(categoryRepository, times(2)).save(argThat(category -> category.getParentId() != null && category.getParentId().equals(moveToCategoryId)));
+        verify(productRepository, times(3)).save(argThat(product -> product.getCategoryId().equals(moveToCategoryId)));
+        verify(categoryRepository).deleteById(categoryId);
+    }
+
+    @Test
+    void deleteCategoryAndMoveChildren_shouldThrow_whenCategoryNotExists() {
+        // Given
+        String categoryId = "notExist";
+        String moveToCategoryId = "exists";
+        when(categoryRepository.existsById(categoryId)).thenReturn(false);
+        when(categoryRepository.existsById(moveToCategoryId)).thenReturn(true);
+
+        // When / Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId)
+        );
+        assertEquals("Category with id notExist does not exist", ex.getMessage());
+        verify(categoryRepository).existsById(categoryId);
+        verify(categoryRepository, never()).deleteById(anyString());
+    }
+
+    @Test
+    void deleteCategoryAndMoveChildren_shouldThrow_whenTargetCategoryNotExists() {
+        // Given
+        String categoryId = "notExist";
+        String moveToCategoryId = "exists";
+        when(categoryRepository.existsById(moveToCategoryId)).thenReturn(false);
+
+        // When / Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId)
+        );
+        assertEquals("New category with id exists does not exist", ex.getMessage());
+        verify(categoryRepository, never()).deleteById(anyString());
+    }
+
+    @Test
+    void deleteCategoryAndMoveChildren_shouldThrow_whenTargetCategoryIsNullButProductsExist() {
+        // Given
+        String categoryId = "exists";
+        String moveToCategoryId = null;
+        when(productRepository.existsByCategoryId(categoryId)).thenReturn(true);
+
+        // When / Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId)
+        );
+        assertEquals("Can't move products to null category, empty category first!", ex.getMessage());
+        verify(categoryRepository, never()).deleteById(anyString());
+    }
+
+    @Test
+    void deleteCategoryAndMoveChildren_shouldDelete_whenTargetCategoryIsNullAndNoProductsExist() {
+        // Given
+        String categoryId = "exists";
+        String moveToCategoryId = null;
+        when(productRepository.existsByCategoryId(categoryId)).thenReturn(false);
+        when(categoryRepository.existsById(categoryId)).thenReturn(true);
+
+        // When / Then
+        categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId);
+
+        verify(categoryRepository).deleteById(anyString());
     }
 }
