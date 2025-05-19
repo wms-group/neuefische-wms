@@ -186,12 +186,9 @@ class ProductServiceTest {
     void updateProduct_shouldUpdateAndReturnProductOutputDTO() {
         // Given
         String productId = "1";
-        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        ProductInputDTO inputDTO = new ProductInputDTO("TestProduct", "cat1", "10,00");
         when(productRepository.existsById(productId)).thenReturn(true);
         when(categoryRepository.existsById(anyString())).thenReturn(true);
-        when(inputDTO.name()).thenReturn("TestProduct");
-        when(inputDTO.categoryId()).thenReturn("cat1");
-        when(inputDTO.price()).thenReturn("10,00");
         when(productRepository.save(any())).thenReturn(mock(Product.class));
 
         // When
