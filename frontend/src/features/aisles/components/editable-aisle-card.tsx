@@ -135,7 +135,6 @@ const EditableAisleCard = ({ aisle, categories, onSubmit, creates, actions }: Pr
                                     category={c}
                                     actions={
                                         <button
-                                            type="button"
                                             className="ml-2 text-xs text-gray-400 hover:text-red-500"
                                             aria-label="Kategorie entfernen"
                                             onClick={() => handleCategoryRemoval(c.id)}
