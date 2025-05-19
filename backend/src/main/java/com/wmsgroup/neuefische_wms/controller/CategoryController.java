@@ -42,6 +42,13 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("delete-and-move/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable String id, @RequestParam(required = false) String moveToCategory) {
+        // interpret empty string as null
+        categoryService.deleteCategoryAndMoveChildren(id,moveToCategory == null || moveToCategory.isBlank() ? null : moveToCategory);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorDTO> illegalArgumentExceptionHandler(IllegalArgumentException exception) {
         return new ResponseEntity<>(

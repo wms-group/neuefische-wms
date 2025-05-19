@@ -3,10 +3,12 @@ package com.wmsgroup.neuefische_wms.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wmsgroup.neuefische_wms.converter.CategoryOutputDTOConverter;
 import com.wmsgroup.neuefische_wms.model.Category;
+import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.ErrorDTO;
 import com.wmsgroup.neuefische_wms.repository.CategoryRepository;
+import com.wmsgroup.neuefische_wms.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,6 +36,10 @@ class CategoryControllerTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
 
     @BeforeEach
     void setUp() {
@@ -228,6 +235,76 @@ class CategoryControllerTest {
     @Test
     void testDeleteCategoryWithNonExistingId_shouldReturnBadRequest() throws Exception {
         String jsonString = mockMvc.perform(delete("/api/categories/654"))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        ErrorDTO result = objectMapper.readValue(jsonString, ErrorDTO.class);
+
+        assertThat(result)
+                .isNotNull()
+                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+    }
+
+    @Test
+    void testDeleteCategoryAndMoveChildren_shouldReturnBadRequest_whenMoveToCategoryIdIsEmptyAndProductsExist() throws Exception {
+        categoryRepository.save(Category.builder().id("src").name("Quelle").build());
+        productRepository.save(Product.builder().id("p1").name("Testprodukt").price(BigDecimal.TEN).categoryId("src").build());
+
+        String jsonString = mockMvc.perform(delete("/api/categories/delete-and-move/src?moveToCategory="))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        ErrorDTO result = objectMapper.readValue(jsonString, ErrorDTO.class);
+
+        assertThat(result)
+                .isNotNull()
+                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException")
+                .hasFieldOrPropertyWithValue("message", "Can't move products to null category, empty category first!");
+        assertThat(categoryRepository.findById("src")).isPresent();
+    }
+
+    @Test
+    void testDeleteCategoryAndMoveChildren_shouldReturnBadRequest_whenMoveToCategoryIdDoesNotExist() throws Exception {
+        categoryRepository.save(Category.builder().id("src2").name("Quelle2").build());
+        productRepository.save(Product.builder().id("p2").name("Testprodukt2").price(BigDecimal.TEN).categoryId("src2").build());
+
+        String jsonString = mockMvc.perform(delete("/api/categories/delete-and-move/src2?moveToCategory=doesNotExist"))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        ErrorDTO result = objectMapper.readValue(jsonString, ErrorDTO.class);
+
+        assertThat(result)
+                .isNotNull()
+                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+        assertThat(categoryRepository.findById("src2")).isPresent();
+    }
+
+    @Test
+    void testDeleteCategoryAndMoveChildren_shouldSucceed_whenMoveToCategoryIdExistsAndProductsExistAndTargetIsEmpty() throws Exception {
+        categoryRepository.save(Category.builder().id("src3").name("Quelle3").build());
+        categoryRepository.save(Category.builder().id("tgt3").name("Ziel3").build());
+        productRepository.save(Product.builder().id("p3").name("Testprodukt3").price(BigDecimal.TEN).categoryId("src3").build());
+        // Zielkategorie ist leer
+
+        mockMvc.perform(delete("/api/categories/delete-and-move/src3?moveToCategory=tgt3"))
+                .andExpect(status().isNoContent());
+
+        // Prüfung: Quell-Kategorie entfernt, Produkte verschoben
+        assertThat(categoryRepository.findById("src3")).isEmpty();
+
+        // Produkt wurde auf Zielkategorie verschoben
+        Product movedProduct = productRepository.findAll().stream()
+                .filter(p -> "p3".equals(p.getId()))
+                .findFirst()
+                .orElse(null);
+        assertThat(movedProduct).isNotNull();
+        assertThat(movedProduct.getCategoryId()).isEqualTo("tgt3");
+    }
+
+    @Test
+    void testDeleteCategoryAndMoveChildren_shouldReturnBadRequest_whenSourceCategoryDoesNotExist() throws Exception {
+        String jsonString = mockMvc.perform(delete("/api/categories/delete-and-move/unknown?moveToCategory=tgt"))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
