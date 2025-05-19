@@ -4,8 +4,6 @@ import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
 import {ProductInputDTO, ProductOutputDTO} from "@/types";
 import {useEffect, useState} from "react";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
-import Button from "@/components/ui/button";
-import Card from "@/components/shared/card.tsx";
 
 type ProductFormProps = {
     onSubmit: (product: ProductInputDTO) => Promise<unknown>;
@@ -46,23 +44,14 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, formRef}: P
         setProduct({...product, [name]: value});
     }
 
-    const {loading} = useCategoriesContext();
-
     return (
-        <Card
-            title={"Neues Produkt"}
-            className={cn(className, "max-w-2xl")}
-            actions={<Button onClick={() => formRef.current?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))}>
-                hinzufügen
-            </Button>}
-        >
         <form
             ref={(ref) => {
                 if (formRef) {
                     formRef.current = ref
                 }
             }}
-            className={cn("flex gap-1 flex-row justify-between items-endopacity-100 transition-opacity duration-200", className)} style={{ opacity: loading ? 0.5 : 1 }}
+            className={cn("flex gap-1 flex-row justify-between items-end", className)}
             onSubmit={handleSubmit}>
             <div className="h-full grow flex-basis-40">
                 <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
@@ -104,7 +93,6 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, formRef}: P
                     defaultValue={defaultCategoryId}/>
             </div>
         </form>
-        </Card>
     )
 }
 
