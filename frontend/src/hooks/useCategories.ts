@@ -49,6 +49,14 @@ export default function useCategories() {
         return [category, ...categories.filter(d => d.id !== category.id)];
     }
 
+    function withReplacedCategory(existingCategories: CategoryOutputDTO[], category: CategoryOutputDTO) {
+        return existingCategories.map(p => p.id === category.id ? category : p);
+    }
+
+    function withRemovedCategory(existingCategories: CategoryOutputDTO[], categoryId: string) {
+        return existingCategories.filter(p => p.id !== categoryId);
+    }
+
     const addCategory = (newCategory: CategoryInputDTO) => {
         setLoading(true);
         setError(null);
@@ -58,8 +66,41 @@ export default function useCategories() {
                     setCategories(prev => withAddedCategoryAtFirst(prev, savedCategory));
                     return savedCategory;
                 }
-                setError("Ungültige Antwort beim Speichern des Gerichts")
-                throw new TypeError("Ungültige Antwort beim Speichern des Gerichts");
+                setError("Ungültige Antwort beim Speichern der Kategorie")
+                throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
+            })
+            .catch(e => {
+                setError(e.message);
+                throw e;
+            })
+            .finally(() => setLoading(false));
+    }
+
+    const updateCategory = (changedCategory: CategoryInputDTO, categoryId: string) => {
+        setLoading(true);
+        setError(null);
+        return CategoriesApi.updateCategory(changedCategory, categoryId)
+            .then((updatedCategory) => {
+                if (updatedCategory && isCategoryOutputDTO(updatedCategory)) {
+                    setCategories(prev => withReplacedCategory(prev, updatedCategory));
+                    return updatedCategory;
+                }
+                setError("Ungültige Antwort beim Speichern der Kategorie")
+                throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
+            })
+            .catch(e => {
+                setError(e.message);
+                throw e;
+            })
+            .finally(() => setLoading(false));
+    }
+
+    const deleteCategory = (categoryId: string, moveToCategory?: string) => {
+        setLoading(true);
+        setError(null);
+        return CategoriesApi.deleteCategory(categoryId, moveToCategory)
+            .then(() => {
+                setCategories(prev => withRemovedCategory(prev, categoryId));
             })
             .catch(e => {
                 setError(e.message);
@@ -74,5 +115,7 @@ export default function useCategories() {
         loading: state.loading,
         error: state.error,
         addCategory,
+        deleteCategory,
+        updateCategory
     };
 }

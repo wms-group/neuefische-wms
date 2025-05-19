@@ -160,3 +160,22 @@ export function isErrorDTO(obj: unknown): obj is ErrorDTO {
         && "message" in obj && (typeof obj.message === "string" || obj.message === null)
         && "status" in obj && typeof obj.status === "string";
 }
+
+export type SearchableSelectProps = {
+    name: string;
+    options: SelectOption[] & SelectGroup[];
+    value?: string | null;
+    onChange: (newValue: SelectOption | null) => void;
+    emptyLabel?: string;
+    defaultValue?: string | null;
+    mandatory?: boolean;
+    disabled?: boolean;
+    error?: string | null;
+    className?: string;
+    placeholder?: string;
+    isMulti?: boolean;
+    isSearchable?: boolean;
+    isClearable?: boolean;
+    isDisabled?: boolean;
+    isInvalid?: boolean;
+}
