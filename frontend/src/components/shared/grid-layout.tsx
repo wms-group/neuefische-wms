@@ -5,7 +5,7 @@ import {buildGridCols, cn} from "@/utils";
 const GridLayout: FC<GridLayoutProps> = ({children, className, gap = "gap-3", gridCols}) => {
     const gridClass = buildGridCols(gridCols);
     return (
-        <div className={cn("grid", gap, gridClass, className)}>{children}</div>
+        <div className={cn("grid", gridClass, gap, className)}>{children}</div>
     )
 }
 

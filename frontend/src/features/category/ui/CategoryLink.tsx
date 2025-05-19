@@ -1,5 +1,5 @@
 import {PropsWithChildren} from "react";
-import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import {CategoryOutputDTO} from "@/types";
 import {cn} from "@/utils";
 
@@ -16,7 +16,14 @@ const CategoryLink = ({category, to, children, basePath, className, withBrackets
     const showBrackets = withBrackets === undefined ? true : withBrackets;
 
     return (
-        <Link to={to ?? path} className={cn("text-indigo-900 underline", showBrackets && "before:content-['['] after:content-[']']", className)}>{children ?? category?.name}</Link>
+        <NavLink to={to ?? path}
+                 end
+                 className={({isActive}) => cn(
+                     "text-indigo-900 font-medium",
+                     isActive && "font-semibold border-b-2 border-b-indigo-900 pb-0.25",
+                     showBrackets && "before:content-['['] after:content-[']']",
+                     className
+                 )}>{children ?? category?.name}</NavLink>
     )
 }
 

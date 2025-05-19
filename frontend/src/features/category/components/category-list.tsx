@@ -1,7 +1,7 @@
-import {CategoryOutputDTO, GridLayoutProps} from "@/types";
+import {GridLayoutProps} from "@/types";
 import {CategoryCard} from "@/features/category";
 import GridLayout from "@/components/shared/grid-layout.tsx";
-import { useCategoriesContext } from "@/context/CategoriesContext";
+import {useCategoriesContext} from "@/context/CategoriesContext";
 
 export type CategoryListProps = {
     className?: string;
@@ -13,16 +13,15 @@ export default function CategoryList({parentId, gridCols, className}: CategoryLi
     const {getCategoriesByParentId} = useCategoriesContext();
     const categories = getCategoriesByParentId(parentId ?? null);
     return (
-        categories && <GridLayout className={className} gridCols={gridCols}>
+        <GridLayout className={className} gridCols={gridCols}>
             {categories.length > 0
                 ? categories
-
                     .map(category => (
                             <CategoryCard
                                 key={category.id}
                                 category={category}
                                 countSubCategories={
-                                    getCategoriesByParentId( category.id).length
+                                    getCategoriesByParentId(category.id).length
                                 }
                             />
                         )

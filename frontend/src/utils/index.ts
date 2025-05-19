@@ -23,12 +23,11 @@ export {selectGroupsFromCategoryOutputDTOs} from "./CategoryUtils"
 /*
 * Helper function to create grid-cols/layout base on cols
 * */
-
 export const buildGridCols= (gridCols?: GridLayoutProps["gridCols"]) => {
   if(!gridCols) return "grid-cols-1";
   return Object.entries(gridCols).map(([breakpoint, cols]) => (
-    breakpoint === "base"
-        ? `grid-cols-${cols}`
-        : `${breakpoint}:grid-cols-${cols}`
+      breakpoint === "base"
+          ? `grid-cols-${cols}`
+          : `${breakpoint}:grid-cols-${cols}`
   )).join(" ");
 }

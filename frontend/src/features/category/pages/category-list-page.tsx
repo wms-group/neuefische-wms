@@ -34,7 +34,10 @@ const CategoryListPage = () => {
             {category && <CategoryBreadcrumbs category={category} />}
             <CategoryForm onSubmit={handleSubmitCategory} defaultParentId={categoryId ?? null}/>
             <h2>Kategorien</h2>
-            <CategoryList parentId={category?.id ?? null} gridCols={{ base: 1, sm: 2, xl: 3 }} />
+            <CategoryList
+                parentId={category?.id ?? null}
+                gridCols={{ base: 1, sm: 2, xl: 3 }}
+            />
         </LayoutContainer>
     )
 }

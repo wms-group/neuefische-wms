@@ -25,33 +25,17 @@ createRoot(document.getElementById('root')!).render(
                             <Route path={"/"} element={<Dashboard/>}/>
                         </Route>
 
-
-                        {/*Relative routing for products*/}
-                        <Route path={"products"}>
-                            <Route index element={<ProductListPage/>}/>
-                            <Route path=":id" element={<ProductDetailPage/>}/>
-                        </Route>
                         {/*Relative routing for categories*/}
                         <Route path={"categories"} element={<CategoriesProductsLayout/>}>
                             <Route index element={<CategoryListPage/>}/>
-                            <Route path=":id" element={<CategoryDetailPage/>}/>
+                            <Route path=":categoryId" element={<CategoryListPage/>}/>
                         </Route>
-                            {/*Relative routing for categories*/}
-                            <Route path={"categories"} element={<CategoriesProductsLayout/>}>
-                                <Route index element={<CategoryListPage/>}/>
-                                <Route path=":categoryId" element={<CategoryListPage/>}/>
-                            </Route>
 
                         {/*Relative routing for products*/}
                         <Route path={"products"} element={<CategoriesProductsLayout/>}>
                             <Route index element={<ProductListPage/>}/>
-                            <Route path=":id" element={<ProductDetailPage/>}/>
+                            <Route path="category/:categoryId" element={<ProductListPage/>}/>
                         </Route>
-                            {/*Relative routing for products*/}
-                            <Route path={"products"} element={<CategoriesProductsLayout/>}>
-                                <Route index element={<ProductListPage/>}/>
-                                <Route path="category/:categoryId" element={<ProductListPage/>}/>
-                            </Route>
 
                         {/*Relative routing for orders*/}
                         <Route path={"orders"}>
@@ -69,11 +53,11 @@ createRoot(document.getElementById('root')!).render(
                                 ...*/}
                         </Route>
 
-                        <Route path={"halls"} element={<HallLayout/>}>
-                            <Route index element={<HallListPage/>}/>
-                            <Route path="new" element={<HallEditPage/>}/>
-                            <Route path=":id" element={<HallDetailPage/>}/>
-                            <Route path=":id/edit" element={<HallEditPage/>}/>
+                        <Route path={"halls"} element={<HallLayout />}>
+                            <Route index element={<HallListPage />} />
+                            <Route path="new" element={<HallEditPage />} />
+                            <Route path=":id" element={<HallDetailPage />} />
+                            <Route path=":id/edit" element={<HallEditPage />} />
                         </Route>
                     </Route>
                 </Routes>

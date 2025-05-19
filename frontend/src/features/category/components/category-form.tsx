@@ -1,12 +1,10 @@
-import {CategoryInputDTO} from "@/types";
 import {useEffect, useRef, useState} from "react";
-import {ButtonType, CategoryInputDTO, CategoryOutputDTO} from "@/types";
-import {useRef, useState} from "react";
+import {ButtonType, CategoryInputDTO} from "@/types";
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import {clsx} from "clsx";
 import Card from "@/components/shared/card.tsx";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
-import { useCategoriesContext } from "@/context/CategoriesContext";
+import {useCategoriesContext} from "@/context/CategoriesContext";
 import {Button, InputWithLabel} from "@/components/ui";
 
 type CategoryFormProps = {
@@ -15,7 +13,7 @@ type CategoryFormProps = {
     className?: string;
 }
 
-export default function CategoryForm({ onSubmit, className, defaultParentId }: CategoryFormProps) {
+export default function CategoryForm({onSubmit, className, defaultParentId}: CategoryFormProps) {
     const [category, setCategory] = useState<CategoryInputDTO>({
         name: "",
         parentId: defaultParentId ?? null,
@@ -24,7 +22,9 @@ export default function CategoryForm({ onSubmit, className, defaultParentId }: C
     const {categories} = useCategoriesContext();
 
     useEffect(() => {
-        setCategory(prev => { return {...prev, parentId: defaultParentId ?? null}});
+        setCategory(prev => {
+            return {...prev, parentId: defaultParentId ?? null}
+        });
     }, [defaultParentId]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -101,5 +101,4 @@ export default function CategoryForm({ onSubmit, className, defaultParentId }: C
             </form>
         </Card>
     )
-
 }

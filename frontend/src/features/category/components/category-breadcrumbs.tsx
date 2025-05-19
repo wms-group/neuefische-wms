@@ -18,7 +18,7 @@ export default function CategoryBreadcrumbs({category, rootName, rootPath, appen
 
     return (
         category.parentId === null ? (
-            <div className={cn("flex items-center breadcrumbs text-sm", className)}>
+            <div className={cn("flex flex-wrap items-center breadcrumbs text-sm gap-y-1", className)}>
                 <span><CategoryLink
                     basePath={rootPath ?? basePath}
                     withBrackets={false}
