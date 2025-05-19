@@ -205,7 +205,7 @@ class ProductServiceTest {
     void updateProduct_shouldThrowIfProductDoesNotExist() {
         // Given
         String productId = "doesNotExist";
-        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        ProductInputDTO inputDTO = new ProductInputDTO("Test Product", "cat-1", "10,00");
         when(productRepository.existsById(productId)).thenReturn(false);
 
         // When / Then
