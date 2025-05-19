@@ -1,21 +1,19 @@
-import {GridLayoutProps, ProductOutputDTO} from "@/types";
+import {ProductOutputDTO} from "@/types";
 import {ProductCard} from "@/features/product";
-import {cn} from "@/utils";
-import GridLayout from "@/components/shared/grid-layout.tsx";
+
 
 export type ProductListProps = {
     products: ProductOutputDTO[]
     className?: string;
     categoryId?: string | null;
-    gridCols?: GridLayoutProps["gridCols"];
 };
 
-export default function ProductList({products, categoryId, gridCols,className}: ProductListProps = {
+export default function ProductList({products, categoryId}: ProductListProps = {
     products: []
 }) {
     return (
-        <GridLayout gridCols={gridCols} className={cn(className)}>
-            { products
+        <>
+            {products
                 .filter(product => categoryId === undefined || product.categoryId === categoryId)
                 .map(product => (
                         <div key={product.id} className="product-list-item">
@@ -24,8 +22,8 @@ export default function ProductList({products, categoryId, gridCols,className}: 
                                 className={"max-w-none"}
                             />
                         </div>
-                )
+                    )
                 )}
-        </GridLayout>
+        </>
     )
 }

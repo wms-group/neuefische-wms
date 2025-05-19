@@ -7,6 +7,7 @@ import LayoutContainer from "@/components/shared/layout-container.tsx";
 import {Link, useParams} from "react-router-dom";
 import {ChevronLeft} from "lucide-react";
 import {useEffect, useState} from "react";
+import GridLayout from "@/components/shared/grid-layout.tsx";
 
 const CategoryListPage = () => {
     const categoryId = useParams().categoryId;
@@ -34,10 +35,12 @@ const CategoryListPage = () => {
             {category && <CategoryBreadcrumbs category={category} />}
             <CategoryForm onSubmit={handleSubmitCategory} defaultParentId={categoryId ?? null}/>
             <h2>Kategorien</h2>
+            <GridLayout  gridCols={{ base: 1, sm: 2, xl: 3 }}>
             <CategoryList
                 parentId={category?.id ?? null}
-                gridCols={{ base: 1, sm: 2, xl: 3 }}
+
             />
+            </GridLayout>
         </LayoutContainer>
     )
 }

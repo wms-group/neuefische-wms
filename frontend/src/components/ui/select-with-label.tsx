@@ -24,7 +24,7 @@ const SelectWithLabel = <T extends string | number>({
                     onChange={(event) => onChange(event.currentTarget.value as T)}
                     disabled={disabled}
                     className={cn(
-                        "border-gray-200 border-1 mt-3 block w-full appearance-none rounded-lg  bg-white/5 px-3 py-1.5 text-sm/6",
+                        "border-primary border-1 mt-3 block w-full appearance-none rounded-lg  bg-white/5 px-3 py-1.5 text-sm/6",
                         "focus:not-focus:outline-none focus:outline-2 focus:-outline-offset-2 focus:outline-white/25",
                         "*:text-black",
                         className

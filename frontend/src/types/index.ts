@@ -190,12 +190,12 @@ export type GridLayoutProps = {
     children: ReactNode;
     className?: string;
     gap?: string;
-    gridCols?: Partial<{
+    gridCols: Partial<{
         base: number;
         sm: number;
         md: number;
         lg: number;
         xl: number;
-        '2xl': number;
+        '2xl'?: number;
     }>
 }

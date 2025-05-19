@@ -1,19 +1,16 @@
-import {GridLayoutProps} from "@/types";
 import {CategoryCard} from "@/features/category";
-import GridLayout from "@/components/shared/grid-layout.tsx";
 import {useCategoriesContext} from "@/context/CategoriesContext";
 
 export type CategoryListProps = {
     className?: string;
     parentId?: string | null;
-    gridCols?: GridLayoutProps["gridCols"];
 };
 
-export default function CategoryList({parentId, gridCols, className}: CategoryListProps) {
+export default function CategoryList({parentId}: CategoryListProps) {
     const {getCategoriesByParentId} = useCategoriesContext();
     const categories = getCategoriesByParentId(parentId ?? null);
     return (
-        <GridLayout className={className} gridCols={gridCols}>
+        <>
             {categories.length > 0
                 ? categories
                     .map(category => (
@@ -27,6 +24,6 @@ export default function CategoryList({parentId, gridCols, className}: CategoryLi
                         )
                     )
                 : <h3 className="text-center">Keine Kategorien</h3>}
-        </GridLayout>
+        </>
     )
 }

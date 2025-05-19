@@ -71,12 +71,14 @@ const ProductListPage = () => {
                     {products.length > 1 && products.length + " Produkte"}
                 </CategoryCardWithSubcategories>
             </GridLayout>
-            <ProductList
-                products={products}
-                categoryId={category?.id ?? null}
-                className={"product-list"}
-                gridCols={{base: 1, sm: 2, xl: 3}}
-            />
+            <GridLayout gridCols={{base: 1, sm: 2, xl: 3}}>
+                <ProductList
+                    products={products}
+                    categoryId={category?.id ?? null}
+                    className={"product-list"}
+
+                />
+            </GridLayout>
         </LayoutContainer>
     )
 }

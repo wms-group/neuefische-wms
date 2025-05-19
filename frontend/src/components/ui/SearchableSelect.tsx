@@ -39,7 +39,7 @@ const SearchableSelect: FC<SearchableSelectProps> = (props) => {
                 container: () => cn('text-gray-900'),
                 control: ({isFocused}) => cn('rounded bg-white/95 m-0 px-3 py-1.5', isFocused && 'outline-2 outline-'),
                 menu: () => cn('rounded mt-1 bg-element-bg m-0 p-0'),
-                groupHeading: () => cn('text-gray-400 bg-element-bg text-xs border-b border-gray-200 px-4 pt-1 pb-0.5 z-100'),
+                groupHeading: () => cn('text-gray-400 bg-element-bg text-xs border-b border-primary px-4 pt-1 pb-0.5 z-100'),
                 option: ({isFocused, isSelected}) => cn("text-gray-600 whitespace-nowrap px-2 py-1 m-0", isFocused && 'bg-primary', isSelected && 'bg-gray-500 text-white'),
             }}
             value={optionForValue(props.value ?? props.defaultValue ?? null)}

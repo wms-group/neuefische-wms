@@ -17,7 +17,7 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
                 <Button className="w-full h-full bg-transparent" onClick={closeSidebar}></Button>
             </div>}
             <aside className={cn(
-                "bg-element-bg border-r border-gray-200 px-4 w-64 h-screen fixed top-0 left-0 z-999 transition-transform duration-300 ease-in-out",
+                "bg-element-bg border-r border-primary px-4 w-64 h-screen fixed top-0 left-0 z-999 transition-transform duration-300 ease-in-out",
                 isOpen ? "translate-x-0" : "-translate-x-full",
                 "lg:translate-x-0",
             )}>
