@@ -222,9 +222,8 @@ class ProductServiceTest {
     void updateProduct_shouldThrowIfCategoryDoesNotExist() {
         // Given
         String productId = "1";
-        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        ProductInputDTO inputDTO = new ProductInputDTO("Test Product", "invalidCat", "10,00");
         when(productRepository.existsById(productId)).thenReturn(true);
-        when(inputDTO.categoryId()).thenReturn("invalidCat");
         when(categoryRepository.existsById("invalidCat")).thenReturn(false);
 
         // When / Then
@@ -238,11 +237,9 @@ class ProductServiceTest {
     void updateProduct_shouldThrowIfNameIsBlank() {
         // Given
         String productId = "1";
-        ProductInputDTO inputDTO = mock(ProductInputDTO.class);
+        ProductInputDTO inputDTO = new ProductInputDTO("   ", "cat1", "10,00");
         when(productRepository.existsById(productId)).thenReturn(true);
-        when(inputDTO.categoryId()).thenReturn("cat1");
         when(categoryRepository.existsById("cat1")).thenReturn(true);
-        when(inputDTO.name()).thenReturn("   ");
 
         // When / Then
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
