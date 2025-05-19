@@ -15,10 +15,10 @@ public class CategoryConverter {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static Category convert(@NonNull CategoryInputDTO categoryManagerInputDTO) {
+    public static Category convert(@NonNull CategoryInputDTO categoryInputDTO) {
         return Category.builder()
-                .name(categoryManagerInputDTO.name())
-                .parentId(categoryManagerInputDTO.parentId())
+                .name(categoryInputDTO.name())
+                .parentId(categoryInputDTO.parentId())
                 .build();
     }
 }

@@ -1,1 +1,1 @@
-export { default as CategoriesApi } from "./CategoriesApi.ts";
+export { default as CategoriesApi } from "./CategoryApi.ts";

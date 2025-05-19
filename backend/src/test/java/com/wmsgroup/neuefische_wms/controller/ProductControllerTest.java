@@ -21,8 +21,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -172,6 +171,107 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/products/category/cat-2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+    }
+
+    @Test
+    void testUpdateProductWithValidInput() throws Exception {
+        // Arrange: Produkt und Kategorie anlegen
+        Product product = productRepository.save(
+                Product.builder()
+                        .id("p-1")
+                        .name("Altname")
+                        .categoryId("cat-1")
+                        .price(BigDecimal.valueOf(5))
+                        .build()
+        );
+        ProductInputDTO inputDTO = new ProductInputDTO("Neuer Name", "cat-1", "9,99");
+
+        // Act & Assert
+        mockMvc.perform(put("/api/products/" + product.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inputDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("p-1"))
+                .andExpect(jsonPath("$.name").value("Neuer Name"))
+                .andExpect(jsonPath("$.categoryId").value("cat-1"))
+                .andExpect(jsonPath("$.price").value("9,99"));
+
+        // Überprüfe, dass das Produkt in der DB angepasst wurde
+        Product updated = productRepository.findById("p-1").orElseThrow();
+        assertThat(updated.getName()).isEqualTo("Neuer Name");
+        assertThat(updated.getPrice()).isEqualTo(new BigDecimal("9.99"));
+    }
+
+    @Test
+    void testUpdateProductWithNonExistingProductId() throws Exception {
+        ProductInputDTO inputDTO = new ProductInputDTO("Name", "cat-1", "5,99");
+        mockMvc.perform(put("/api/products/invalid-id")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inputDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+    }
+
+    @Test
+    void testUpdateProductWithInvalidCategory() throws Exception {
+        // Produkt mit gültiger Kategorie anlegen
+        Product product = productRepository.save(
+                Product.builder()
+                        .id("p-2")
+                        .name("Test")
+                        .categoryId("cat-1")
+                        .price(BigDecimal.valueOf(8))
+                        .build()
+        );
+        ProductInputDTO inputDTO = new ProductInputDTO("Neuer Name", "non-existing-cat", "4,99");
+
+        mockMvc.perform(put("/api/products/" + product.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inputDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+    }
+
+    @Test
+    void testUpdateProductWithBlankName() throws Exception {
+        Product product = productRepository.save(
+                Product.builder()
+                        .id("p-3")
+                        .name("Test")
+                        .categoryId("cat-1")
+                        .price(BigDecimal.valueOf(8))
+                        .build()
+        );
+        ProductInputDTO inputDTO = new ProductInputDTO("  ", "cat-1", "10,00");
+        mockMvc.perform(put("/api/products/" + product.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inputDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    void testDeleteProductWithExistingId() throws Exception {
+        Product product = productRepository.save(
+                Product.builder()
+                        .id("p-4")
+                        .name("Test")
+                        .categoryId("cat-1")
+                        .price(BigDecimal.valueOf(8))
+                        .build()
+        );
+        mockMvc.perform(delete("/api/products/" + product.getId()))
+                .andExpect(status().isNoContent());
+
+        // Das Produkt soll gelöscht sein
+        assertThat(productRepository.findById(product.getId())).isEmpty();
+    }
+
+    @Test
+    void testDeleteProductWithNonExistingId() throws Exception {
+        mockMvc.perform(delete("/api/products/non-existent-id"))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
     }
 }

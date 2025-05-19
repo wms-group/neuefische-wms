@@ -11,7 +11,6 @@ export const ProductApi = {
     cancelableDeleteProductRef: {} as Record<string, AbortController | null>,
 
     throwErrorByResponse(error: unknown) {
-        console.error(error);
         if (axios.isAxiosError(error) && isErrorDTO(error.response?.data)) {
             throw new Error(error.response.data.message ?? "Unbekannter Fehler");
         }
@@ -56,6 +55,42 @@ export const ProductApi = {
             this.throwErrorByResponse(error);
         }
         throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
+    },
+
+    async updateProduct(submittedProduct: ProductInputDTO, productId: string): Promise<ProductOutputDTO | null> {
+        this.cancelableUpdateProductRef[productId]?.abort();
+        this.cancelableUpdateProductRef[productId] = new AbortController();
+
+        try {
+            const response = await axios.put(this.baseUrl + "/" + productId, submittedProduct, {
+                signal: this.cancelableUpdateProductRef[productId].signal
+            });
+            if (isProductOutputDTO(response.data)) {
+                return response.data
+            }
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                return null;
+            }
+            this.throwErrorByResponse(error);
+        }
+        throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
+    },
+
+    async deleteProduct(productId: string): Promise<void> {
+        this.cancelableDeleteProductRef[productId]?.abort();
+        this.cancelableDeleteProductRef[productId] = new AbortController();
+
+        try {
+            await axios.delete(this.baseUrl + "/" + productId, {
+                signal: this.cancelableDeleteProductRef[productId].signal
+            });
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                return;
+            }
+            this.throwErrorByResponse(error);
+        }
     },
 }
 

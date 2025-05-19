@@ -37,16 +37,16 @@ export default function useCategories() {
         setState(prev => ({ ...prev, loading }));
     }
 
-    useEffect(() => {
-        setLoading(true);
-        CategoriesApi.getAllCategories()
-            .then(setCategories)
-            .catch((e: { message: string | null; }) => setError(e.message))
-            .finally(() => setLoading(false));
-    }, []);
-
     const withAddedCategoryAtFirst = (categories: CategoryOutputDTO[], category: CategoryOutputDTO) => {
         return [category, ...categories.filter(d => d.id !== category.id)];
+    }
+
+    function withReplacedCategory(existingCategories: CategoryOutputDTO[], category: CategoryOutputDTO) {
+        return existingCategories.map(p => p.id === category.id ? category : p);
+    }
+
+    function withRemovedCategory(existingCategories: CategoryOutputDTO[], categoryId: string) {
+        return existingCategories.filter(p => p.id !== categoryId);
     }
 
     const addCategory = (newCategory: CategoryInputDTO) => {
@@ -58,8 +58,8 @@ export default function useCategories() {
                     setCategories(prev => withAddedCategoryAtFirst(prev, savedCategory));
                     return savedCategory;
                 }
-                setError("Ungültige Antwort beim Speichern des Gerichts")
-                throw new TypeError("Ungültige Antwort beim Speichern des Gerichts");
+                setError("Ungültige Antwort beim Speichern der Kategorie")
+                throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
             })
             .catch(e => {
                 setError(e.message);
@@ -68,11 +68,60 @@ export default function useCategories() {
             .finally(() => setLoading(false));
     }
 
+    const updateCategory = (changedCategory: CategoryInputDTO, categoryId: string) => {
+        setLoading(true);
+        setError(null);
+        return CategoriesApi.updateCategory(changedCategory, categoryId)
+            .then((updatedCategory) => {
+                if (updatedCategory && isCategoryOutputDTO(updatedCategory)) {
+                    setCategories(prev => withReplacedCategory(prev, updatedCategory));
+                    return updatedCategory;
+                }
+                setError("Ungültige Antwort beim Speichern der Kategorie")
+                throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
+            })
+            .catch(e => {
+                setError(e.message);
+                throw e;
+            })
+            .finally(() => setLoading(false));
+    }
+
+    const deleteCategory = (categoryId: string, moveToCategory?: string) => {
+        setLoading(true);
+        setError(null);
+        return CategoriesApi.deleteCategory(categoryId, moveToCategory)
+            .then(() => {
+                setCategories(prev => withRemovedCategory(prev, categoryId));
+            })
+            .catch(e => {
+                setError(e.message);
+                throw e;
+            })
+            .finally(() => setLoading(false));
+    }
+
+    const flushCategories = () => {
+        setLoading(true);
+        CategoriesApi.getAllCategories()
+            .then(setCategories)
+            .catch((e: { message: string | null; }) => setError(e.message))
+            .finally(() => setLoading(false));
+    }
+
+    useEffect(() => {
+        flushCategories()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return {
         categories: state.categories,
         getCategoriesByParentId,
         loading: state.loading,
         error: state.error,
         addCategory,
+        deleteCategory,
+        updateCategory,
+        flushCategories
     };
 }

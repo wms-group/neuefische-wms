@@ -19,13 +19,15 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final IdService idService;
 
+    private static final String CATEGORY_NOT_FOUND_MESSAGE = "Category for categoryId %s does not exist";
+
     public List<ProductOutputDTO> getAllProducts() {
         return ProductOutputDTOConverter.convert(productRepository.findAll());
     }
 
     public ProductOutputDTO addProduct(@NonNull ProductInputDTO productInputDTO) {
         if (!categoryRepository.existsById(productInputDTO.categoryId())) {
-            throw new IllegalArgumentException(String.format("Category for categoryId %s does not exist", productInputDTO.categoryId()));
+            throw new IllegalArgumentException(String.format(CATEGORY_NOT_FOUND_MESSAGE, productInputDTO.categoryId()));
         }
         if (productInputDTO.name().isBlank()) {
             throw new IllegalArgumentException("Name must not be blank");
@@ -38,9 +40,34 @@ public class ProductService {
         );
     }
 
+    public ProductOutputDTO updateProduct(@NonNull String id, @NonNull ProductInputDTO productInputDTO) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException(String.format("Product with id %s does not exist", id));
+        }
+        if (!categoryRepository.existsById(productInputDTO.categoryId())) {
+            throw new IllegalArgumentException(String.format(CATEGORY_NOT_FOUND_MESSAGE, productInputDTO.categoryId()));
+        }
+        if (productInputDTO.name().isBlank()) {
+            throw new IllegalArgumentException("Name must not be blank");
+        }
+        return ProductOutputDTOConverter.convert(
+                productRepository.save(
+                        ProductConverter.convert(productInputDTO)
+                                .withId(id)
+                )
+        );
+    }
+
+    public void deleteProduct(@NonNull String id) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException(String.format("Product with id %s does not exist", id));
+        }
+        productRepository.deleteById(id);
+    }
+
     public List<ProductOutputDTO> getProductsByCategoryId(@NonNull String categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
-            throw new IllegalArgumentException(String.format("Category for categoryId %s does not exist", categoryId));
+            throw new IllegalArgumentException(String.format(CATEGORY_NOT_FOUND_MESSAGE, categoryId));
         }
         return ProductOutputDTOConverter.convert(productRepository.findAllByCategoryId(categoryId));
     }

@@ -34,6 +34,19 @@ public class ProductController {
                 HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductOutputDTO> updateProduct(@PathVariable String id, @RequestBody ProductInputDTO productInputDTO) {
+        return new ResponseEntity<>(
+                productService.updateProduct(id, productInputDTO),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorDTO> illegalArgumentExceptionHandler(IllegalArgumentException exception) {
         return new ResponseEntity<>(

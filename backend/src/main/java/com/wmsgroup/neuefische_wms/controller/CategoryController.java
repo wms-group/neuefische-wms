@@ -29,6 +29,26 @@ public class CategoryController {
                 HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryOutputDTO> updateCategory(@PathVariable String id, @RequestBody CategoryInputDTO categoryManagerInputDTO) {
+        return new ResponseEntity<>(
+                categoryService.updateCategory(id, categoryManagerInputDTO),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable String id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("delete-and-move/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable String id, @RequestParam(required = false) String moveToCategory) {
+        // interpret empty string as null
+        categoryService.deleteCategoryAndMoveChildren(id,moveToCategory == null || moveToCategory.isBlank() ? null : moveToCategory);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorDTO> illegalArgumentExceptionHandler(IllegalArgumentException exception) {
         return new ResponseEntity<>(

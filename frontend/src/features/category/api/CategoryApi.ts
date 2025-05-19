@@ -1,7 +1,12 @@
 import axios from "axios";
-import {CategoryInputDTO, CategoryOutputDTO, isCategoryOutputDTO, isErrorDTO} from "@/types";
+import {
+    CategoryInputDTO,
+    CategoryOutputDTO,
+    isCategoryOutputDTO,
+    isErrorDTO
+} from "@/types";
 
-export const CategoriesApi = {
+export const CategoryApi = {
     baseUrl: '/api/categories',
 
     cancelableGetAllRef: null as AbortController | null,
@@ -57,6 +62,48 @@ export const CategoriesApi = {
         }
         throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
     },
+    
+    async updateCategory(submittedCategory: CategoryInputDTO, categoryId: string): Promise<CategoryOutputDTO | null> {
+        this.cancelableUpdateCategoryRef[categoryId]?.abort();
+        this.cancelableUpdateCategoryRef[categoryId] = new AbortController();
+
+        try {
+            const response = await axios.put(this.baseUrl + "/" + categoryId, submittedCategory, {
+                signal: this.cancelableUpdateCategoryRef[categoryId].signal
+            });
+            if (isCategoryOutputDTO(response.data)) {
+                return response.data
+            }
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                return null;
+            }
+            this.throwErrorByResponse(error);
+        }
+        throw new TypeError("Ungültige Antwort beim Speichern der Kategorie");
+    },
+
+    async deleteCategory(categoryId: string, moveToCategory?: string): Promise<void> {
+        this.cancelableDeleteCategoryRef[categoryId]?.abort();
+        this.cancelableDeleteCategoryRef[categoryId] = new AbortController();
+
+        try {
+            if (moveToCategory === undefined) {
+                await axios.delete(this.baseUrl + "/" + categoryId, {
+                    signal: this.cancelableDeleteCategoryRef[categoryId].signal
+                })
+            } else {
+                await axios.delete(this.baseUrl + "/delete-and-move/" + categoryId + "?moveToCategory=" + moveToCategory, {
+                    signal: this.cancelableDeleteCategoryRef[categoryId].signal
+                });
+            }
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                return;
+            }
+            this.throwErrorByResponse(error);
+        }
+    },
 }
 
-export default CategoriesApi;
+export default CategoryApi;

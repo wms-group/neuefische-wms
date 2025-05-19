@@ -21,7 +21,9 @@ public class CategoryOutputDTOConverter {
         return new CategoryOutputDTO(
                 category.getId(),
                 category.getName(),
-                category.getParentId()
+                category.getParentId(),
+                0,
+                0
         );
     }
 
