@@ -1,6 +1,7 @@
 import {CategoryOutputDTO} from "@/types";
 import Card from "@/components/shared/card.tsx";
-import { Link } from "react-router-dom";
+import {cn} from "@/utils";
+import CategoryLink from "@/features/category/ui/CategoryLink.tsx";
 
 type CategoryCardProps = {
     category: CategoryOutputDTO;
@@ -10,14 +11,9 @@ type CategoryCardProps = {
 
 const CategoryCard = ({category, countSubCategories, className}: CategoryCardProps) => {
     return (
-        countSubCategories === 0 ? (
-            <Card title={category.name} actions={"not ready yet"} className={className}>
-                <span className="text-gray-500">Keine Unterkategorien</span>
-            </Card> ) : (
-                <Card title={category.name} actions={"not ready yet"} className={className}>
-                    <Link to={"/categories/" + category.id}>{countSubCategories} Kategorie{countSubCategories > 1 || countSubCategories == 0 ? "n" : ""}</Link>
-                </Card>
-        )
+        <Card title={category.name} actions={"not ready yet"} className={cn(className, "max-w-2xl")}>
+            <CategoryLink category={category}>{countSubCategories ? (countSubCategories + " Unterkategorien") : ("keine Unterkategorien")}</CategoryLink>
+        </Card>
     )
 }
 

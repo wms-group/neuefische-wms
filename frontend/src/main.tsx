@@ -4,8 +4,8 @@ import './index.css'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {SidebarProvider} from "@/provider/sidebar-provider.tsx";
 import {OrderDetailPage, OrderListPage} from "@/features/orders";
-import {ProductDetailPage, ProductListPage} from "@/features/product";
-import {CategoryDetailPage, CategoryListPage} from "@/features/category";
+import {ProductListPage} from "@/features/product";
+import {CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
 import {HallDetailPage, HallEditPage, HallListPage} from "@/features/halls";
 import {DashboardLayoutPage, RootLayout} from "@/layouts";
@@ -36,12 +36,22 @@ createRoot(document.getElementById('root')!).render(
                             <Route index element={<CategoryListPage/>}/>
                             <Route path=":id" element={<CategoryDetailPage/>}/>
                         </Route>
+                            {/*Relative routing for categories*/}
+                            <Route path={"categories"} element={<CategoriesProductsLayout/>}>
+                                <Route index element={<CategoryListPage/>}/>
+                                <Route path=":categoryId" element={<CategoryListPage/>}/>
+                            </Route>
 
                         {/*Relative routing for products*/}
                         <Route path={"products"} element={<CategoriesProductsLayout/>}>
                             <Route index element={<ProductListPage/>}/>
                             <Route path=":id" element={<ProductDetailPage/>}/>
                         </Route>
+                            {/*Relative routing for products*/}
+                            <Route path={"products"} element={<CategoriesProductsLayout/>}>
+                                <Route index element={<ProductListPage/>}/>
+                                <Route path="category/:categoryId" element={<ProductListPage/>}/>
+                            </Route>
 
                         {/*Relative routing for orders*/}
                         <Route path={"orders"}>
