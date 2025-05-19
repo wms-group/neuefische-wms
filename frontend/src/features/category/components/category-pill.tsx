@@ -1,44 +1,30 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
 import { CategoryOutputDTO } from '@/types'
 
 type NavigatingProps = {
   category: CategoryOutputDTO;
-  navigates: true;
   actions?: React.ReactNode;
 };
 
 type NonNavigatingProps = {
   category: CategoryOutputDTO;
-  navigates?: false;
   actions?: React.ReactNode;
 };
 
 type CategoryPillProps = NavigatingProps | NonNavigatingProps;
 
 
-const CategoryPill = ({category, navigates, actions}: CategoryPillProps) => {
-    const navigate = useNavigate();
+const CategoryPill = ({category,  actions}: CategoryPillProps) => {
 
-    const handleClick = () => {
-        if (navigates) {
-            navigate(`/categories/${category.id}`);
-        }
-    };
-  return (
-    <button
-      className={`inline-flex items-center rounded-full bg-gray-100 text-gray-800 px-3 py-1 font-medium mr-2 select-none transition
-        ${navigates ? 'cursor-pointer hover:bg-gray-200 focus:ring-2 focus:ring-gray-400' : 'cursor-default'}
-      `}
-      onClick={navigates ? handleClick : undefined}
-      tabIndex={navigates ? 0 : -1}
-      disabled={!navigates}
-      aria-label={category.name}
-    >
-      {category.name}
-      {actions && <span className="ml-2 flex items-center">{actions}</span>}
-    </button>
-  )
+    return (
+        <div
+        className={`inline-flex items-center rounded-full bg-gray-100 text-gray-800 px-3 py-1 font-medium mr-2 select-none transition`}
+        aria-label={category.name}
+        >
+            {category.name}
+        {actions && <span className="ml-2 flex items-center">{actions}</span>}
+        </div>
+    )
 }
 
 export default CategoryPill

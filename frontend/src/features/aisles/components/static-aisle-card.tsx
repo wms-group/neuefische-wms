@@ -16,7 +16,7 @@ const StaticAisleCard = ({ aisle, categories }: AisleCardProps) => {
             <Card title={aisle.name}>
                 <div>
                     {
-                        aisleCategories.map((c) => <CategoryPill key={c.id} category={c} navigates />)
+                        aisleCategories.map((c) => <CategoryPill key={c.id} category={c} />)
                     }
                 </div>
                 {/* TODO: add information on stock here */}
