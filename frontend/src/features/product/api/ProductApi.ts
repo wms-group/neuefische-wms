@@ -1,15 +1,14 @@
-import api from "@/api/axios";
-import {CategoryInputDTO, CategoryOutputDTO, isCategoryOutputDTO, isErrorDTO} from "@/types";
 import axios from "axios";
+import {ProductInputDTO, ProductOutputDTO, isProductOutputDTO, isErrorDTO} from "@/types";
 
-export const CategoriesApi = {
-    baseUrl: '/categories',
+export const ProductApi = {
+    baseUrl: '/api/products',
 
     cancelableGetAllRef: null as AbortController | null,
     cancelableSavePositionsRef: null as AbortController | null,
-    cancelableSaveCategoryRef: null as AbortController | null,
-    cancelableUpdateCategoryRef: {} as Record<string, AbortController | null>,
-    cancelableDeleteCategoryRef: {} as Record<string, AbortController | null>,
+    cancelableSaveProductRef: null as AbortController | null,
+    cancelableUpdateProductRef: {} as Record<string, AbortController | null>,
+    cancelableDeleteProductRef: {} as Record<string, AbortController | null>,
 
     throwErrorByResponse(error: unknown) {
         console.error(error);
@@ -19,15 +18,15 @@ export const CategoriesApi = {
         throw new Error("Unbekannter Fehler");
     },
 
-    async getAllCategories(): Promise<CategoryOutputDTO[]> {
+    async getProductsByCategoryId(categoryId: string): Promise<ProductOutputDTO[]> {
         this.cancelableGetAllRef?.abort();
         this.cancelableGetAllRef = new AbortController();
 
         try {
-            const response = await api.get(this.baseUrl, {
+            const response = await axios.get(this.baseUrl + "/category/" + categoryId, {
                 signal: this.cancelableGetAllRef.signal
             });
-            if (Array.isArray(response.data) && response.data.every(isCategoryOutputDTO)) {
+            if (Array.isArray(response.data) && response.data.every(isProductOutputDTO)) {
                 return response.data;
             }
         } catch (error) {
@@ -39,15 +38,15 @@ export const CategoriesApi = {
         throw new TypeError("Ungültige Antwort beim Laden der Kategorien");
     },
 
-    async saveCategory(submittedCategory: CategoryInputDTO): Promise<CategoryOutputDTO | null> {
-        this.cancelableSaveCategoryRef?.abort();
-        this.cancelableSaveCategoryRef = new AbortController();
+    async saveProduct(submittedProduct: ProductInputDTO): Promise<ProductOutputDTO | null> {
+        this.cancelableSaveProductRef?.abort();
+        this.cancelableSaveProductRef = new AbortController();
 
         try {
-            const response = await api.post(this.baseUrl, submittedCategory, {
-                signal: this.cancelableSaveCategoryRef.signal
+            const response = await axios.post(this.baseUrl, submittedProduct, {
+                signal: this.cancelableSaveProductRef.signal
             });
-            if (isCategoryOutputDTO(response.data)) {
+            if (isProductOutputDTO(response.data)) {
                 return response.data
             }
         } catch (error) {
@@ -60,4 +59,4 @@ export const CategoriesApi = {
     },
 }
 
-export default CategoriesApi;
+export default ProductApi;
