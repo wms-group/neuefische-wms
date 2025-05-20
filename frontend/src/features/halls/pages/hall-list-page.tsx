@@ -3,30 +3,36 @@ import { NavLink } from "react-router-dom";
 import LayoutContainer from "@/components/shared/layout-container.tsx";
 import { Hall } from "@/types";
 import { useHalls } from "@/features/halls";
+import Button from "@/components/ui/button";
+import Card from "@/components/shared/card";
 
 const HallListPage = () => {
-    const { halls, fetchHalls } = useHalls();
+    const { halls, fetchHalls, removeHall } = useHalls();
 
     useEffect(() => {
         fetchHalls();
     }, [fetchHalls]);
 
+    const handleHallRemoval = async (hallId: string) => {
+        removeHall(hallId);
+    }
+
     return (
-        <LayoutContainer>
-            <div className="flex justify-between h-max">
-                <h2 className="text-xl mb-4">Halls</h2>
-                <NavLink to={"new"} className="mb-4 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-blue-300">
-                    Add Hall</NavLink>
+        <LayoutContainer >
+            <div className="flex justify-between h-max mb-2">
+                <h2 className="text-xl mb-4">Hallen</h2>
+                <NavLink to={"new"}>
+                    <Button label="Neue Halle"/>
+                </NavLink>
             </div>
 
-            <ul className="space-y-2">
+            <ul className="flex flex-col gap-2">
                 {halls.map((h: Hall) => 
-                    <NavLink to={h.id} key={h.id}>
-                        <div className="flex justify-start gap-3">
-                            <h3>{h.name}</h3>
-                            <div>Aisle Count: {h.aisleIds.length}</div>
-                        </div>
-                    </NavLink>
+                    <Card key={h.id} title={(<NavLink to={h.id} key={h.id}>{h.name}</NavLink>)} 
+                        actions={(<Button label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}
+                    >
+                        <div>Aisle Count: {h.aisleIds.length}</div>
+                    </Card>
                 )}
             </ul>
         </LayoutContainer>
