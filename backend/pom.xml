@@ -73,6 +73,7 @@
     </dependencies>
 
     <build>
+        <finalName>wms-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>

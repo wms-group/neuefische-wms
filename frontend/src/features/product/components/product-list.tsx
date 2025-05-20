@@ -1,6 +1,6 @@
 import {ProductInputDTO, ProductOutputDTO} from "@/types";
 import {ProductCard} from "@/features/product";
-import {cn} from "@/utils";
+
 
 export type ProductListProps = {
     products: ProductOutputDTO[]
@@ -10,12 +10,12 @@ export type ProductListProps = {
     categoryId?: string | null;
 };
 
-export default function ProductList({products, onSubmit, onDelete, categoryId, className}: ProductListProps = {
+export default function ProductList({products, onSubmit, onDelete, categoryId}: ProductListProps = {
     products: []
 }) {
     return (
-        <div className={cn("product-list flex flex-col gap-2", className)}>
-            { products
+        <>
+            {products
                 .filter(product => categoryId === undefined || product.categoryId === categoryId)
                 .map(product => (
                         <div key={product.id} className="product-list-item">
@@ -25,8 +25,8 @@ export default function ProductList({products, onSubmit, onDelete, categoryId, c
                                 onDelete={onDelete}
                             />
                         </div>
-                )
+                    )
                 )}
-        </div>
+        </>
     )
 }

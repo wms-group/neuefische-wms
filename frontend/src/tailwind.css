@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+    --color-element-bg: var(--color-gray-100);
+    --color-primary: var(--color-gray-200);
+    --color-secondary: var(--color-gray-300);
+
+}
+
+@layer base {
+    body {
+        @apply text-slate-700;
+        @apply bg-element-bg;
+    }
+
+    #root {
+        @apply min-h-screen;
+    }
+
+    h1 {
+        @apply text-2xl font-bold;
+    }
+
+    h2 {
+        @apply text-xl font-bold;
+    }
+
+    h3 {
+        @apply text-lg font-semibold;
+    }
+
+    ::placeholder {
+        @apply text-sm;
+    }
+}
+
+@layer components {
+    .card {
+        @apply rounded-lg p-6 bg-element-bg shadow-xl;
+    }
+}

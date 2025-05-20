@@ -28,7 +28,7 @@ const ButtonWithSelect: React.FC<ButtonWithSelectProps> = ({
                 onChange={onChange}
                 value={selectValue}
                 {...props} />
-            {label && <div className={cn("absolute w-54 text-xs text-black/30 px-2.5 text-nowrap")}>{label}</div>}
+            {label && <small className={cn("absolute w-54 text-[0.65rem] text-black/30 px-2.5 text-nowrap")}>{label}</small>}
             <Button
                 className={cn("rounded-s-none shrink", className)}
                 onClick={onClick}
