@@ -20,17 +20,22 @@ export default function ProductNewFormCard({ onSubmit, value, className, default
             className={cn(className, "max-w-2xl")}
             actions={
                 <div className={"flex justify-end w-full items-center"}>
-                    <Button type={ButtonType.button} onClick={() => formRef.current?.dispatchEvent(new Event("submit", {
-                        cancelable: true,
-                        bubbles: true
-                    }))}
+                    <Button type={ButtonType.button}
+                            onClick={() => formRef?.current?.dispatchEvent(new Event("submit", {
+                                cancelable: true,
+                                bubbles: true
+                            }))}
                             className="rounded w-fit h-fit bg-gray-600 px-4 py-2 text-sm text-white data-hover:bg-gray-500 data-hover:data-active:bg-gray-700">
                         hinzufügen
                     </Button>
                 </div>}
         >
-            <ProductForm onSubmit={onSubmit} value={value} defaultCategoryId={defaultCategoryId}
-                         setFormRef={setFormRef}/>
+            <ProductForm
+                onSubmit={onSubmit}
+                value={value}
+                defaultCategoryId={defaultCategoryId}
+                setFormRef={setFormRef}
+            />
         </Card>
     )
 }
