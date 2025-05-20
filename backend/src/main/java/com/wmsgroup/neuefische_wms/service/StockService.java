@@ -12,6 +12,7 @@ import com.wmsgroup.neuefische_wms.exception.StockNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.Stock;
+import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.StockInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.StockOutputDTO;
 import com.wmsgroup.neuefische_wms.repository.AisleRepository;
@@ -26,16 +27,19 @@ public class StockService {
     private final ProductRepository productRepo;
     private final AisleRepository aisleRepo;
     private final StockRepository stockRepo;
+    private final CategoryService categoryService;
     private final IdService idService;
 
-    public StockService(AisleRepository aisleRepo, IdService idService, ProductRepository productRepo, StockRepository stockRepo) {
+    public StockService(AisleRepository aisleRepo, IdService idService, ProductRepository productRepo, StockRepository stockRepo, CategoryService categoryService) {
         this.aisleRepo = aisleRepo;
         this.idService = idService;
         this.productRepo = productRepo;
         this.stockRepo = stockRepo;
+        this.categoryService = categoryService;
     }
 
     public StockOutputDTO getProductCount(String productId) throws StockNotFoundException {
+
         Product product = productRepo.findById(productId)
             .orElseThrow(() -> new StockNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
         
@@ -59,6 +63,30 @@ public class StockService {
         Optional<Aisle> aisle = aisles.stream()
             .filter(a -> a.categoryIds().contains(product.getCategoryId()))
             .findFirst();
+
+        if (aisle.isEmpty()) {
+            List<CategoryOutputDTO> categories = categoryService.getAllCategories();
+            Optional<CategoryOutputDTO> current = categories.stream()
+                .filter(c -> c.id().equals(product.getCategoryId()))
+                .findFirst();
+            while (current.isPresent()) {
+                String parentId = current.get().parentId();
+                if (parentId == null) {
+                    break;
+                }
+                Optional<Aisle> parentAisle = aisles.stream()
+                    .filter(a -> a.categoryIds().contains(parentId))
+                    .findFirst();
+                if (parentAisle.isPresent()) {
+                    aisle = parentAisle;
+                    break;
+                }
+                current = categories.stream()
+                    .filter(c -> c.id().equals(parentId))
+                    .findFirst();
+            }
+        }
+
         if(aisle.isEmpty()) {
             aisle = aisles.stream()
             .filter(a -> a.categoryIds().isEmpty())
@@ -128,6 +156,6 @@ public class StockService {
     }
 
     public void deleteStockById(String id) {
-
+        stockRepo.deleteById(id);
     }
 }

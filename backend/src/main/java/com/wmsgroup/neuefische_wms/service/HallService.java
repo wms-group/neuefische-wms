@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.wmsgroup.neuefische_wms.exception.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.exception.HallNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Hall;
 import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;
@@ -17,11 +18,13 @@ import com.wmsgroup.neuefische_wms.repository.HallRepository;
 public class HallService {
 
 	private final HallRepository hallRepo;
+    private final AisleService aisleService;
 	private final IdService idService;
 
-	public HallService(HallRepository hallRepo, IdService idService) {
+	public HallService(HallRepository hallRepo, IdService idService, AisleService aisleService) {
 		this.hallRepo = hallRepo;
 		this.idService = idService;
+        this.aisleService = aisleService;
 	}
 
 	public List<Hall> getHalls() {
@@ -71,11 +74,15 @@ public class HallService {
 	}
 
 	public void deleteHall(String id) throws HallNotFoundException {
-		if (!hallRepo.existsById(id)) {
-			throw new HallNotFoundException("Hall with id: " + id + " could not be found.");
-		}
+        Hall hall = hallRepo.findById(id).orElseThrow(() -> new HallNotFoundException("Hall with id: " + id + " could not be found."));
 
 		hallRepo.deleteById(id);
+        for (String aisleId : hall.aisleIds()) {
+            try {
+                aisleService.deleteAisleById(aisleId);
+            } catch (AisleNotFoundException e) {
+            }
+        }
 	}
 
 	private void throwIfNameIsNullOrEmpty(Hall hall) {

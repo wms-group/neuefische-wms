@@ -54,29 +54,33 @@ class AisleServiceTest {
 		verify(repo, times(1)).save(expected);
 	}
 
-	@Test
-	void deleteAisle_deletes_withValidId() throws AisleNotFoundException {
-		String validId = "A1";
-		when(repo.existsById(validId)).thenReturn(true);
+    @Test
+    void deleteAisle_deletes_withValidId() throws AisleNotFoundException {
+        String validId = "A1";
+        Aisle aisle = new Aisle(validId, "Test Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+        when(repo.findById(validId)).thenReturn(Optional.of(aisle));
 
-		service.deleteAisleById(validId);
+        service.deleteAisleById(validId);
 
-		verify(repo, times(1)).deleteById(validId);
-	}
+        verify(repo, times(1)).findById(validId);
+        verify(repo, times(1)).deleteById(validId);
+        verify(stockService, times(1)).deleteStockById("S1");
+        verify(stockService, times(1)).deleteStockById("S2");
+    }
 
-	@Test
-	void deleteAisle_throwsAisleNotFound_withInvalidId() {
-		String invalidId = "A1";
-		when(repo.existsById(invalidId)).thenReturn(false);
+    @Test
+    void deleteAisle_throwsAisleNotFound_withInvalidId() {
+        String invalidId = "A1";
+        when(repo.findById(invalidId)).thenReturn(Optional.empty());
 
-		assertThatThrownBy(() -> {
-			service.deleteAisleById(invalidId);
-		})
-				.isInstanceOf(AisleNotFoundException.class)
-				.hasMessage("Aisle with id: " + invalidId + " was not found.");
+        assertThatThrownBy(() -> service.deleteAisleById(invalidId))
+                .isInstanceOf(AisleNotFoundException.class)
+                .hasMessage("Aisle with id: " + invalidId + " was not found.");
 
-		verify(repo, never()).deleteById(any());
-	}
+        verify(repo, times(1)).findById(invalidId);
+        verify(repo, never()).deleteById(any());
+        verify(stockService, never()).deleteStockById(any());
+    }
 
 	@Test
 	void updateAisle_updatesAisle_withValidAisle() throws AisleNotFoundException {

@@ -139,27 +139,45 @@ class AisleControllerTest {
 				.isEmpty();
 	}
 
-	@Test
-	void deleteAisle_deletes_withValidId() throws Exception {
-		Aisle aisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
-		repo.save(aisle);
+    @Test
+    void deleteAisle_deletes_withValidId() throws Exception {
+        Aisle aisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+        Product product1 = Product.builder()
+                .id("P1")
+                .name("Product 1")
+                .categoryId("C1")
+                .price(BigDecimal.ONE)
+                .build();
+        Product product2 = Product.builder()
+                .id("P2")
+                .name("Product 2")
+                .categoryId("C2")
+                .price(BigDecimal.TEN)
+                .build();
+        Stock stock1 = new Stock("S1", "P1", 10);
+        Stock stock2 = new Stock("S2", "P2", 20);
+        repo.save(aisle);
+        productRepo.saveAll(List.of(product1, product2));
+        stockRepo.saveAll(List.of(stock1, stock2));
 
-		mvc.perform(delete(uri + "/" + aisle.id()))
-				.andExpect(status().isNoContent());
+        mvc.perform(delete(uri + "/" + aisle.id()))
+                .andExpect(status().isNoContent());
 
-		assertThat(repo.existsById(aisle.id()))
-				.isFalse();
-	}
+        assertThat(repo.existsById(aisle.id())).isFalse();
+        assertThat(stockRepo.existsById("S1")).isFalse();
+        assertThat(stockRepo.existsById("S2")).isFalse();
+        assertThat(productRepo.existsById("P1")).isTrue();
+        assertThat(productRepo.existsById("P2")).isTrue();
+    }
 
-	@Test
-	void deleteAisle_throwsAisleNotFound_withInvalidId() throws Exception {
-		String invalidId = "A1";
-		mvc.perform(delete(uri + "/" + invalidId))
-				.andExpect(status().isNotFound());
+    @Test
+    void deleteAisle_throwsAisleNotFound_withInvalidId() throws Exception {
+        String invalidId = "A1";
+        mvc.perform(delete(uri + "/" + invalidId))
+                .andExpect(status().isNotFound());
 
-		assertThat(repo.existsById(invalidId))
-				.isFalse();
-	}
+        assertThat(repo.existsById(invalidId)).isFalse();
+    }
 
 	@Test
 	void getAislesWithIds_returnsAisles_withValidIds() throws Exception {

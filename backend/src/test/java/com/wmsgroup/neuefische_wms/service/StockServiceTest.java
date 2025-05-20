@@ -32,6 +32,7 @@ class StockServiceTest {
     private AisleRepository aisleRepo;
     private ProductRepository productRepo;
     private StockRepository stockRepo;
+    private CategoryService categoryService;
     private IdService idService;
 
     @BeforeEach
@@ -41,7 +42,8 @@ class StockServiceTest {
         productRepo = mock(ProductRepository.class);
         stockRepo = mock(StockRepository.class);
         idService = mock(IdService.class);
-        service = new StockService(aisleRepo, idService, productRepo, stockRepo);
+        categoryService = mock(CategoryService.class);
+        service = new StockService(aisleRepo, idService, productRepo, stockRepo, categoryService);
     }
 
     @Test
@@ -248,5 +250,14 @@ class StockServiceTest {
 
         verify(stockRepo, times(1)).findById(invalidStockId);
         verify(productRepo, never()).findById(any());
+    }
+
+    @Test
+    void deleteStockById_deletesStock_withValidId() {
+        String stockId = "S1";
+
+        service.deleteStockById(stockId);
+
+        verify(stockRepo, times(1)).deleteById(stockId);
     }
 }

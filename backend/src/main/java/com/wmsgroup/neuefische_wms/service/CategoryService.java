@@ -1,5 +1,9 @@
 package com.wmsgroup.neuefische_wms.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.wmsgroup.neuefische_wms.converter.CategoryConverter;
 import com.wmsgroup.neuefische_wms.converter.CategoryOutputDTOConverter;
 import com.wmsgroup.neuefische_wms.exception.CategoryNotFoundException;
@@ -11,11 +15,9 @@ import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
 import com.wmsgroup.neuefische_wms.repository.CategoryRepository;
 import com.wmsgroup.neuefische_wms.repository.ProductRepository;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -118,5 +120,4 @@ public class CategoryService {
         // Delete category itself
         categoryRepository.deleteById(id);
     }
-
 }
