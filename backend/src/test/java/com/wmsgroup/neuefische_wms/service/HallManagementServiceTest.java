@@ -19,7 +19,7 @@ import com.wmsgroup.neuefische_wms.model.dto.HallUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.HallRepository;
 
 class HallManagementServiceTest {
-	private HallManagementService service;
+	private HallService service;
 	private IdService idService;
 	private HallRepository hallRepo;
 
@@ -28,7 +28,7 @@ class HallManagementServiceTest {
 	void setup() {
 		idService = mock(IdService.class);
 		hallRepo = mock(HallRepository.class);
-		service = new HallManagementService(hallRepo, idService);
+		service = new HallService(hallRepo, idService);
 	}
 
 	@Test

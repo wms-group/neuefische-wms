@@ -15,14 +15,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.wmsgroup.neuefische_wms.exceptions.AisleNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.AisleUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.AisleRepository;
 
 class AisleManagementServiceTest {
-	private AisleManagementService service;
+	private AisleService service;
+    private StockService stockService;
 
 	private AisleRepository repo;
 	private IdService idService;
@@ -31,7 +32,8 @@ class AisleManagementServiceTest {
 	void setUp() {
 		repo = mock(AisleRepository.class);
 		idService = mock(IdService.class);
-		service = new AisleManagementService(idService, repo);
+        stockService = mock(StockService.class);
+		service = new AisleService(repo, idService, stockService);
 	}
 
 	@Test

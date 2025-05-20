@@ -14,12 +14,12 @@ import com.wmsgroup.neuefische_wms.model.dto.HallUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.HallRepository;
 
 @Service
-public class HallManagementService {
+public class HallService {
 
 	private final HallRepository hallRepo;
 	private final IdService idService;
 
-	public HallManagementService(HallRepository hallRepo, IdService idService) {
+	public HallService(HallRepository hallRepo, IdService idService) {
 		this.hallRepo = hallRepo;
 		this.idService = idService;
 	}
