@@ -2,7 +2,7 @@ import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import {clsx} from "clsx";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
-import {useEffect, useState} from "react";
+import {Dispatch, useEffect, useState} from "react";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 
 type CategoryFormProps = {
@@ -10,10 +10,10 @@ type CategoryFormProps = {
     value?: CategoryOutputDTO;
     defaultParentId: string;
     className?: string;
-    formRef?: React.RefObject<HTMLFormElement | null>;
+    setFormRef?: Dispatch<React.SetStateAction<HTMLFormElement | null>>;
 }
 
-const CategoryForm = ({onSubmit, value, defaultParentId, className, formRef}: CategoryFormProps) => {
+const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}: CategoryFormProps) => {
     const [category, setCategory] = useState<CategoryInputDTO>({
         name: value?.name ?? "",
         parentId: value?.parentId ?? defaultParentId,
@@ -44,11 +44,7 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, formRef}: Ca
 
     return (
         <form
-            ref={(ref) => {
-                if (formRef) {
-                    formRef.current = ref
-                }
-            }}
+            ref={setFormRef}
             className={cn("flex gap-1 flex-row justify-between items-end", className)}
             onSubmit={handleSubmit}>
             <div className="h-full grow flex-basis-40">
