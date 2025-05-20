@@ -67,7 +67,7 @@ jobs:
       - name: Download Backend Artefakt
         uses: actions/download-artifact@v3
         with:
-          name: backend-artifact      # so hast du das Artefakt beim Build benannt
+          name: app-jar      # so hast du das Artefakt beim Build benannt
           path: backend-target/
 
       - name: Login to Docker Hub
