@@ -20,7 +20,7 @@ import com.wmsgroup.neuefische_wms.repository.StockRepository;
 
 @Service
 public class StockService {
-    private final String idNotFoundMessage ="Product with given id was not found.";
+    private final static String ID_NOT_FOUND_MESSAGE ="Product with given id was not found.";
 
     private final ProductRepository productRepo;
     private final AisleRepository aisleRepo;
@@ -44,14 +44,14 @@ public class StockService {
             .sum();
 
         Product product = productRepo.findById(productId)
-            .orElseThrow(() -> new StockNotFoundException(idNotFoundMessage));
+            .orElseThrow(() -> new StockNotFoundException(ID_NOT_FOUND_MESSAGE));
 
         return new StockOutputDTO(productId, ProductOutputDTOConverter.convert(product), amount);
     }
 
     public StockOutputDTO add(StockInputDTO toAdd) throws StockNotFoundException, AisleNotFoundException {
         Product product = productRepo.findById(toAdd.productId())
-            .orElseThrow(() -> new StockNotFoundException(idNotFoundMessage));
+            .orElseThrow(() -> new StockNotFoundException(ID_NOT_FOUND_MESSAGE));
 
         List<Aisle> aisles = aisleRepo.findAll();
         Optional<Aisle> aisle = aisles.stream()
@@ -116,7 +116,7 @@ public class StockService {
         Stock stock = stockRepo.findById(stockId)
             .orElseThrow(() -> new StockNotFoundException("Stock with given id was not found"));
         Product product = productRepo.findById(stock.productId())
-            .orElseThrow(() -> new StockNotFoundException(idNotFoundMessage));
+            .orElseThrow(() -> new StockNotFoundException(ID_NOT_FOUND_MESSAGE));
 
         return new StockOutputDTO(stock.id(), ProductOutputDTOConverter.convert(product), stock.amount());
     }
