@@ -20,7 +20,7 @@ import com.wmsgroup.neuefische_wms.repository.StockRepository;
 
 @Service
 public class StockService {
-    private final static String ID_NOT_FOUND_MESSAGE ="Product with given id was not found.";
+    private static final String ID_NOT_FOUND_MESSAGE ="Product with given id was not found.";
 
     private final ProductRepository productRepo;
     private final AisleRepository aisleRepo;
