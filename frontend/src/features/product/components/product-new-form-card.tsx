@@ -17,7 +17,7 @@ export default function ProductNewFormCard({ onSubmit, value, className, default
     return (
         <Card
             title={"Neues Produkt"}
-            className={cn(className, "max-w-2xl")}
+            className={cn("w-full lg:max-w-2xl", className)}
             actions={
                 <div className={"flex justify-end w-full items-center"}>
                     <Button type={ButtonType.button}

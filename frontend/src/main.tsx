@@ -8,12 +8,17 @@ import {ProductListPage} from "@/features/product";
 import {CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
 import {HallDetailPage, HallEditPage, HallListPage} from "@/features/halls";
-import {DashboardLayoutPage, RootLayout} from "@/layouts";
-import { AisleDetailPage } from '@/features/aisles';
-import CategoriesProductsLayout from './layouts/categories-products-layout.tsx';
-import HallLayout from './layouts/hall-layout.tsx';
+import {
+    AisleLayout,
+    CategoriesProductsLayout,
+    DashboardLayoutPage,
+    HallLayout,
+    RootLayout,
+    StockLayout
+} from "@/layouts";
+import {AisleDetailPage} from '@/features/aisles';
 import Dashboard from "@/pages/dashboard.tsx";
-import AisleLayout from './layouts/aisle-layout.tsx';
+import {StockPage} from "@/features/stock";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -47,7 +52,7 @@ createRoot(document.getElementById('root')!).render(
 
                         {/*Relative routing for users*/}
                         <Route path={"/users"}>
-                            <Route path={"user-profile"} element={<UserProfilePage/>}/>
+                            <Route path={"settings"} element={<UserProfilePage/>}/>
                             <Route path={"create-user"} element={<UserCreatePage/>}/>
                             {/* rotes can be extend to
                                 users:id
@@ -66,6 +71,10 @@ createRoot(document.getElementById('root')!).render(
 
                             <Route path="aisles" element={<AisleLayout />}>
                                 <Route path=":id" element={<AisleDetailPage />}/>
+                        </Route>
+
+                        <Route path={"stock"} element={<StockLayout />}>
+                            <Route index element={<StockPage />} />
                         </Route>
                     </Route>
                 </Routes>
