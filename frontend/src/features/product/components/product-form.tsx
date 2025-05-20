@@ -17,7 +17,7 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, setFormRef}
     const [product, setProduct] = useState<ProductInputDTO>({
         name: value?.name ?? "",
         categoryId: value?.categoryId ?? defaultCategoryId,
-        price: value?.price ?? "0,00",
+        price: value?.price ?? "",
     });
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, setFormRef}
             setProduct({
                 name: "",
                 categoryId: defaultCategoryId,
-                price: "0,00",
+                price: "",
             });
         }
         return savedProduct;
