@@ -20,7 +20,7 @@ import com.wmsgroup.neuefische_wms.repository.StockRepository;
 
 @Service
 public class StockService {
-    private static final String ID_NOT_FOUND_MESSAGE ="Product with given id was not found.";
+    public static final String ID_NOT_FOUND_MESSAGE ="Product was not found.";
 
     private final ProductRepository productRepo;
     private final AisleRepository aisleRepo;
@@ -35,16 +35,17 @@ public class StockService {
     }
 
     public StockOutputDTO getProductCount(String productId) throws StockNotFoundException {
+        Product product = productRepo.findById(productId)
+            .orElseThrow(() -> new StockNotFoundException(ID_NOT_FOUND_MESSAGE));
+        
         List<String> stockIds = aisleRepo.findAll().stream()
             .flatMap(aisle -> aisle.stockIds().stream())
             .toList();
+
         int amount = stockRepo.findAllById(stockIds).stream()
             .filter(s -> s.productId().equals(productId))
             .mapToInt(Stock::amount)
             .sum();
-
-        Product product = productRepo.findById(productId)
-            .orElseThrow(() -> new StockNotFoundException(ID_NOT_FOUND_MESSAGE));
 
         return new StockOutputDTO(productId, ProductOutputDTOConverter.convert(product), amount);
     }
@@ -86,7 +87,7 @@ public class StockService {
             throw new StockNotFoundException("Could not find enough stock to remove.");
         }
         
-        List<String> removingStockIds = List.of();
+        List<String> removingStockIds = new ArrayList<>();
         int count = 0;
         for (Stock stock : stocks) {
             if(count + stock.amount() > toRemove.amount()) {
