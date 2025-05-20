@@ -28,7 +28,7 @@ public record ErrorDTO(
         Throwable cause = exception.getCause();
         String path = null;
         if (exception instanceof WithPathInterface) {
-            path = exception.getPath();
+            path = ((WithPathInterface) exception).getPath();
         }
         return new ErrorDTO(
                 exception.getClass().getSimpleName(),
