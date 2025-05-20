@@ -73,15 +73,15 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: $DOCKER_HUB_USERNAME
-          password: $DOCKER_HUB_PASSWORD
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Build and Push Backend Image
         uses: docker/build-push-action@v5
         with:
           context: .                           # verweist auf dein Dockerfile
           push: true                          # damit das Image hochgeladen wird
-          tags: $DOCKER_IMAGE_TAG
+          tags: ${{ secrets.DOCKER_IMAGE_TAG }}
 
   deploy-to-render:
     runs-on: ubuntu-latest
@@ -90,4 +90,4 @@ jobs:
     steps:
       - name: Trigger Render Deployment
         run: |
-          curl -X POST $RENDER_DEPLOY_HOOK
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
