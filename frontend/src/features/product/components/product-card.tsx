@@ -3,7 +3,7 @@ import Card from "@/components/shared/card.tsx";
 import {cn} from "@/utils";
 import Button from "@/components/ui/button.tsx";
 import {ProductForm} from "@/features/product";
-import {useRef, useState} from "react";
+import {Dispatch, SetStateAction, useState} from "react";
 
 type ProductCardProps = {
     product: ProductOutputDTO;
@@ -44,11 +44,11 @@ const EditOrSubmitButton = ({isEditing, handleEdit, handleSubmitClicked}: EditOr
 type ProductEditProps = {
     product: ProductOutputDTO;
     onSubmit: (product: ProductInputDTO) => Promise<unknown>;
-    formRef?: React.RefObject<HTMLFormElement>;
+    setFormRef: Dispatch<SetStateAction<HTMLFormElement | null>>;
 }
 
-const ProductEdit = ({product, onSubmit, formRef}: ProductEditProps) => (
-    <ProductForm defaultCategoryId={product.categoryId} onSubmit={onSubmit} value={product} {...{formRef}} />
+const ProductEdit = ({product, onSubmit, setFormRef}: ProductEditProps) => (
+    <ProductForm defaultCategoryId={product.categoryId} onSubmit={onSubmit} value={product} setFormRef={setFormRef} />
 );
 
 type ProductContentProps = {
@@ -63,7 +63,7 @@ const ProductContent = ({product}: ProductContentProps) => (
 
 const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps) => {
     const [isEditing, setIsEditing] = useState(false);
-    const formRef = useRef<HTMLFormElement>(null);
+    const [formRef, setFormRef] = useState<HTMLFormElement | null>(null);
 
     const handleDelete = () => {
         if (!onDelete) return;
@@ -76,8 +76,8 @@ const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps)
     };
 
     const handleSubmitClicked = () => {
-        if (!formRef.current) return;
-        formRef.current.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        if (!formRef) return;
+        formRef.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
     };
 
     const handleSubmit = (submittedProduct: ProductInputDTO): Promise<unknown> => {
@@ -102,9 +102,7 @@ const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps)
             className={cn(className, "max-w-2xl")}
         >
             {isEditing ?
-                <ProductEdit product={product} onSubmit={handleSubmit}
-                    {...(formRef.current !== null && {formRef: formRef as React.RefObject<HTMLFormElement>})}
-                /> :
+                <ProductEdit product={product} onSubmit={handleSubmit} setFormRef={setFormRef} /> :
                 <ProductContent product={product} />}
         </Card>
     );

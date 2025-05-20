@@ -2,7 +2,7 @@ import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import {clsx} from "clsx";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
 import {ProductInputDTO, ProductOutputDTO} from "@/types";
-import {useEffect, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 
 type ProductFormProps = {
@@ -10,14 +10,14 @@ type ProductFormProps = {
     value?: ProductOutputDTO;
     defaultCategoryId: string;
     className?: string;
-    formRef?: React.RefObject<HTMLFormElement | null>;
+    setFormRef: Dispatch<SetStateAction<HTMLFormElement | null>>
 }
 
-const ProductForm = ({onSubmit, value, defaultCategoryId, className, formRef}: ProductFormProps) => {
+const ProductForm = ({onSubmit, value, defaultCategoryId, className, setFormRef}: ProductFormProps) => {
     const [product, setProduct] = useState<ProductInputDTO>({
         name: value?.name ?? "",
         categoryId: value?.categoryId ?? defaultCategoryId,
-        price: value?.price ?? "",
+        price: value?.price ?? "0,00",
     });
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, formRef}: P
             setProduct({
                 name: "",
                 categoryId: defaultCategoryId,
-                price: "",
+                price: "0,00",
             });
         }
         return savedProduct;
@@ -46,11 +46,11 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, formRef}: P
 
     return (
         <form
-            ref={(ref) => {
-                if (formRef) {
-                    formRef.current = ref
-                }
-            }}
+            ref={setFormRef}
+            data-testid={cn(
+                "product-form",
+                value ? "edit" : "new"
+            )}
             className={cn("flex gap-1 flex-row justify-between items-end", className)}
             onSubmit={handleSubmit}>
             <div className="h-full grow flex-basis-40">
