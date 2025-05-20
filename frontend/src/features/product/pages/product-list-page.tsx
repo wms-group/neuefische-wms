@@ -1,5 +1,5 @@
 import {CategoryOutputDTO, ProductInputDTO, ProductOutputDTO} from "@/types";
-import {ProductNewFormCard, ProductList} from "@/features/product";
+import {ProductList, ProductNewFormCard} from "@/features/product";
 import {toast} from "sonner";
 import {AxiosError} from "axios";
 import {useProductContext} from "@/context/products/useProductContext.ts";

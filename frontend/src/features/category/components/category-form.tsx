@@ -13,7 +13,7 @@ type CategoryFormProps = {
     formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-const CategoryForm =({onSubmit, value, defaultParentId, className, formRef}: CategoryFormProps) => {
+const CategoryForm = ({onSubmit, value, defaultParentId, className, formRef}: CategoryFormProps) => {
     const [category, setCategory] = useState<CategoryInputDTO>({
         name: value?.name ?? "",
         parentId: value?.parentId ?? defaultParentId,
@@ -49,41 +49,41 @@ const CategoryForm =({onSubmit, value, defaultParentId, className, formRef}: Cat
             ref={(ref) => {
                 if (formRef) {
                     formRef.current = ref
-                }}}
-                className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className)}
-                onSubmit={handleSubmit}>
-                <div className="h-full w-full">
-                    <InputWithLabel
-                        label={"Name"}
-                        value={category.name}
-                        onChange={handleChange}
-                        onBlur={handleChange}
-                        name={"name"}
-                        placeholder={"Category Name..."}
-                        className={cn(
-                            'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
-                            'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
-                        )}
-                    />
-                </div>
-                <div className="h-full w-full">
-                    <label htmlFor="parentId" className={clsx("text-sm/6 font-medium text-gray")}>Unterkategorie
-                        von...</label>
-                    <SearchableSelect
-                        name="parentId"
-                        options={selectGroupsFromCategoryOutputDTOs(categories)}
-                        onChange={(newValue) => handleChange({
-                            target: {
-                                name: 'parentId',
-                                value: newValue?.value
-                            }
-                        } as unknown as React.ChangeEvent<HTMLInputElement>)}
-                        value={category.parentId}
-                        defaultValue={defaultParentId}
-                    />
-                </div>
-            </form>
-        </Card>
+                }
+            }}
+            className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className)}
+            onSubmit={handleSubmit}>
+            <div className="h-full w-full">
+                <InputWithLabel
+                    label={"Name"}
+                    value={category.name}
+                    onChange={handleChange}
+                    onBlur={handleChange}
+                    name={"name"}
+                    placeholder={"Category Name..."}
+                    className={cn(
+                        'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
+                        'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
+                    )}
+                />
+            </div>
+            <div className="h-full w-full">
+                <label htmlFor="parentId" className={cn("text-sm/6 font-medium text-gray")}>Unterkategorie
+                    von...</label>
+                <SearchableSelect
+                    name="parentId"
+                    options={selectGroupsFromCategoryOutputDTOs(categories)}
+                    onChange={(newValue) => handleChange({
+                        target: {
+                            name: 'parentId',
+                            value: newValue?.value
+                        }
+                    } as unknown as React.ChangeEvent<HTMLInputElement>)}
+                    value={category.parentId}
+                    defaultValue={defaultParentId}
+                />
+            </div>
+        </form>
     )
 }
 

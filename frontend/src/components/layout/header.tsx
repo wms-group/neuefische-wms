@@ -17,9 +17,6 @@ const Header = () => {
                 </Button>
                 <h1>SEARCH</h1>
             </div>
-            <div>
-                <p>LOG-IN</p>
-            </div>
         </header>
     )
 }

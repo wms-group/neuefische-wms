@@ -1,5 +1,5 @@
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
-import {CategoryBreadcrumbs, CategoryNewFormCard, CategoryList} from "@/features/category";
+import {CategoryBreadcrumbs, CategoryList, CategoryNewFormCard} from "@/features/category";
 import {toast} from "sonner";
 import {AxiosError} from "axios";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
@@ -61,7 +61,7 @@ const CategoryListPage = () => {
             <GridLayout  gridCols={{ base: 1, sm: 2, xl: 3 }}>
             <CategoryList parentId={category?.id ?? null} onSubmit={handleSubmitUpdatedCategory} onDelete={handleDeleteCategory}/>
             </GridLayout>
-        </div>
+        </LayoutContainer>
     )
 }
 
