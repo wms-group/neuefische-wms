@@ -1,5 +1,9 @@
 package com.wmsgroup.neuefische_wms.service;
 
+import com.wmsgroup.neuefische_wms.exception.CategoryNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.NoValidNumberException;
+import com.wmsgroup.neuefische_wms.exception.NotBlankException;
+import com.wmsgroup.neuefische_wms.exception.ProductNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.ProductInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.ProductOutputDTO;
@@ -68,7 +72,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void addProduct_shouldThrowIllegalArgumentException_whenCategoryIdDoesNotExist() {
+    void addProduct_shouldThrowCategoryNotFoundException_whenCategoryIdDoesNotExist() {
         // Given
         String missingCategoryId = "missing-category-id";
         ProductInputDTO inputDTO = new ProductInputDTO("Child Product", missingCategoryId, "10,00" );
@@ -76,13 +80,66 @@ class ProductServiceTest {
         when(categoryRepository.existsById(missingCategoryId)).thenReturn(false);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
+        CategoryNotFoundException ex = assertThrows(
+                CategoryNotFoundException.class,
                 () -> productService.addProduct(inputDTO)
         );
-        assertEquals("Category for categoryId missing-category-id does not exist", ex.getMessage());
+        assertEquals("Kategorie für die Id missing-category-id existiert nicht.", ex.getMessage());
+        assertEquals("product/new/categoryId", ex.getPath());
 
         verify(categoryRepository).existsById(missingCategoryId);
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    void addProduct_shouldThrowNotBlankException_whenNameIsBlank() {
+        // Given
+        String categoryId = "category-id";
+        ProductInputDTO inputDTO = new ProductInputDTO("   ", categoryId, "10,00" );
+
+        // When / Then
+        NotBlankException ex = assertThrows(
+                NotBlankException.class,
+                () -> productService.addProduct(inputDTO)
+        );
+        assertEquals("Name darf nicht leer sein!", ex.getMessage());
+        assertEquals("product/new/name", ex.getPath());
+
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    void addProduct_shouldThrowNotBlankException_whenPriceIsBlank() {
+        // Given
+        String categoryId = "category-id";
+        ProductInputDTO inputDTO = new ProductInputDTO("Product", categoryId, "   " );
+
+        // When / Then
+        NotBlankException ex = assertThrows(
+                NotBlankException.class,
+                () -> productService.addProduct(inputDTO)
+        );
+        assertEquals("Preis darf nicht leer sein!", ex.getMessage());
+        assertEquals("product/new/price", ex.getPath());
+
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    void addProduct_shouldThrowNoValidNumberException_whenPriceIsNotNumeric() {
+        // Given
+        String categoryId = "category-id";
+        ProductInputDTO inputDTO = new ProductInputDTO("Product", categoryId, "xxx" );
+
+        // When / Then
+        NoValidNumberException ex = assertThrows(
+                NoValidNumberException.class,
+                () -> productService.addProduct(inputDTO)
+        );
+        assertEquals("Preis muss eine gültige Zahl sein!", ex.getMessage());
+        assertEquals("product/new/price", ex.getPath());
+
+        verify(productRepository, never()).save(any());
     }
 
     @Test
@@ -141,25 +198,36 @@ class ProductServiceTest {
         when(productRepository.existsById(productId)).thenReturn(false);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        ProductNotFoundException ex = assertThrows(ProductNotFoundException.class, () ->
                 productService.updateProduct(productId, inputDTO)
         );
-        assertTrue(ex.getMessage().contains(productId));
+
+        assertEquals("Produkt mit Id doesNotExist existiert nicht.", ex.getMessage());
+        assertEquals("product/doesNotExist/", ex.getPath());
+
+        verify(productRepository).existsById(productId);
+        verify(productRepository, never()).save(any());
     }
 
     @Test
     void updateProduct_shouldThrowIfCategoryDoesNotExist() {
         // Given
         String productId = "1";
-        ProductInputDTO inputDTO = new ProductInputDTO("Test Product", "invalidCat", "10,00");
+        String invalidCatId = "invalidCat";
+        ProductInputDTO inputDTO = new ProductInputDTO("Test Product", invalidCatId, "10,00");
         when(productRepository.existsById(productId)).thenReturn(true);
-        when(categoryRepository.existsById("invalidCat")).thenReturn(false);
+        when(categoryRepository.existsById(invalidCatId)).thenReturn(false);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        CategoryNotFoundException ex = assertThrows(CategoryNotFoundException.class, () ->
                 productService.updateProduct(productId, inputDTO)
         );
-        assertTrue(ex.getMessage().contains("invalidCat"));
+
+        assertEquals("Kategorie für die Id invalidCat existiert nicht.", ex.getMessage());
+        assertEquals("product/1/categoryId", ex.getPath());
+
+        verify(categoryRepository).existsById(invalidCatId);
+        verify(productRepository, never()).save(any());
     }
 
     @Test
@@ -168,13 +236,52 @@ class ProductServiceTest {
         String productId = "1";
         ProductInputDTO inputDTO = new ProductInputDTO("   ", "cat1", "10,00");
         when(productRepository.existsById(productId)).thenReturn(true);
-        when(categoryRepository.existsById("cat1")).thenReturn(true);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        NotBlankException ex = assertThrows(NotBlankException.class, () ->
                 productService.updateProduct(productId, inputDTO)
         );
-        assertEquals("Name must not be blank", ex.getMessage());
+
+        assertEquals("Name darf nicht leer sein!", ex.getMessage());
+        assertEquals("product/1/name", ex.getPath());
+
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    void updateProduct_shouldThrowIfPriceIsBlank() {
+        // Given
+        String productId = "1";
+        ProductInputDTO inputDTO = new ProductInputDTO("Product", "cat1", "   ");
+        when(productRepository.existsById(productId)).thenReturn(true);
+
+        // When / Then
+        NotBlankException ex = assertThrows(NotBlankException.class, () ->
+                productService.updateProduct(productId, inputDTO)
+        );
+
+        assertEquals("Preis darf nicht leer sein!", ex.getMessage());
+        assertEquals("product/1/price", ex.getPath());
+
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    void updateProduct_shouldThrowIfPriceIsNonNumeric() {
+        // Given
+        String productId = "1";
+        ProductInputDTO inputDTO = new ProductInputDTO("Product", "cat1", "Acht Dollar");
+        when(productRepository.existsById(productId)).thenReturn(true);
+
+        // When / Then
+        NoValidNumberException ex = assertThrows(NoValidNumberException.class, () ->
+                productService.updateProduct(productId, inputDTO)
+        );
+
+        assertEquals("Preis muss eine gültige Zahl sein!", ex.getMessage());
+        assertEquals("product/1/price", ex.getPath());
+
+        verify(productRepository, never()).save(any());
     }
 
     @Test
@@ -192,10 +299,14 @@ class ProductServiceTest {
         String productId = "notfound";
         when(productRepository.existsById(productId)).thenReturn(false);
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        ProductNotFoundException ex = assertThrows(ProductNotFoundException.class, () ->
                 productService.deleteProduct(productId)
         );
-        assertTrue(ex.getMessage().contains(productId));
+
+        assertEquals("Produkt mit Id notfound existiert nicht.", ex.getMessage());
+        assertEquals("product/notfound/", ex.getPath());
+
+        verify(productRepository, never()).delete(any());
     }
 
     @Test
@@ -262,7 +373,8 @@ class ProductServiceTest {
         when(categoryRepository.existsById("cat-1")).thenReturn(false);
 
         // When / Then
-        assertThrows(IllegalArgumentException.class, () -> productService.getProductsByCategoryId("cat-1"));
+        assertThrows(CategoryNotFoundException.class, () -> productService.getProductsByCategoryId("cat-1"));
+
         verify(categoryRepository).existsById("cat-1");
     }
 }
