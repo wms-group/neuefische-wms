@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {Dispatch, useEffect, useState} from "react";
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
@@ -10,10 +10,10 @@ type CategoryFormProps = {
     value?: CategoryOutputDTO;
     defaultParentId: string;
     className?: string;
-    formRef?: React.RefObject<HTMLFormElement | null>;
+    setFormRef?: Dispatch<React.SetStateAction<HTMLFormElement | null>>;
 }
 
-const CategoryForm = ({onSubmit, value, defaultParentId, className, formRef}: CategoryFormProps) => {
+const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}: CategoryFormProps) => {
     const [category, setCategory] = useState<CategoryInputDTO>({
         name: value?.name ?? "",
         parentId: value?.parentId ?? defaultParentId,
@@ -46,11 +46,7 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, formRef}: Ca
 
     return (
         <form
-            ref={(ref) => {
-                if (formRef) {
-                    formRef.current = ref
-                }
-            }}
+            ref={setFormRef}
             className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className)}
             onSubmit={handleSubmit}>
             <div className="h-full w-full">
