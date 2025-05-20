@@ -244,7 +244,7 @@ class StockServiceTest {
 
         assertThatThrownBy(() -> service.getStockById(invalidStockId))
                 .isInstanceOf(StockNotFoundException.class)
-                .hasMessage("Stock with given id was not found.");
+                .hasMessage("Stock was not found.");
 
         verify(stockRepo, times(1)).findById(invalidStockId);
         verify(productRepo, never()).findById(any());
