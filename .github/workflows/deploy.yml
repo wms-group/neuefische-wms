@@ -1,12 +1,8 @@
 name: Neue Fische WMS Deployment
 on:
-  workflow_run:
-    workflows:
-      - Test with Maven
+  push:
     branches:
       - main
-    types:
-      - completed
 
 jobs:
   frontend-build:
