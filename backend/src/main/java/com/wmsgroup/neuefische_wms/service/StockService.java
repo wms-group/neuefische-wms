@@ -83,7 +83,7 @@ public class StockService {
             .toList();
         
         if(potentialStock.stream().mapToInt(Stock::amount).sum() < toRemove.amount()) {
-            throw new StockNotFoundException("Could not find enough stock toList() remove.");
+            throw new StockNotFoundException("Could not find enough stock to remove.");
         }
         
         List<String> removingStockIds = List.of();
@@ -114,7 +114,7 @@ public class StockService {
     
     public StockOutputDTO getStockById(String stockId) throws StockNotFoundException {
         Stock stock = stockRepo.findById(stockId)
-            .orElseThrow(() -> new StockNotFoundException("Stock with given id was not found"));
+            .orElseThrow(() -> new StockNotFoundException("Stock with given id was not found."));
         Product product = productRepo.findById(stock.productId())
             .orElseThrow(() -> new StockNotFoundException(ID_NOT_FOUND_MESSAGE));
 
