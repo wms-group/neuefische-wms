@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wmsgroup.neuefische_wms.exception.AisleNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.StockNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.AisleUpdateDTO;
@@ -61,7 +62,7 @@ public class AisleController {
 	}
 
     @GetMapping("/{aisleId}/stock")
-    public ResponseEntity<List<StockOutputDTO>> getStock(@PathVariable String aisleId) throws AisleNotFoundException {
+    public ResponseEntity<List<StockOutputDTO>> getStock(@PathVariable String aisleId) throws AisleNotFoundException, StockNotFoundException {
         return ResponseEntity.ok(aisleService.getStockFrom(aisleId));
     }
 }

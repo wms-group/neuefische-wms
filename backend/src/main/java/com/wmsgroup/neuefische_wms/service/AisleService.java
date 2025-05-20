@@ -1,5 +1,6 @@
 package com.wmsgroup.neuefische_wms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,17 +64,15 @@ public class AisleService {
 		return aisleRepo.findAllById(ids);
 	}
 
-    public List<StockOutputDTO> getStockFrom(String aisleId) throws AisleNotFoundException {
-        Aisle aisle = aisleRepo.findById(aisleId)
-        .orElseThrow(() -> new AisleNotFoundException("Aisle with id: " + aisleId + " was not found."));
+	public List<StockOutputDTO> getStockFrom(String aisleId) throws AisleNotFoundException, StockNotFoundException {
+		Aisle aisle = aisleRepo.findById(aisleId)
+		.orElseThrow(() -> new AisleNotFoundException("Aisle with id: " + aisleId + " was not found."));
 
-		return aisle.stockIds().stream().map(stockId -> {
-			try {
-				return stockService.getStockById(stockId);
-			} catch (StockNotFoundException e) {
-				throw new StockNotFoundException("Stock with id: " + stockId + " was not found.", e);
-			}
-		}).toList();
-    }
+		List<StockOutputDTO> stockList = new ArrayList<>();
+		for (String stockId : aisle.stockIds()) {
+			stockList.add(stockService.getStockById(stockId));
+		}
+		return stockList;
+	}
 
 }

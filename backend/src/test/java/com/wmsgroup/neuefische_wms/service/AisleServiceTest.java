@@ -21,7 +21,7 @@ import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.AisleUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.AisleRepository;
 
-class AisleManagementServiceTest {
+class AisleServiceTest {
 	private AisleService service;
     private StockService stockService;
 

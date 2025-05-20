@@ -18,7 +18,7 @@ import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.HallUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.HallRepository;
 
-class HallManagementServiceTest {
+class HallServiceTest {
 	private HallService service;
 	private IdService idService;
 	private HallRepository hallRepo;
