@@ -2,7 +2,7 @@ import {CategoryInputDTO, CategoryOutputDTO, SelectOption} from "@/types";
 import Card from "@/components/shared/card.tsx";
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import Button from "@/components/ui/button.tsx";
-import {useEffect, useRef, useState} from "react";
+import {Dispatch, useEffect, useState} from "react";
 import CategoryLink from "@/features/category/ui/CategoryLink.tsx";
 import {CategoryForm} from "@/features/category";
 import ButtonWithSelect from "@/components/ui/ButtonWithSelect.tsx";
@@ -67,11 +67,11 @@ const EditOrSubmitButton = ({isEditing, handleEdit, handleSubmitClicked}: EditOr
 type CategoryEditProps = {
     category: CategoryOutputDTO;
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
-    formRef?: React.RefObject<HTMLFormElement>;
+    setFormRef?: Dispatch<React.SetStateAction<HTMLFormElement | null>>;
 }
 
-const CategoryEdit = ({category, onSubmit, formRef}: CategoryEditProps) => (
-    <CategoryForm defaultParentId={category.parentId ?? ""} onSubmit={onSubmit} value={category} {...{formRef}}></CategoryForm>
+const CategoryEdit = ({category, onSubmit, setFormRef}: CategoryEditProps) => (
+    <CategoryForm defaultParentId={category.parentId ?? ""} onSubmit={onSubmit} value={category} {...{setFormRef}}></CategoryForm>
 )
 
 type CategoryContentProps = {
@@ -99,7 +99,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
     const [isEditing, setIsEditing] = useState(false);
     const [moveTo, setMoveTo] = useState<string | null>(null);
 
-    const formRef = useRef<HTMLFormElement>(null);
+    const [formRef, setFormRef] = useState<HTMLFormElement | null>(null);
 
     const handleDelete = () => {
         if (!onDelete) return Promise.resolve();
@@ -117,8 +117,8 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
     }
 
     const handleSubmitClicked = () => {
-        if (!formRef.current) return;
-        formRef.current.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        if (!formRef) return;
+        formRef.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
     }
 
     const handleSubmit = (submittedCategory: CategoryInputDTO): Promise<unknown> => {
@@ -146,7 +146,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
                 <CategoryEdit
                     category={category}
                     onSubmit={handleSubmit}
-                    {...(formRef.current !== null && {formRef: formRef as React.RefObject<HTMLFormElement>})}
+                    setFormRef={setFormRef}
                 /> :
                 <CategoryContent
                     category={category}
