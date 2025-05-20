@@ -2,8 +2,7 @@ name: Neue Fische WMS Deployment
 on:
   workflow_run:
     workflows:
-      - SonarQube
-      - Build Frontend
+      - Test with Maven
     branches:
       - main
     types:
@@ -60,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 'app-jar'
-          path: 'backend/target/app.jar'
+          path: 'backend/target/wms-app.jar'
 
   push-to-docker-hub:
     runs-on: ubuntu-latest
