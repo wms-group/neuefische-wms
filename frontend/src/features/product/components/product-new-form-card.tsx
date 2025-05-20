@@ -21,7 +21,7 @@ export default function ProductNewFormCard({ onSubmit, value, className, default
             actions={
                 <div className={"flex justify-end w-full items-center"}>
                     <Button type={ButtonType.button}
-                            onClick={() => formRef?.current?.dispatchEvent(new Event("submit", {
+                            onClick={() => formRef?.dispatchEvent(new Event("submit", {
                                 cancelable: true,
                                 bubbles: true
                             }))}

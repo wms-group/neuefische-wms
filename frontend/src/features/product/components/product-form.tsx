@@ -69,12 +69,8 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, setFormRef}
                 <label htmlFor="price" className={cn("text-sm/6 font-medium text-gray")}>Preis</label>
                 <input
                     name="price"
-                    value={parseFloat(product.price.replace(",", ".")).toFixed(2)}
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="1000000"
-                    placeholder="0.00"
+                    value={product.price}
+                    placeholder="0,00"
                     className={cn(
                         'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
                         'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
