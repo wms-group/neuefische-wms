@@ -96,7 +96,7 @@ class CategoryControllerTest {
         assertThat(result)
                 .isNotNull()
                 .hasFieldOrPropertyWithValue("error", "NullPointerException")
-                .hasFieldOrPropertyWithValue("message", "name is marked non-null but is null");
+                .hasFieldOrPropertyWithValue("message", "Name is marked non-null but is null");
     }
 
     @Test
@@ -108,7 +108,7 @@ class CategoryControllerTest {
                         .content(objectMapper.writeValueAsString(inputDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+                .andExpect(jsonPath("$.error").value("CategoryNotFoundException"));
     }
 
     @Test
@@ -188,7 +188,7 @@ class CategoryControllerTest {
 
         assertThat(result)
                 .isNotNull()
-                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+                .hasFieldOrPropertyWithValue("error", "CategoryNotFoundException");
     }
 
     @Test
@@ -207,7 +207,7 @@ class CategoryControllerTest {
 
         assertThat(result)
                 .isNotNull()
-                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+                .hasFieldOrPropertyWithValue("error", "CategoryNotFoundException");
     }
 
     @Test
@@ -242,7 +242,7 @@ class CategoryControllerTest {
 
         assertThat(result)
                 .isNotNull()
-                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+                .hasFieldOrPropertyWithValue("error", "CategoryNotFoundException");
     }
 
     @Test
@@ -258,8 +258,8 @@ class CategoryControllerTest {
 
         assertThat(result)
                 .isNotNull()
-                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException")
-                .hasFieldOrPropertyWithValue("message", "Can't move products to null category, empty category first!");
+                .hasFieldOrPropertyWithValue("error", "CategoryNotValidException")
+                .hasFieldOrPropertyWithValue("message", "Bitte Produkte erst löschen oder verschieben!");
         assertThat(categoryRepository.findById("src")).isPresent();
     }
 
@@ -276,7 +276,7 @@ class CategoryControllerTest {
 
         assertThat(result)
                 .isNotNull()
-                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+                .hasFieldOrPropertyWithValue("error", "CategoryNotFoundException");
         assertThat(categoryRepository.findById("src2")).isPresent();
     }
 
@@ -312,6 +312,6 @@ class CategoryControllerTest {
 
         assertThat(result)
                 .isNotNull()
-                .hasFieldOrPropertyWithValue("error", "IllegalArgumentException");
+                .hasFieldOrPropertyWithValue("error", "CategoryNotFoundException");
     }
 }

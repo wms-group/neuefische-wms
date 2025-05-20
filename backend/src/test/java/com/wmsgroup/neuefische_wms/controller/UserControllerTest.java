@@ -155,7 +155,7 @@ class UserControllerTest {
   void getUserById_shouldReturnNotFound_whenUserDoesNotExist() throws Exception {
     mockMvc.perform(get("/api/wms-group/non-existent-id"))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.error").value("Not Found"))
+            .andExpect(jsonPath("$.error").value("UserNotFoundException"))
             .andExpect(jsonPath("$.message").value("User with the id:  not found!"));
   }
 }

@@ -15,6 +15,11 @@ export function cn(...inputs: ClassValue[]) {
 * */
 export const FullYear = () => new Date().getFullYear();
 
+export const arraysEqual = (a: string[], b: string[]): boolean => {
+    if (a.length !== b.length) return false;
+    return a.every((val, idx) => val === b[idx]);
+}
+
 /*
 * Return Select Groups for react-select from Categories
 */

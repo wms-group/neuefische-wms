@@ -1,5 +1,8 @@
 package com.wmsgroup.neuefische_wms.service;
 
+import com.wmsgroup.neuefische_wms.exception.CategoryNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.CategoryNotValidException;
+import com.wmsgroup.neuefische_wms.exception.NotBlankException;
 import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryOutputDTO;
@@ -59,7 +62,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void addCategory_shouldThrowIllegalArgumentException_whenParentIdDoesNotExist() {
+    void addCategory_shouldThrowCategoryNotFoundException_whenParentIdDoesNotExist() {
         // Given
         String missingParentId = "missing-parent-id";
         CategoryInputDTO inputDTO = new CategoryInputDTO("Child Category", missingParentId);
@@ -67,13 +70,31 @@ class CategoryServiceTest {
         when(categoryRepository.existsById(missingParentId)).thenReturn(false);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
+        CategoryNotFoundException ex = assertThrows(
+                CategoryNotFoundException.class,
                 () -> categoryService.addCategory(inputDTO)
         );
-        assertEquals("Parent category with id missing-parent-id does not exist", ex.getMessage());
+        assertEquals("Oberkategorie mit id missing-parent-id existiert nicht.", ex.getMessage());
+        assertEquals("category/new/parentId", ex.getPath());
 
         verify(categoryRepository).existsById(missingParentId);
+        verify(categoryRepository, never()).save(any());
+    }
+
+    @Test
+    void addCategory_shouldThrowNotBlankException_whenNameIsBlank() {
+        // Given
+        CategoryInputDTO inputDTO = new CategoryInputDTO("   ", null);
+
+        // When / Then
+        NotBlankException ex = assertThrows(
+                NotBlankException.class,
+                () -> categoryService.addCategory(inputDTO)
+        );
+        assertEquals("Name darf nicht leer sein!", ex.getMessage());
+        assertEquals("category/new/name", ex.getPath());
+
+        verify(categoryRepository, never()).save(any());
     }
 
     @Test
@@ -130,7 +151,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void updateCategory_shouldThrowIllegalArgumentException_whenCategoryDoesNotExist() {
+    void updateCategory_shouldThrowCategoryNotFoundException_whenCategoryDoesNotExist() {
         // Given
         String categoryId = "notFound";
         CategoryInputDTO inputDTO = new CategoryInputDTO("newname", null);
@@ -138,16 +159,18 @@ class CategoryServiceTest {
         when(categoryRepository.existsById(categoryId)).thenReturn(false);
 
         // When/Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        CategoryNotFoundException ex = assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.updateCategory(categoryId, inputDTO)
         );
-        assertEquals("Category with id notFound does not exist", ex.getMessage());
+        assertEquals("Kategorie mit id notFound existiert nicht.", ex.getMessage());
+        assertEquals("category/notFound/", ex.getPath());
+
         verify(categoryRepository).existsById(categoryId);
         verify(categoryRepository, never()).save(any());
     }
 
     @Test
-    void updateCategory_shouldThrowIllegalArgumentException_whenParentCategoryDoesNotExist() {
+    void updateCategory_shouldThrowCategoryNotFoundException_whenParentCategoryDoesNotExist() {
         // Given
         String categoryId = "cat-1";
         String parentCategoryId = "not-found";
@@ -157,17 +180,19 @@ class CategoryServiceTest {
         when(categoryRepository.existsById(parentCategoryId)).thenReturn(false);
 
         // When/Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        CategoryNotFoundException ex = assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.updateCategory(categoryId, inputDTO)
         );
-        assertEquals("Parent category with id not-found does not exist", ex.getMessage());
+        assertEquals("Oberkategorie mit id not-found existiert nicht.", ex.getMessage());
+        assertEquals("category/cat-1/parentId", ex.getPath());
+
         verify(categoryRepository).existsById(categoryId);
         verify(categoryRepository).existsById(parentCategoryId);
         verify(categoryRepository, never()).save(any());
     }
 
     @Test
-    void updateCategory_shouldThrowIllegalArgumentException_whenNameIsBlank() {
+    void updateCategory_shouldThrowNotBlankException_whenNameIsBlank() {
         // Given
         String categoryId = "cat-2";
         CategoryInputDTO inputDTO = new CategoryInputDTO("   ", null);
@@ -175,10 +200,12 @@ class CategoryServiceTest {
         when(categoryRepository.existsById(categoryId)).thenReturn(true);
 
         // When/Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        NotBlankException ex = assertThrows(NotBlankException.class,
                 () -> categoryService.updateCategory(categoryId, inputDTO)
         );
-        assertEquals("Name must not be blank", ex.getMessage());
+        assertEquals("Name darf nicht leer sein!", ex.getMessage());
+        assertEquals("category/cat-2/name", ex.getPath());
+
         verify(categoryRepository).existsById(categoryId);
         verify(categoryRepository, never()).save(any());
     }
@@ -206,10 +233,12 @@ class CategoryServiceTest {
         when(categoryRepository.existsById(categoryId)).thenReturn(false);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        CategoryNotFoundException ex = assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.deleteCategory(categoryId)
         );
-        assertEquals("Category with id notExist does not exist", ex.getMessage());
+        assertEquals("Kategorie mit id notExist existiert nicht.", ex.getMessage());
+        assertEquals("category/notExist/", ex.getPath());
+
         verify(categoryRepository).existsById(categoryId);
         verify(categoryRepository, never()).deleteById(anyString());
     }
@@ -257,13 +286,14 @@ class CategoryServiceTest {
         String categoryId = "notExist";
         String moveToCategoryId = "exists";
         when(categoryRepository.existsById(categoryId)).thenReturn(false);
-        when(categoryRepository.existsById(moveToCategoryId)).thenReturn(true);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        CategoryNotFoundException ex = assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId)
         );
-        assertEquals("Category with id notExist does not exist", ex.getMessage());
+        assertEquals("Kategorie mit id notExist existiert nicht.", ex.getMessage());
+        assertEquals("category/notExist/", ex.getPath());
+
         verify(categoryRepository).existsById(categoryId);
         verify(categoryRepository, never()).deleteById(anyString());
     }
@@ -271,15 +301,18 @@ class CategoryServiceTest {
     @Test
     void deleteCategoryAndMoveChildren_shouldThrow_whenTargetCategoryNotExists() {
         // Given
-        String categoryId = "notExist";
-        String moveToCategoryId = "exists";
+        String categoryId = "exist";
+        String moveToCategoryId = "notExist";
+        when(categoryRepository.existsById(categoryId)).thenReturn(true);
         when(categoryRepository.existsById(moveToCategoryId)).thenReturn(false);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        CategoryNotFoundException ex = assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId)
         );
-        assertEquals("New category with id exists does not exist", ex.getMessage());
+        assertEquals("Neue Kategorie mit id notExist existiert nicht.", ex.getMessage());
+        assertEquals("category/exist/moveToCategory", ex.getPath());
+
         verify(categoryRepository, never()).deleteById(anyString());
     }
 
@@ -288,13 +321,16 @@ class CategoryServiceTest {
         // Given
         String categoryId = "exists";
         String moveToCategoryId = null;
+        when(categoryRepository.existsById(categoryId)).thenReturn(true);
         when(productRepository.existsByCategoryId(categoryId)).thenReturn(true);
 
         // When / Then
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        CategoryNotValidException ex = assertThrows(CategoryNotValidException.class,
                 () -> categoryService.deleteCategoryAndMoveChildren(categoryId, moveToCategoryId)
         );
-        assertEquals("Can't move products to null category, empty category first!", ex.getMessage());
+        assertEquals("Bitte Produkte erst löschen oder verschieben!", ex.getMessage());
+        assertEquals("category/exists/moveToCategory", ex.getPath());
+
         verify(categoryRepository, never()).deleteById(anyString());
     }
 

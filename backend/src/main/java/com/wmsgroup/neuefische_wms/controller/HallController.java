@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wmsgroup.neuefische_wms.exceptions.HallNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.HallNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Hall;
 import com.wmsgroup.neuefische_wms.model.dto.ErrorDTO;
 import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;

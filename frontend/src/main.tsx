@@ -9,9 +9,11 @@ import {CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
 import {HallDetailPage, HallEditPage, HallListPage} from "@/features/halls";
 import {DashboardLayoutPage, RootLayout} from "@/layouts";
+import { AisleDetailPage } from '@/features/aisles';
 import CategoriesProductsLayout from './layouts/categories-products-layout.tsx';
 import HallLayout from './layouts/hall-layout.tsx';
 import Dashboard from "@/pages/dashboard.tsx";
+import AisleLayout from './layouts/aisle-layout.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -56,8 +58,14 @@ createRoot(document.getElementById('root')!).render(
                         <Route path={"halls"} element={<HallLayout />}>
                             <Route index element={<HallListPage />} />
                             <Route path="new" element={<HallEditPage />} />
-                            <Route path=":id" element={<HallDetailPage />} />
-                            <Route path=":id/edit" element={<HallEditPage />} />
+                            <Route path=":id" element={<HallDetailPage />} >
+                            <Route path=":aisleId" element={<AisleDetailPage />} />
+                                </Route>
+                                <Route path=":id/edit" element={<HallEditPage />} />
+                            </Route>
+
+                            <Route path="aisles" element={<AisleLayout />}>
+                                <Route path=":id" element={<AisleDetailPage />}/>
                         </Route>
                     </Route>
                 </Routes>

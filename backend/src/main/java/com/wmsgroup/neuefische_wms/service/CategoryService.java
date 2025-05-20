@@ -2,6 +2,9 @@ package com.wmsgroup.neuefische_wms.service;
 
 import com.wmsgroup.neuefische_wms.converter.CategoryConverter;
 import com.wmsgroup.neuefische_wms.converter.CategoryOutputDTOConverter;
+import com.wmsgroup.neuefische_wms.exception.CategoryNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.CategoryNotValidException;
+import com.wmsgroup.neuefische_wms.exception.NotBlankException;
 import com.wmsgroup.neuefische_wms.model.Category;
 import com.wmsgroup.neuefische_wms.model.Product;
 import com.wmsgroup.neuefische_wms.model.dto.CategoryInputDTO;
@@ -21,7 +24,29 @@ public class CategoryService {
     private final ProductRepository productRepository;
     private final IdService idService;
 
-    private static final String CATEGORY_NOT_FOUND_MESSAGE = "Category with id %s does not exist";
+    private static final String CATEGORY_NOT_FOUND_MESSAGE_FORMAT = "Kategorie mit id %s existiert nicht.";
+    private static final String PARENT_NOT_FOUND_MESSAGE_FORMAT = "Oberkategorie mit id %s existiert nicht.";
+    private static final String NEW_NOT_FOUND_MESSAGE_FORMAT = "Neue Kategorie mit id %s existiert nicht.";
+    private static final String NO_NULL_CATEGORY_STRING = "Bitte Produkte erst löschen oder verschieben!";
+    private static final String NOT_BLANK_MESSAGE_FORMAT = "%s darf nicht leer sein!";
+
+    private static final String PATH_FORMAT = "category/%s/%s";
+
+    private void validateOrThrow(CategoryInputDTO categoryInputDTO, String id, String item) {
+        if (id != null && !categoryRepository.existsById(id)) {
+            throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND_MESSAGE_FORMAT, id), String.format(PATH_FORMAT, item, ""));
+        }
+        if (categoryInputDTO == null) {
+            return; // nothing to validate if categoryInputDTO is null, so we can skip the rest of the validation code here.
+        }
+
+        if (categoryInputDTO.name().isBlank()) {
+            throw new NotBlankException(String.format(NOT_BLANK_MESSAGE_FORMAT, "Name"), String.format(PATH_FORMAT, item, "name"));
+        }
+        if (categoryInputDTO.parentId() != null && !categoryRepository.existsById(categoryInputDTO.parentId())) {
+            throw new CategoryNotFoundException(String.format(PARENT_NOT_FOUND_MESSAGE_FORMAT, categoryInputDTO.parentId()), String.format(PATH_FORMAT, item, "parentId"));
+        }
+    }
 
     public List<CategoryOutputDTO> getAllCategories() {
         return CategoryOutputDTOConverter.convert(categoryRepository.findAll())
@@ -35,12 +60,8 @@ public class CategoryService {
     }
 
     public CategoryOutputDTO addCategory(@NonNull CategoryInputDTO categoryInputDTO) {
-        if (categoryInputDTO.name().isBlank()) {
-            throw new IllegalArgumentException("Name must not be blank");
-        }
-        if (categoryInputDTO.parentId() != null && !categoryRepository.existsById(categoryInputDTO.parentId())) {
-            throw new IllegalArgumentException(String.format("Parent category with id %s does not exist", categoryInputDTO.parentId()));
-        }
+        validateOrThrow(categoryInputDTO, null, "new");
+
         return CategoryOutputDTOConverter.convert(
                 categoryRepository.save(
                         CategoryConverter.convert(categoryInputDTO)
@@ -50,15 +71,8 @@ public class CategoryService {
     }
 
     public CategoryOutputDTO updateCategory(@NonNull String id, @NonNull CategoryInputDTO categoryInputDTO) {
-        if (!categoryRepository.existsById(id)) {
-            throw new IllegalArgumentException(String.format(CATEGORY_NOT_FOUND_MESSAGE, id));
-        }
-        if (categoryInputDTO.parentId() != null && !categoryRepository.existsById(categoryInputDTO.parentId())) {
-            throw new IllegalArgumentException(String.format("Parent category with id %s does not exist", categoryInputDTO.parentId()));
-        }
-        if (categoryInputDTO.name().isBlank()) {
-            throw new IllegalArgumentException("Name must not be blank");
-        }
+        validateOrThrow(categoryInputDTO, id, id);
+
         return CategoryOutputDTOConverter.convert(
                 categoryRepository.save(
                         CategoryConverter.convert(categoryInputDTO)
@@ -68,9 +82,8 @@ public class CategoryService {
     }
 
     public void deleteCategory(@NonNull String id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new IllegalArgumentException(String.format(CATEGORY_NOT_FOUND_MESSAGE, id));
-        }
+        validateOrThrow(null, id, id);
+
         // delete products in category
         productRepository.deleteAllByCategoryId(id);
         // delete all children
@@ -80,16 +93,16 @@ public class CategoryService {
     }
 
     public void deleteCategoryAndMoveChildren(@NonNull String id, String moveToCategoryId) {
+        validateOrThrow(null, id, id);
+
         if (moveToCategoryId != null && !categoryRepository.existsById(moveToCategoryId)) {
-            throw new IllegalArgumentException(String.format("New category with id %s does not exist", moveToCategoryId));
+            throw new CategoryNotFoundException(String.format(NEW_NOT_FOUND_MESSAGE_FORMAT, moveToCategoryId), String.format(PATH_FORMAT, id, "moveToCategory"));
         }
         // Can't move products to null category
         if (moveToCategoryId == null && productRepository.existsByCategoryId(id)) {
-            throw new IllegalArgumentException("Can't move products to null category, empty category first!");
+            throw new CategoryNotValidException(NO_NULL_CATEGORY_STRING, String.format(PATH_FORMAT, id, "moveToCategory"));
         }
-        if (!categoryRepository.existsById(id)) {
-            throw new IllegalArgumentException(String.format(CATEGORY_NOT_FOUND_MESSAGE, id));
-        }
+
         // Move products to new category / null check just for type safety
         if (moveToCategoryId != null) {
             List<Product> products = productRepository.findAllByCategoryId(id);

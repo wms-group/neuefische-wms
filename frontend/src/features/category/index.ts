@@ -5,3 +5,4 @@ export { default as CategoryList } from "./components/category-list.tsx";
 export { default as CategoryNewFormCard } from "./components/category-new-form-card.tsx";
 export { default as CategoryForm } from "./components/category-form.tsx";
 export { default as CategoryBreadcrumbs } from "./components/category-breadcrumbs.tsx"
+export { default as CategoryPill } from "./components/category-pill.tsx"
