@@ -126,4 +126,8 @@ public class StockService {
 
         return new StockOutputDTO(stock.id(), ProductOutputDTOConverter.convert(product), stock.amount());
     }
+
+    public void deleteStockById(String id) {
+
+    }
 }

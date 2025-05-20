@@ -40,11 +40,12 @@ public class AisleService {
 	}
 
 	public void deleteAisleById(String id) throws AisleNotFoundException {
-		if (!aisleRepo.existsById(id)) {
-			throw new AisleNotFoundException("Aisle with id: " + id + " was not found.");
-		}
+        Aisle aisle = aisleRepo.findById(id).orElseThrow(() -> new AisleNotFoundException("Aisle with id: " + id + " was not found."));
 
 		aisleRepo.deleteById(id);
+        for (String stockId : aisle.stockIds()) {
+            stockService.deleteStockById(stockId);
+        }
 	}
 
 	public Aisle getAisleById(String id) throws AisleNotFoundException {
