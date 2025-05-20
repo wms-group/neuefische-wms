@@ -29,7 +29,18 @@ type CategoryActionsProps = {
     categories: CategoryOutputDTO[];
 }
 
-const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, handleDelete, handleMoveTo, handleSubmitClicked, value, categories}: CategoryActionsProps)=> (
+const CategoryActions = ({
+                             category,
+                             onDelete,
+                             onSubmit,
+                             isEditing,
+                             handleEdit,
+                             handleDelete,
+                             handleMoveTo,
+                             handleSubmitClicked,
+                             value,
+                             categories
+                         }: CategoryActionsProps) => (
     <>
         <>{onSubmit && <EditOrSubmitButton
             isEditing={isEditing}
@@ -71,7 +82,8 @@ type CategoryEditProps = {
 }
 
 const CategoryEdit = ({category, onSubmit, formRef}: CategoryEditProps) => (
-    <CategoryForm defaultParentId={category.parentId ?? ""} onSubmit={onSubmit} value={category} {...{formRef}}></CategoryForm>
+    <CategoryForm defaultParentId={category.parentId ?? ""} onSubmit={onSubmit}
+                  value={category} {...{formRef}}></CategoryForm>
 )
 
 type CategoryContentProps = {
@@ -118,10 +130,10 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
 
     const handleSubmitClicked = () => {
         if (!formRef.current) return;
-        formRef.current.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        formRef.current.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
     }
 
-    const handleSubmit = (submittedCategory: CategoryInputDTO): Promise<unknown> => {
+    const handleSubmit = async (submittedCategory: CategoryInputDTO): Promise<unknown> => {
         if (!onSubmit) return Promise.resolve();
         return onSubmit(submittedCategory, category.id)
             .then(() => {
@@ -130,18 +142,22 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
     }
 
     return (
-        <Card title={category.name} actions={<CategoryActions
-            category={category}
-            onDelete={onDelete}
-            onSubmit={onSubmit}
-            isEditing={isEditing}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-            handleMoveTo={handleMoveTo}
-            handleSubmitClicked={handleSubmitClicked}
-            value={moveTo}
-            categories={categories}
-        />} className={cn(className, "max-w-2xl")}>
+        <Card title={category.name} actions={
+            <div className={"flex justify-between w-full items-center"}>
+                <CategoryActions
+                    category={category}
+                    onDelete={onDelete}
+                    onSubmit={onSubmit}
+                    isEditing={isEditing}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                    handleMoveTo={handleMoveTo}
+                    handleSubmitClicked={handleSubmitClicked}
+                    value={moveTo}
+                    categories={categories}
+                />
+            </div>
+        } className={cn("max-w-2xl", className)}>
             {isEditing ?
                 <CategoryEdit
                     category={category}
@@ -152,7 +168,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
                     category={category}
                     countSubCategories={category.countSubCategories}
                     countProducts={category.countProducts}
-            />}
+                />}
         </Card>
     )
 }

@@ -107,8 +107,11 @@ const ProductListPage = () => {
                 </CategoryCardWithSubcategories>
             </GridLayout>
             <GridLayout gridCols={{base: 1, sm: 2, xl: 3}}>
-                <ProductList products={products} categoryId={category?.id ?? null} onSubmit={handleSubmitUpdatedProduct}
-                             onDelete={handleDeleteProduct}/>
+                <ProductList
+                    products={products} categoryId={category?.id ?? null}
+                    onSubmit={handleSubmitUpdatedProduct}
+                    onDelete={handleDeleteProduct}
+                />
             </GridLayout>
         </LayoutContainer>
     )

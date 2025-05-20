@@ -21,9 +21,17 @@ type ProductActionsProps = {
     handleSubmitClicked: () => void;
 }
 
-const ProductActions = ({isEditing, onDelete, onSubmit, handleEdit, handleDelete, handleSubmitClicked}: ProductActionsProps) => (
+const ProductActions = ({
+                            isEditing,
+                            onDelete,
+                            onSubmit,
+                            handleEdit,
+                            handleDelete,
+                            handleSubmitClicked
+                        }: ProductActionsProps) => (
     <>
-        <>{onSubmit && <EditOrSubmitButton isEditing={isEditing} handleEdit={handleEdit} handleSubmitClicked={handleSubmitClicked} />}</>
+        <>{onSubmit && <EditOrSubmitButton isEditing={isEditing} handleEdit={handleEdit}
+                                           handleSubmitClicked={handleSubmitClicked}/>}</>
         <>{isEditing && <Button onClick={handleEdit}>Abbrechen</Button>}</>
         <>{onDelete && <Button onClick={handleDelete} className={cn("bg-red-300 text-white/90")}>Löschen</Button>}</>
     </>
@@ -48,7 +56,7 @@ type ProductEditProps = {
 }
 
 const ProductEdit = ({product, onSubmit, setFormRef}: ProductEditProps) => (
-    <ProductForm defaultCategoryId={product.categoryId} onSubmit={onSubmit} value={product} setFormRef={setFormRef} />
+    <ProductForm defaultCategoryId={product.categoryId} onSubmit={onSubmit} value={product} setFormRef={setFormRef}/>
 );
 
 type ProductContentProps = {
@@ -56,9 +64,8 @@ type ProductContentProps = {
 }
 
 const ProductContent = ({product}: ProductContentProps) => (
-    <div>
-        <div>Preis: {product.price}</div>
-    </div>
+    <p>Preis: {product.price}</p>
+
 );
 
 const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps) => {
@@ -77,7 +84,7 @@ const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps)
 
     const handleSubmitClicked = () => {
         if (!formRef) return;
-        formRef.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        formRef.dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
     };
 
     const handleSubmit = (submittedProduct: ProductInputDTO): Promise<unknown> => {
@@ -91,19 +98,22 @@ const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps)
     return (
         <Card
             title={product.name}
-            actions={<ProductActions
-                isEditing={isEditing}
-                onDelete={onDelete ? () => handleDelete() : undefined}
-                onSubmit={onSubmit ? () => handleSubmitClicked() : undefined}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-                handleSubmitClicked={handleSubmitClicked}
-            />}
+            actions={
+                <div className={"flex justify-end gap-4 w-full items-center"}>
+                    <ProductActions
+                        isEditing={isEditing}
+                        onDelete={onDelete ? () => handleDelete() : undefined}
+                        onSubmit={onSubmit ? () => handleSubmitClicked() : undefined}
+                        handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                        handleSubmitClicked={handleSubmitClicked}
+                    />
+                </div>}
             className={cn(className, "max-w-2xl")}
         >
             {isEditing ?
-                <ProductEdit product={product} onSubmit={handleSubmit} setFormRef={setFormRef} /> :
-                <ProductContent product={product} />}
+                <ProductEdit product={product} onSubmit={handleSubmit} setFormRef={setFormRef}/> :
+                <ProductContent product={product}/>}
         </Card>
     );
 };

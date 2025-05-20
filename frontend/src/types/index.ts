@@ -201,13 +201,19 @@ export type InputWithLabelProps = {
     name: string
     value: string
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
-    onBlur: (e: ChangeEvent<HTMLInputElement>) => void
+    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void
     type?: string
     placeholder?: string
     required?: boolean
     className?: string
     error?: string
     disabled?: boolean
+    step?: string;
+    min?: string;
+    max?: string;
+    inputMode?: "text" | "decimal" | "search" | "none" | "email" | "tel" | "url" | "numeric";
+    /** HTML `pattern` attribute "[0-9]*[\\.,]?[0-9]{0,2}" */
+    pattern?: string;
 }
 
 export type GridLayoutProps = {

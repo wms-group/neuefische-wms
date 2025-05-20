@@ -28,6 +28,10 @@
     h3 {
         @apply text-lg font-semibold;
     }
+
+    ::placeholder {
+        @apply text-sm;
+    }
 }
 
 @layer components {

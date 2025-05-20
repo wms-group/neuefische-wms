@@ -20,11 +20,10 @@ export default function CategoryList({parentId, onSubmit, onDelete}: CategoryLis
                             <CategoryCard
                                 key={category.id}
                                 category={category}
-                                countSubCategories={
-                                    category.countSubCategories}
+                                countSubCategories={category.countSubCategories}
                                 onSubmit={onSubmit}
-                                onDelete={onDelete
-                                }
+                                onDelete={onDelete}
+                                className="max-w-none"
                             />
                         )
                     )
