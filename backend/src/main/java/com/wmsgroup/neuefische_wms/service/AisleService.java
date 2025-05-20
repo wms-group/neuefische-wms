@@ -71,7 +71,7 @@ public class AisleService {
 			try {
 				return stockService.getStockById(stockId);
 			} catch (StockNotFoundException e) {
-				throw new RuntimeException("Stock with id: " + stockId + " was not found.", e);
+				throw new StockNotFoundException("Stock with id: " + stockId + " was not found.", e);
 			}
 		}).toList();
     }

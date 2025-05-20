@@ -25,17 +25,17 @@ public class StockController {
     }
 
     @GetMapping("/count/{productId}")
-    private ResponseEntity<StockOutputDTO> getProductAmount(@PathVariable String productId) throws StockNotFoundException {
+    public ResponseEntity<StockOutputDTO> getProductAmount(@PathVariable String productId) throws StockNotFoundException {
         return ResponseEntity.ok(stockService.getProductCount(productId));
     }
 
     @PostMapping()
-    private ResponseEntity<StockOutputDTO> addStock(@RequestBody StockInputDTO toAdd) throws StockNotFoundException, AisleNotFoundException {
+    public ResponseEntity<StockOutputDTO> addStock(@RequestBody StockInputDTO toAdd) throws StockNotFoundException, AisleNotFoundException {
         return ResponseEntity.ok(stockService.add(toAdd));
     }
 
     @DeleteMapping()
-    private ResponseEntity<StockOutputDTO> removeStock(@RequestBody StockInputDTO toRemove) throws StockNotFoundException, AisleNotFoundException {
+    public ResponseEntity<StockOutputDTO> removeStock(@RequestBody StockInputDTO toRemove) throws StockNotFoundException, AisleNotFoundException {
         stockService.remove(toRemove);
         return ResponseEntity.ok().build();
     }

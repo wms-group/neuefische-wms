@@ -20,6 +20,8 @@ import com.wmsgroup.neuefische_wms.repository.StockRepository;
 
 @Service
 public class StockService {
+    private final String idNotFoundMessage ="Product with given id was not found.";
+
     private final ProductRepository productRepo;
     private final AisleRepository aisleRepo;
     private final StockRepository stockRepo;
@@ -42,14 +44,14 @@ public class StockService {
             .sum();
 
         Product product = productRepo.findById(productId)
-            .orElseThrow(() -> new StockNotFoundException("Product with given id was not found."));
+            .orElseThrow(() -> new StockNotFoundException(idNotFoundMessage));
 
         return new StockOutputDTO(productId, ProductOutputDTOConverter.convert(product), amount);
     }
 
     public StockOutputDTO add(StockInputDTO toAdd) throws StockNotFoundException, AisleNotFoundException {
         Product product = productRepo.findById(toAdd.productId())
-            .orElseThrow(() -> new StockNotFoundException("Product with given id was not found."));
+            .orElseThrow(() -> new StockNotFoundException(idNotFoundMessage));
 
         List<Aisle> aisles = aisleRepo.findAll();
         Optional<Aisle> aisle = aisles.stream()
@@ -102,17 +104,19 @@ public class StockService {
         }
 
         aisleRepo.findAll().stream()
-            .filter(a -> a.stockIds().stream().anyMatch(sid -> removingStockIds.contains(sid)))
-            .forEach((a) -> {
-                aisleRepo.save(a.withStockIds(a.stockIds().stream().filter(sid -> !removingStockIds.contains(sid)).toList()));
-            });
+            .filter(a -> a.stockIds().stream().anyMatch(removingStockIds::contains))
+            .forEach(a -> aisleRepo.save(a
+                .withStockIds(a.stockIds().stream()
+                    .filter(sid -> !removingStockIds.contains(sid))
+                    .toList()))
+            );
     }
     
     public StockOutputDTO getStockById(String stockId) throws StockNotFoundException {
         Stock stock = stockRepo.findById(stockId)
             .orElseThrow(() -> new StockNotFoundException("Stock with given id was not found"));
         Product product = productRepo.findById(stock.productId())
-            .orElseThrow(() -> new StockNotFoundException("Product with given id was not found."));
+            .orElseThrow(() -> new StockNotFoundException(idNotFoundMessage));
 
         return new StockOutputDTO(stock.id(), ProductOutputDTOConverter.convert(product), stock.amount());
     }
