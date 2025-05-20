@@ -1,4 +1,4 @@
-import {ComponentType, PropsWithChildren, type ReactNode} from "react";
+import {ChangeEvent, ComponentType, PropsWithChildren, type ReactNode} from "react";
 import {LucideProps} from "lucide-react";
 
 export interface SideBarNavItem {
@@ -58,6 +58,7 @@ export type ButtonProps = {
 export type UserAvatarProps = {
     userName: string;
     onLogout?: () => void;
+    btnClassName?: string;
 };
 
 export enum Role {
@@ -183,6 +184,50 @@ export function isErrorDTO(obj: unknown): obj is ErrorDTO {
         && "causeMessage" in obj && (typeof obj.causeMessage === "string" || obj.causeMessage === null)
         && "message" in obj && (typeof obj.message === "string" || obj.message === null)
         && "status" in obj && typeof obj.status === "string";
+}
+
+export type SelectProps<T extends string | number> = {
+    label: string;
+    description?: string;
+    options: T[];
+    value: T;
+    onChange: (value: T) => void;
+    disabled?: boolean;
+    className?: string;
+};
+
+export type InputWithLabelProps = {
+    label: string
+    name: string
+    value: string
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void
+    type?: string
+    placeholder?: string
+    required?: boolean
+    className?: string
+    error?: string
+    disabled?: boolean
+    step?: string;
+    min?: string;
+    max?: string;
+    inputMode?: "text" | "decimal" | "search" | "none" | "email" | "tel" | "url" | "numeric";
+    /** HTML `pattern` attribute "[0-9]*[\\.,]?[0-9]{0,2}" */
+    pattern?: string;
+}
+
+export type GridLayoutProps = {
+    children: ReactNode;
+    className?: string;
+    gap?: string;
+    gridCols: Partial<{
+        base: number;
+        sm: number;
+        md: number;
+        lg: number;
+        xl: number;
+        '2xl'?: number;
+    }>
 }
 
 export type SearchableSelectProps = {

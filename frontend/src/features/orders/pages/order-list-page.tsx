@@ -1,9 +1,10 @@
+import LayoutContainer from "@/components/shared/layout-container.tsx";
 
 const OrderListPage = () => {
     return (
-        <div>
+        <LayoutContainer className="h-full">
             Oder List Page
-        </div>
+        </LayoutContainer>
     )
 }
 

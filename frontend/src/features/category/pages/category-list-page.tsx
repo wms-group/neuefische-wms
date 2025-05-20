@@ -1,12 +1,14 @@
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
-import {CategoryBreadcrumbs, CategoryNewFormCard, CategoryList} from "@/features/category";
-import {toast, Toaster} from "sonner";
+import {CategoryBreadcrumbs, CategoryList, CategoryNewFormCard} from "@/features/category";
+import {toast} from "sonner";
 import {AxiosError} from "axios";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import LayoutContainer from "@/components/shared/layout-container.tsx";
 import {Link, useParams} from "react-router-dom";
 import {ChevronLeft} from "lucide-react";
 import {useEffect, useState} from "react";
 import {useProductContext} from "@/context/products/useProductContext.ts";
+import GridLayout from "@/components/shared/grid-layout.tsx";
 
 const CategoryListPage = () => {
     const categoryId = useParams().categoryId;
@@ -51,13 +53,15 @@ const CategoryListPage = () => {
     }, [categoryId, categories])
 
     return (
-        <div className={"category-list-page p-2 flex flex-col gap-4"}>
-            <h2 className={"flex flew-row"}>{category ? (<><Link to={"/categories/" + (category.parentId ?? "")}><ChevronLeft/></Link>{category?.name}</>) : (<>Kategorien</>)}</h2>
+        <LayoutContainer className={"category-list-page flex flex-col flex-1 gap-4 z-1"}>
+            <h2 className={"flex flew-row"}>{category ? (<><Link to={"/categories/" + (category.parentId ?? "")}><ChevronLeft/></Link>{category?.name}</>) : (<>Neue Kategorie</>)}</h2>
             {category && <CategoryBreadcrumbs category={category} />}
             <CategoryNewFormCard onSubmit={handleSubmitNewCategory} defaultParentId={categoryId ?? ""}/>
+            <h3>Kategorien</h3>
+            <GridLayout  gridCols={{ base: 1, sm: 2 }}>
             <CategoryList parentId={category?.id ?? null} onSubmit={handleSubmitUpdatedCategory} onDelete={handleDeleteCategory}/>
-            <Toaster />
-        </div>
+            </GridLayout>
+        </LayoutContainer>
     )
 }
 

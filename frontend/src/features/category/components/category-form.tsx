@@ -1,9 +1,9 @@
-import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
-import {clsx} from "clsx";
-import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
-import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
 import {Dispatch, useEffect, useState} from "react";
+import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
+import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
+import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import {InputWithLabel} from "@/components/ui";
 
 type CategoryFormProps = {
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
@@ -20,7 +20,9 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}:
     });
 
     useEffect(() => {
-        setCategory(prev => { return {...prev, parentId: defaultParentId}});
+        setCategory(prev => {
+            return {...prev, parentId: defaultParentId}
+        });
     }, [defaultParentId]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,28 +47,37 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}:
     return (
         <form
             ref={setFormRef}
-            className={cn("flex gap-1 flex-row justify-between items-end", className)}
+            className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className)}
             onSubmit={handleSubmit}>
-            <div className="h-full grow flex-basis-40">
-                <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
-                <input
-                    name="name"
+            <div className="h-full w-full">
+                <InputWithLabel
+                    label={"Name"}
                     value={category.name}
+                    onChange={handleChange}
+                    onBlur={handleChange}
+                    name={"name"}
+                    placeholder={"Category Name..."}
                     className={cn(
                         'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
                         'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
                     )}
-                    onChange={handleChange}
                 />
             </div>
-            <div className="h-full grow flex-basis-60">
-                <label htmlFor="parentId" className={clsx("text-sm/6 font-medium text-gray")}>Kategorie</label>
+            <div className="h-full w-full">
+                <label htmlFor="parentId" className={cn("text-sm/6 font-medium text-gray")}>Unterkategorie
+                    von...</label>
                 <SearchableSelect
                     name="parentId"
                     options={selectGroupsFromCategoryOutputDTOs(categories)}
-                    onChange={(newValue) => handleChange({target: {name: 'parentId', value: newValue?.value}} as unknown as React.ChangeEvent<HTMLInputElement>)}
+                    onChange={(newValue) => handleChange({
+                        target: {
+                            name: 'parentId',
+                            value: newValue?.value
+                        }
+                    } as unknown as React.ChangeEvent<HTMLInputElement>)}
                     value={category.parentId}
-                    defaultValue={defaultParentId}/>
+                    defaultValue={defaultParentId}
+                />
             </div>
         </form>
     )

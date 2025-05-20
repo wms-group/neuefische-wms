@@ -1,12 +1,14 @@
 import {CategoryOutputDTO, ProductInputDTO, ProductOutputDTO} from "@/types";
-import {ProductNewFormCard, ProductList} from "@/features/product";
-import {toast, Toaster} from "sonner";
+import {ProductList, ProductNewFormCard} from "@/features/product";
+import {toast} from "sonner";
 import {AxiosError} from "axios";
 import {useProductContext} from "@/context/products/useProductContext.ts";
-import {useParams} from "react-router-dom";
-import {CategoryBreadcrumbs, CategoryCardWithSubcategories} from "@/features/category";
 import {useEffect, useState} from "react";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import {useParams} from "react-router-dom";
+import {CategoryBreadcrumbs, CategoryCardWithSubcategories} from "@/features/category";
+import GridLayout from "@/components/shared/grid-layout.tsx";
+import LayoutContainer from "@/components/shared/layout-container.tsx";
 
 const ProductListPage = () => {
     const {getProductsByCategoryId, addProduct, updateProduct, deleteProduct} = useProductContext();
@@ -32,15 +34,14 @@ const ProductListPage = () => {
             return
         }
         getProductsByCategoryId(category.id)
-            .then((products  ) => {
+            .then((products) => {
                 setProducts(products)
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch(_e => {
+
+            .catch(() => {
                 setProducts([])
             })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category]);
+    }, [category, getProductsByCategoryId]);
 
     const handleSubmitNewProduct = async (product: ProductInputDTO) => {
         return toast.promise(addProduct(product)
@@ -50,11 +51,11 @@ const ProductListPage = () => {
                     }
                     return product;
                 }),
-                {
-                    loading: "Speichere Produkt...",
-                    success: "Produkt erfolgreich gespeichert.",
-                    error: (reason: AxiosError) => "Speichern des Produkts fehlgeschlagen: " + reason.message
-                });
+            {
+                loading: "Speichere Produkt...",
+                success: "Produkt erfolgreich gespeichert.",
+                error: (reason: AxiosError) => "Speichern des Produkts fehlgeschlagen: " + reason.message
+            });
     }
 
     function withUpdatedProduct(products: ProductOutputDTO[], product: ProductOutputDTO) {
@@ -69,11 +70,11 @@ const ProductListPage = () => {
                     }
                     return product;
                 }),
-                {
-                    loading: "Speichere Produkt...",
-                    success: "Produkt erfolgreich gespeichert.",
-                    error: (reason: AxiosError) => "Speichern des Produkts fehlgeschlagen: " + reason.message
-                });
+            {
+                loading: "Speichere Produkt...",
+                success: "Produkt erfolgreich gespeichert.",
+                error: (reason: AxiosError) => "Speichern des Produkts fehlgeschlagen: " + reason.message
+            });
     }
 
     function withRemovedProduct(products: ProductOutputDTO[], productId: string) {
@@ -85,26 +86,34 @@ const ProductListPage = () => {
                 .then(() => {
                     setProducts(prev => withRemovedProduct(prev, productId));
                 }),
-                {
-                    loading: "Lösche Produkt...",
-                    success: "Produkt erfolgreich gelöscht.",
-                    error: (reason: AxiosError) => "Löschen des Produkts fehlgeschlagen: " + reason.message
-                });
+            {
+                loading: "Lösche Produkt...",
+                success: "Produkt erfolgreich gelöscht.",
+                error: (reason: AxiosError) => "Löschen des Produkts fehlgeschlagen: " + reason.message
+            });
     }
 
     return (
-        <div className={"product-list-page p-2 flex flex-col gap-4"}>
+        <LayoutContainer className={"product-list-page p-2 flex flex-col gap-4"}>
             <h2>Produkte</h2>
-            {category && <CategoryBreadcrumbs category={category} basePath={"/products/category"} rootName={"Produkte"} rootPath={"/products"}/>}
+            {category && <CategoryBreadcrumbs category={category} basePath={"/products/category"} rootName={"Produkte"}
+                                              rootPath={"/products"}/>}
             <ProductNewFormCard onSubmit={handleSubmitNewProduct} defaultCategoryId={categoryId ?? ""}/>
-            <CategoryCardWithSubcategories category={category ?? null} basePath={"/products/category"}>
-                {products.length === 0 && "Keine Produkte"}
-                {products.length === 1 && "Ein Produkt"}
-                {products.length > 1 && products.length + " Produkte"}
-            </CategoryCardWithSubcategories>
-            <ProductList products={products} categoryId={category?.id ?? null} onSubmit={handleSubmitUpdatedProduct} onDelete={handleDeleteProduct}/>
-            <Toaster />
-        </div>
+            <GridLayout gridCols={{base: 1, sm: 2, xl: 3}}>
+                <CategoryCardWithSubcategories category={category ?? null} basePath={"/products/category"}>
+                    {products.length === 0 && "Keine Produkte"}
+                    {products.length === 1 && "Ein Produkt"}
+                    {products.length > 1 && products.length + " Produkte"}
+                </CategoryCardWithSubcategories>
+            </GridLayout>
+            <GridLayout gridCols={{base: 1, sm: 2, xl: 3}}>
+                <ProductList
+                    products={products} categoryId={category?.id ?? null}
+                    onSubmit={handleSubmitUpdatedProduct}
+                    onDelete={handleDeleteProduct}
+                />
+            </GridLayout>
+        </LayoutContainer>
     )
 }
 
