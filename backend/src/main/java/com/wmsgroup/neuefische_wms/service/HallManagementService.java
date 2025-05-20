@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.wmsgroup.neuefische_wms.exceptions.HallNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.HallNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Hall;
 import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.HallUpdateDTO;

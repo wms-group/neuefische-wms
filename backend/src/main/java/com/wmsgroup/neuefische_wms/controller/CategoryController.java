@@ -57,7 +57,7 @@ public class CategoryController {
     }
 
     @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ErrorDTO> nullPointerExceptionHandler(NullPointerException        exception) {
+    public ResponseEntity<ErrorDTO> nullPointerExceptionHandler(NullPointerException exception) {
         return new ResponseEntity<>(
                 ErrorDTO.fromException(exception),
                 HttpStatus.BAD_REQUEST);

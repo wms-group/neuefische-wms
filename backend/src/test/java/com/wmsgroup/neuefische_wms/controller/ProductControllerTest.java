@@ -95,7 +95,7 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(inputDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+                .andExpect(jsonPath("$.error").value("CategoryNotFoundException"));
     }
 
     @Test
@@ -115,7 +115,7 @@ class ProductControllerTest {
         assertThat(result)
                 .isNotNull()
                 .hasFieldOrPropertyWithValue("error", "NullPointerException")
-                .hasFieldOrPropertyWithValue("message", "categoryId is marked non-null but is null");
+                .hasFieldOrPropertyWithValue("message", "CategoryId is marked non-null but is null");
     }
 
     @Test
@@ -171,7 +171,7 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/products/category/cat-2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+                .andExpect(jsonPath("$.error").value("CategoryNotFoundException"));
     }
 
     @Test
@@ -210,7 +210,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+                .andExpect(jsonPath("$.error").value("ProductNotFoundException"));
     }
 
     @Test
@@ -230,7 +230,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+                .andExpect(jsonPath("$.error").value("CategoryNotFoundException"));
     }
 
     @Test
@@ -272,6 +272,6 @@ class ProductControllerTest {
     void testDeleteProductWithNonExistingId() throws Exception {
         mockMvc.perform(delete("/api/products/non-existent-id"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("IllegalArgumentException"));
+                .andExpect(jsonPath("$.error").value("ProductNotFoundException"));
     }
 }
