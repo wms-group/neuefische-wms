@@ -39,7 +39,7 @@ const HallDetailPage = () => {
         </div>
 
         <h3>
-            Neuen Gang erstellen:
+            Gänge:
         </h3>
         {
             hallAisles.length == 0 
