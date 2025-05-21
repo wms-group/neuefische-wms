@@ -6,3 +6,6 @@ export { default as CategoryNewFormCard } from "./components/category-new-form-c
 export { default as CategoryForm } from "./components/category-form.tsx";
 export { default as CategoryBreadcrumbs } from "./components/category-breadcrumbs.tsx"
 export { default as CategoryPill } from "./components/category-pill.tsx"
+export { default as CategoryCardSkeleton } from "./components/category-card-skeleton.tsx"
+export { default as CategoryListSkeleton } from "./components/category-list-skeleton.tsx"
+export { default as CategoryLinksSkeleton } from "./components/category-links-skeleton.tsx"

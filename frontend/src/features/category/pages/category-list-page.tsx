@@ -53,13 +53,13 @@ const CategoryListPage = () => {
     }, [categoryId, categories])
 
     return (
-        <LayoutContainer className={"category-list-page flex flex-col flex-1 gap-4 z-1"}>
+        <LayoutContainer className={"category-list-page flex flex-col gap-4 z-1"}>
             <h2 className={"flex flew-row"}>{category ? (<><Link to={"/categories/" + (category.parentId ?? "")}><ChevronLeft/></Link>{category?.name}</>) : (<>Neue Kategorie</>)}</h2>
             {category && <CategoryBreadcrumbs category={category} />}
-            <CategoryNewFormCard onSubmit={handleSubmitNewCategory} defaultParentId={categoryId ?? ""}/>
+            <CategoryNewFormCard onSubmit={handleSubmitNewCategory} defaultParentId={categoryId ?? null}/>
             <h3>Kategorien</h3>
-            <GridLayout gridCols={{ base: 1, lg: 2, xl: 2 }}>
-            <CategoryList parentId={category?.id ?? null} onSubmit={handleSubmitUpdatedCategory} onDelete={handleDeleteCategory}/>
+            <GridLayout  gridCols={{ base: 1, xl: 2 }}>
+                <CategoryList parentId={category?.id ?? null} onSubmit={handleSubmitUpdatedCategory} onDelete={handleDeleteCategory}/>
             </GridLayout>
         </LayoutContainer>
     )
