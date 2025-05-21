@@ -1,4 +1,4 @@
-import {ReactNode, useRef, useState} from 'react';
+import {ChangeEvent, FormEvent, ReactNode, useRef, useState} from 'react';
 import Card from '@/components/shared/card';
 import {Aisle, CategoryOutputDTO} from '@/types';
 import {arraysEqual, cn, selectGroupsFromCategoryOutputDTOs} from '@/utils';
@@ -33,13 +33,12 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
 
     const isUnchanged = aisle.name === editingAisle.name && arraysEqual(aisle.categoryIds, editingAisle.categoryIds);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
-        console.log("Button disabled: ", aisle.name === editingAisle.name && arraysEqual(aisle.categoryIds, editingAisle.categoryIds));
         setEditingAisle({...editingAisle, [name]: value});
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await onSubmit(editingAisle);
 
@@ -53,7 +52,7 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
         }
     }
 
-    const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSelect = (e: ChangeEvent<HTMLInputElement>) => {
         const {value} = e.target;
 
         if (aisleCategories.some(ac => ac.id === value)) {
@@ -64,7 +63,6 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
             ...editingAisle,
             categoryIds: [value, ...editingAisle.categoryIds]
         });
-        console.log(aisle.categoryIds);
     }
 
     const handleCategoryRemoval = (categoryId: string) => {
@@ -79,7 +77,7 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
     }
 
     return (
-        <Card title={creates ? "Neuer Gang" : ""}
+        <Card className={"max-w-4xl"} title={creates ? "Neuer Gang" : ""}
               actions={
                   <div className='flex gap-2'>
                       {
@@ -91,10 +89,7 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                       {actions}
 
                       <Button
-                          onClick={() => formRef.current?.dispatchEvent(new Event("submit", {
-                              cancelable: true,
-                              bubbles: true
-                          }))}
+                          onClick={() => formRef.current?.requestSubmit()}
                           disabled={editingAisle.name === "" || isUnchanged}>
                           {creates ? "Hinzufügen" : "Speichern"}
                       </Button>
@@ -108,9 +103,10 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                     onSubmit={handleSubmit}
                     className={"flex gap-1 flex-row justify-between items-end"}
                 >
-                    <div className="h-full grow flex-basis-60">
+                    <div className="h-full w-full lg:w-1/2">
                         <InputWithLabel
-                            label={'Name'}
+                            type={'text'}
+                            label={'Gang Name'}
                             name={'name'}
                             value={editingAisle.name}
                             className={cn(
@@ -119,14 +115,6 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                             )}
                             onChange={handleChange}
                             onBlur={handleChange}
-                        />
-
-                        <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
-                        <input
-                            name="name"
-
-                            onChange={handleChange}
-                            value={editingAisle.name}
                         />
                     </div>
 
@@ -146,22 +134,14 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                         </label>
                     </div>
                 </form>
-                <div className='flex flex-wrap gap-0.5'>
+                <div className='flex flex-wrap gap-1 my-2'>
                     {/* TODO: fix that the card should not expand */}
                     {
                         aisleCategories.map(c => (
                             <CategoryPill
                                 key={c.id}
                                 category={c}
-                                actions={
-                                    <Button
-                                        className="ml-2 text-xs text-gray-400 hover:text-red-500"
-                                        aria-label="Kategorie entfernen"
-                                        onClick={() => handleCategoryRemoval(c.id)}
-                                    >
-                                        ×
-                                    </Button>
-                                }
+                                onRemove={handleCategoryRemoval}
                             />
                         ))
                     }

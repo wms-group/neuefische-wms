@@ -1,28 +1,27 @@
-import React from 'react'
-import { CategoryOutputDTO } from '@/types'
+import {CategoryOutputDTO} from '@/types'
+import {Button} from "@/components/ui";
+import {X} from "lucide-react";
 
-type NavigatingProps = {
-  category: CategoryOutputDTO;
-  actions?: React.ReactNode;
+type CategoryPillProps = {
+    category: CategoryOutputDTO;
+    onRemove: (id: string) => void;
 };
 
-type NonNavigatingProps = {
-  category: CategoryOutputDTO;
-  actions?: React.ReactNode;
-};
-
-type CategoryPillProps = NavigatingProps | NonNavigatingProps;
-
-
-const CategoryPill = ({category,  actions}: CategoryPillProps) => {
-
+const CategoryPill = ({ category, onRemove }: CategoryPillProps) => {
     return (
         <div
-        className={`inline-flex items-center rounded-full bg-gray-100 text-gray-800 px-3 py-1 font-medium mr-2 select-none transition`}
-        aria-label={category.name}
+            className="inline-flex items-center px-2 py-1 rounded-full bg-gray-200 text-gray-800 text-sm font-medium select-none transition"
+            aria-label={category.name}
         >
             {category.name}
-        {actions && <span className="ml-2 flex items-center">{actions}</span>}
+            <Button
+                iconOnly
+                onClick={() => onRemove(category.id)}
+                className="text-gray-500 hover:text-red-600 focus:outline-none text-xs p-0.75 bg-transparent"
+                aria-label={`Remove ${category.name}`}
+            >
+               <X />
+            </Button>
         </div>
     )
 }

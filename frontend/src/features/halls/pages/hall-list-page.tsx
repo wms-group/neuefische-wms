@@ -1,10 +1,11 @@
-import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import {useEffect} from "react";
+import {NavLink} from "react-router-dom";
 import LayoutContainer from "@/components/shared/layout-container.tsx";
-import { Hall } from "@/types";
-import { useHalls } from "@/features/halls";
+import {Hall} from "@/types";
+import {useHalls} from "@/features/halls";
 import Button from "@/components/ui/button";
 import Card from "@/components/shared/card";
+import GridLayout from "@/components/shared/grid-layout.tsx";
 
 const HallListPage = () => {
     const { halls, fetchHalls, removeHall } = useHalls();
@@ -26,15 +27,15 @@ const HallListPage = () => {
                 </NavLink>
             </div>
 
-            <ul className="flex flex-col gap-2">
-                {halls.map((h: Hall) => 
-                    <Card key={h.id} title={(<NavLink to={h.id} key={h.id}>{h.name}</NavLink>)} 
-                        actions={(<Button label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}
+            <GridLayout gridCols={{ base: 1, sm: 2, md: 3 }} >
+                {halls.map((h: Hall) =>
+                    <Card key={h.id} title={(<NavLink to={h.id} key={h.id}>{h.name}</NavLink>)}
+                          actions={(<Button label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}
                     >
                         <div>Aisle Count: {h.aisleIds.length}</div>
                     </Card>
                 )}
-            </ul>
+            </GridLayout>
         </LayoutContainer>
     );
 };
