@@ -39,6 +39,7 @@ const EditableAisleList = ({aisles, setAisles}: EditableListProps) => {
     }
 
     const handleCreateSubmit = async (aisle: Aisle): Promise<Aisle> => {
+        console.log("Create: ", aisle)
         const createdAisle = await addAisle(aisle);
         if (!createdAisle) {
             throw new Error("Failed to create aisle");
@@ -55,7 +56,7 @@ const EditableAisleList = ({aisles, setAisles}: EditableListProps) => {
             <h3 className="text-l">Neuen Gang erstellen:</h3>
             <EditableAisleCard aisle={emptyAisle} categories={categories} creates onSubmit={handleCreateSubmit}/>
 
-            <h4>Gänge: </h4>
+            <h3>Gänge: </h3>
             <GridLayout gridCols={{base: 1, sm: 2, md: 2, xl: 3}}>
                 {
                     aisles.map(a =>

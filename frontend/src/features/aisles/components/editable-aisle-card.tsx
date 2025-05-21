@@ -109,10 +109,6 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                             label={'Gang Name'}
                             name={'name'}
                             value={editingAisle.name}
-                            className={cn(
-                                'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
-                                'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
-                            )}
                             onChange={handleChange}
                             onBlur={handleChange}
                         />

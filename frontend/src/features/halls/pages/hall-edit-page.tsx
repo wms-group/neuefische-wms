@@ -61,10 +61,12 @@ const HallEditPage = () => {
             (hall.aisleIds?.length ?? 0) !== (newAisleIds?.length ?? 0) ||
             (hall.aisleIds ?? []).some(id => !(newAisleIds ?? []).includes(id)) ||
             (newAisleIds ?? []).some(id => !(hall.aisleIds ?? []).includes(id));
+        console.log("Halls Aisles: ", hall.aisleIds, "New Aisle State: ", aisles.map(a => a.id))
 
         if (hasDiff) {
             setHall({...hall, aisleIds: newAisleIds});
             setHallAisles(aisles);
+            updateHall({...hall, aisleIds: newAisleIds});
         }
     };
 
@@ -81,9 +83,7 @@ const HallEditPage = () => {
     }
 
     return (
-
         <LayoutContainer>
-            <button onClick={() => navigate(-1)}>Zurück</button>
             <h2 className="text-xl mb-4">{isCreationPage ? "Neue Halle" : "Halle Bearbeiten"}</h2>
 
             <form className="flex items-end gap-4 max-w-4xl" onSubmit={handleSubmit}>
@@ -107,7 +107,6 @@ const HallEditPage = () => {
             </form>
             {
                 !isCreationPage && <>
-                    <h3 className="text-l mb-4">Gänge:</h3>
                     <EditableAisleList aisles={hallAisles} setAisles={setAisles} />
                 </>
             }
