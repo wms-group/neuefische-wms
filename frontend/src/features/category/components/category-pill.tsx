@@ -10,7 +10,7 @@ type CategoryPillProps = {
 const CategoryPill = ({ category, onRemove }: CategoryPillProps) => {
     return (
         <div
-            className="inline-flex items-center px-2 py-1 rounded-full bg-gray-200 text-gray-800 text-sm font-medium select-none transition"
+            className="inline-flex items-center px-2 pl-4 py-1 rounded-full bg-gray-200 text-gray-800 text-sm font-medium select-none transition"
             aria-label={category.name}
         >
             {category.name}

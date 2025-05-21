@@ -13,7 +13,8 @@ import {
     DashboardLayoutPage,
     HallLayout,
     RootLayout,
-    StockLayout
+    StockLayout,
+    UserLayout
 } from "@/layouts";
 import {AisleDetailPage} from '@/features/aisles';
 import Dashboard from "@/pages/dashboard.tsx";
@@ -27,8 +28,10 @@ createRoot(document.getElementById('root')!).render(
                     {/*APP RootLayout*/}
                     <Route element={<RootLayout/>}>
                         {/*APP Entry point*/}
-                        <Route element={<DashboardLayoutPage/>}>
-                            <Route path={"/"} element={<Dashboard/>}/>
+                        <Route element={<CategoriesProductsLayout/>}>
+                            <Route element={<DashboardLayoutPage/>}>
+                                <Route path={"/"} element={<Dashboard/>}/>
+                            </Route>
                         </Route>
 
                         {/*Relative routing for products*/}
@@ -44,7 +47,7 @@ createRoot(document.getElementById('root')!).render(
                         </Route>
 
                         {/*Relative routing for users*/}
-                        <Route path={"/users"}>
+                        <Route path={"/users"} element={<UserLayout/>}>
                             <Route path={"settings"} element={<UserProfilePage/>}/>
                             <Route path={"create-user"} element={<UserCreatePage/>}/>
                             {/* rotes can be extend to
@@ -53,21 +56,23 @@ createRoot(document.getElementById('root')!).render(
                                 ...*/}
                         </Route>
 
-                        <Route path={"halls"} element={<HallLayout />}>
-                            <Route index element={<HallListPage />} />
-                            <Route path="new" element={<HallEditPage />} />
-                            <Route path=":id" element={<HallDetailPage />} >
-                            <Route path=":aisleId" element={<AisleDetailPage />} />
-                                </Route>
-                                <Route path=":id/edit" element={<HallEditPage />} />
+                        <Route path={"halls"} element={<HallLayout/>}>
+                            <Route index element={<HallListPage/>}/>
+                            <Route path="new" element={<HallEditPage/>}/>
+                            <Route path=":id" element={<HallDetailPage/>}>
+                                <Route path=":aisleId" element={<AisleDetailPage/>}/>
                             </Route>
-
-                            <Route path="aisles" element={<AisleLayout />}>
-                                <Route path=":id" element={<AisleDetailPage />}/>
+                            <Route path=":id/edit" element={<HallEditPage/>}/>
                         </Route>
 
-                        <Route path={"stock"} element={<StockLayout />}>
-                            <Route index element={<StockPage />} />
+                        <Route path="aisles" element={<AisleLayout/>}>
+                            <Route path=":id" element={<AisleDetailPage/>}/>
+                        </Route>
+
+                        <Route element={<CategoriesProductsLayout/>}>
+                            <Route path={"stock"} element={<StockLayout/>}>
+                                <Route index element={<StockPage/>}/>
+                            </Route>
                         </Route>
                     </Route>
                 </Routes>

@@ -15,7 +15,6 @@ const Header = () => {
                      <SidebarOpen size={20}/>
 
                 </Button>
-                <h1>SEARCH</h1>
             </div>
         </header>
     )

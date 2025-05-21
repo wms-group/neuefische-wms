@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {ProductInputDTO, ProductOutputDTO, isProductOutputDTO} from "@/types";
+import {isProductOutputDTO, ProductInputDTO, ProductOutputDTO} from "@/types";
 import {ProductApi} from "@/features/product";
 
 export type useProductApi = ReturnType<typeof useProduct>;
@@ -76,7 +76,7 @@ export default function useProduct() {
         return [product, ...products.filter(d => d.id !== product.id)];
     }
 
-    const getProductsByCategoryId = (categoryId: string): Promise<ProductOutputDTO[]> => {
+    const getProductsByCategoryId = async (categoryId: string): Promise<ProductOutputDTO[]> => {
         if (categoryId in state.productsByCategoryId) {
             return Promise.resolve(state.productsByCategoryId[categoryId]);
         }
@@ -97,7 +97,7 @@ export default function useProduct() {
             .finally(() => decreaseCounterAndSetLoading());
     }
 
-    const addProduct = (newProduct: ProductInputDTO) => {
+    const addProduct = async(newProduct: ProductInputDTO) => {
         increaseCounterAndSetLoading();
         setError(null);
         return ProductApi.saveProduct(newProduct)
@@ -116,7 +116,7 @@ export default function useProduct() {
             .finally(() => decreaseCounterAndSetLoading());
     }
 
-    const updateProduct = (changedProduct: ProductInputDTO, productId: string) => {
+    const updateProduct = async (changedProduct: ProductInputDTO, productId: string) => {
         increaseCounterAndSetLoading();
         setError(null);
         return ProductApi.updateProduct(changedProduct, productId)
@@ -135,7 +135,7 @@ export default function useProduct() {
             .finally(() => decreaseCounterAndSetLoading());
     }
 
-    const deleteProduct = (productId: string) => {
+    const deleteProduct = async (productId: string) => {
         increaseCounterAndSetLoading();
         setError(null);
         return ProductApi.deleteProduct(productId)
@@ -153,6 +153,24 @@ export default function useProduct() {
         setProducts([]);
     }
 
+    const getProducts = async (): Promise<ProductOutputDTO[] | undefined> => {
+        increaseCounterAndSetLoading();
+        setError(null);
+        try {
+            const products = await ProductApi.getAllProducts();
+            setProducts(products);
+            return products;
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                setError(e.message);
+            }
+            return undefined;
+        } finally {
+            decreaseCounterAndSetLoading();
+        }
+    };
+
+
     return {
         products: state.products,
         getProductsByCategoryId,
@@ -162,5 +180,6 @@ export default function useProduct() {
         updateProduct,
         deleteProduct,
         flushProducts,
+        getProducts
     };
 }

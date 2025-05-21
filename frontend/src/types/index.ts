@@ -9,7 +9,7 @@ export interface SideBarNavItem {
 
 export interface SidebarConfig {
     sidebarHeader: {
-        logo: string | ReactNode;
+        logoPath?: string;
     }
     sidebarNavItems: SideBarNavItem[];
 }
@@ -61,17 +61,17 @@ export type UserAvatarProps = {
     btnClassName?: string;
 };
 
-export enum Role {
+export enum UserRole {
     ADMIN = "ADMIN",
     MANAGER = "MANAGER",
     CLERK = "CLERK",
 }
 
 export type UserDto = {
-    id?: string;
+    id: string;
     username: string;
     name: string;
-    role: Role;
+    role: UserRole;
     password?: string;
 };
 
@@ -199,7 +199,7 @@ export type SelectProps<T extends string | number> = {
 export type InputWithLabelProps = {
     label: string
     name: string
-    value: string | number
+    value?: string | number
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
     onBlur?: (e: ChangeEvent<HTMLInputElement>) => void
     type?: string
@@ -259,4 +259,44 @@ export interface StockItemDto {
 export interface StockInputDto {
     productId: string;
     amount: number;
+}
+
+export type Product = {
+    id: string;
+    name: string;
+    category: string;
+    imageUrl: string;
+    variants: number;
+    price: number;
+};
+
+export enum OrderStatus {
+    DELIVERED = "Delivered",
+    PENDING = "Pending",
+    CANCELED = "Canceled",
+}
+
+export type OrderItem = {
+    product: Product;
+    status: OrderStatus;
+    date: string;
+};
+
+export type RecentOrdersProps = {
+    orders: OrderItem[];
+};
+
+export type FormValues = {
+    productId: string;
+    amount: number;
+};
+
+export interface StockFormProps {
+    products: ProductOutputDTO[];
+    onSubmit: (data: FormValues) => Promise<void | StockItemDto>;
+    submitLabel: string;
+    submitClassName?: string;
+    iconAfter?: ReactNode;
+    disabled?: boolean;
+    defaultValues?: Partial<FormValues>;
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ProductInputDTO, ProductOutputDTO, isProductOutputDTO, isErrorDTO} from "@/types";
+import {isErrorDTO, isProductOutputDTO, ProductInputDTO, ProductOutputDTO} from "@/types";
 
 export const ProductApi = {
     baseUrl: '/api/products',
@@ -92,6 +92,27 @@ export const ProductApi = {
             this.throwErrorByResponse(error);
         }
     },
+
+    async getAllProducts(): Promise<ProductOutputDTO[]> {
+        this.cancelableGetAllRef?.abort();
+        this.cancelableGetAllRef = new AbortController();
+
+        try {
+            const response = await axios.get(this.baseUrl, {
+                signal: this.cancelableGetAllRef.signal
+            });
+            if (Array.isArray(response.data) && response.data.every(isProductOutputDTO)) {
+                return response.data;
+            }
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                return [];
+            }
+            this.throwErrorByResponse(error);
+        }
+        throw new TypeError("Ungültige Antwort beim Laden der Produkte");
+    }
+
 }
 
 export default ProductApi;

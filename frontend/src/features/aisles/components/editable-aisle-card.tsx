@@ -111,6 +111,7 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                             value={editingAisle.name}
                             onChange={handleChange}
                             onBlur={handleChange}
+                            className="bg-white"
                         />
                     </div>
 

@@ -1,13 +1,16 @@
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from '@headlessui/react';
 import LayoutContainer from '@/components/shared/layout-container';
 import {CreateStockForm, DeleteStockForm} from "@/features/stock";
+import {useOutletContext} from "react-router-dom";
+import {ProductOutputDTO} from "@/types";
 
 const tabs = [
-    { name: 'Add Stock', component: <CreateStockForm /> },
-    { name: 'Remove Stock', component: <DeleteStockForm /> },
+    { name: 'Add Stock' },
+    { name: 'Remove Stock' },
 ];
 
 const StockTabs = () => {
+    const allProducts = useOutletContext<ProductOutputDTO[]>();
     return (
         <LayoutContainer className="h-full">
             <TabGroup className="w-full h-full">
@@ -22,11 +25,12 @@ const StockTabs = () => {
                     ))}
                 </TabList>
                 <TabPanels className="mt-4 max-w-5xl">
-                    {tabs.map(({ name, component }) => (
-                        <TabPanel key={name} className="bg-white p-4 shadow">
-                            {component}
-                        </TabPanel>
-                    ))}
+                    <TabPanel className="bg-white p-4 shadow">
+                        <CreateStockForm products={allProducts} />
+                    </TabPanel>
+                    <TabPanel className="bg-white p-4 shadow">
+                        <DeleteStockForm products={allProducts} />
+                    </TabPanel>
                 </TabPanels>
             </TabGroup>
         </LayoutContainer>

@@ -25,9 +25,8 @@
     // Enables non-relative imports from the 'src' folder using '@/'
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"],
+      "@data/*": ["data/*"]
     }
   },
   "include": ["src"]
