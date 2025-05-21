@@ -15,9 +15,21 @@ export default function useProduct() {
     const [state, setState] = useState<StateProps>({
         products: [],
         productsByCategoryId: {},
-        loading: false,
+        loading: true,
         error: null
     });
+
+    let loadCounter = 0;
+
+    function increaseCounterAndSetLoading() {
+        loadCounter++;
+        setLoading(loadCounter > 0);
+    }
+
+    function decreaseCounterAndSetLoading() {
+        loadCounter--;
+        setLoading(loadCounter > 0);
+    }
 
     function withReplaceOrAddedProducts(existingProducts: ProductOutputDTO[], products: ProductOutputDTO[]) {
         return [
@@ -68,7 +80,7 @@ export default function useProduct() {
         if (categoryId in state.productsByCategoryId) {
             return Promise.resolve(state.productsByCategoryId[categoryId]);
         }
-        setLoading(true);
+        increaseCounterAndSetLoading();
         return ProductApi.getProductsByCategoryId(categoryId)
             .then(products => {
                 if (products.length === 0) {
@@ -82,11 +94,11 @@ export default function useProduct() {
                 setError(e.message);
                 throw e;
             })
-            .finally(() => setLoading(false));
+            .finally(() => decreaseCounterAndSetLoading());
     }
 
     const addProduct = (newProduct: ProductInputDTO) => {
-        setLoading(true);
+        increaseCounterAndSetLoading();
         setError(null);
         return ProductApi.saveProduct(newProduct)
             .then((savedProduct) => {
@@ -101,11 +113,11 @@ export default function useProduct() {
                 setError(e.message);
                 throw e;
             })
-            .finally(() => setLoading(false));
+            .finally(() => decreaseCounterAndSetLoading());
     }
 
     const updateProduct = (changedProduct: ProductInputDTO, productId: string) => {
-        setLoading(true);
+        increaseCounterAndSetLoading();
         setError(null);
         return ProductApi.updateProduct(changedProduct, productId)
             .then((updatedProduct) => {
@@ -120,11 +132,11 @@ export default function useProduct() {
                 setError(e.message);
                 throw e;
             })
-            .finally(() => setLoading(false));
+            .finally(() => decreaseCounterAndSetLoading());
     }
 
     const deleteProduct = (productId: string) => {
-        setLoading(true);
+        increaseCounterAndSetLoading();
         setError(null);
         return ProductApi.deleteProduct(productId)
             .then(() => {
@@ -134,7 +146,7 @@ export default function useProduct() {
                 setError(e.message);
                 throw e;
             })
-            .finally(() => setLoading(false));
+            .finally(() => decreaseCounterAndSetLoading());
     }
 
     const flushProducts = () => {

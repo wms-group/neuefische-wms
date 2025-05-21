@@ -46,11 +46,13 @@ const HallEditPage = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (isCreationPage) {
-            await addHall({name: hall.name, aisleIds: hall.aisleIds});
+            const createdHall = await addHall({ name: hall.name, aisleIds: hall.aisleIds });
+            if(createdHall) {
+                navigate(`/halls/${createdHall.id}/edit`);
+            }
         } else {
             await updateHall(hall);
         }
-        navigate(-1);
     };
 
     const setAisles = (aisles: Aisle[]) => {
@@ -59,10 +61,12 @@ const HallEditPage = () => {
             (hall.aisleIds?.length ?? 0) !== (newAisleIds?.length ?? 0) ||
             (hall.aisleIds ?? []).some(id => !(newAisleIds ?? []).includes(id)) ||
             (newAisleIds ?? []).some(id => !(hall.aisleIds ?? []).includes(id));
+        console.log("Halls Aisles: ", hall.aisleIds, "New Aisle State: ", aisles.map(a => a.id))
 
         if (hasDiff) {
             setHall({...hall, aisleIds: newAisleIds});
             setHallAisles(aisles);
+            updateHall({...hall, aisleIds: newAisleIds});
         }
     };
 
@@ -79,7 +83,6 @@ const HallEditPage = () => {
     }
 
     return (
-
         <LayoutContainer>
             <h2 className="text-xl mb-4">{isCreationPage ? "Neue Halle" : "Halle Bearbeiten"}</h2>
 
@@ -102,7 +105,11 @@ const HallEditPage = () => {
                 }
 
             </form>
-            <EditableAisleList aisles={hallAisles} setAisles={setAisles}/>
+            {
+                !isCreationPage && <>
+                    <EditableAisleList aisles={hallAisles} setAisles={setAisles} />
+                </>
+            }
         </LayoutContainer>
     );
 };

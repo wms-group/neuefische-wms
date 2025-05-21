@@ -1,4 +1,3 @@
-export { default as CategoryListPage } from "./pages/category-list-page.tsx";
 export { default as CategoryCard } from "./components/category-card.tsx";
 export { default as CategoryCardWithSubcategories } from "./components/category-card-with-subcategories.tsx";
 export { default as CategoryList } from "./components/category-list.tsx";
@@ -6,3 +5,6 @@ export { default as CategoryNewFormCard } from "./components/category-new-form-c
 export { default as CategoryForm } from "./components/category-form.tsx";
 export { default as CategoryBreadcrumbs } from "./components/category-breadcrumbs.tsx"
 export { default as CategoryPill } from "./components/category-pill.tsx"
+export { default as CategoryCardSkeleton } from "./components/category-card-skeleton.tsx"
+export { default as CategoryListSkeleton } from "./components/category-list-skeleton.tsx"
+export { default as CategoryLinksSkeleton } from "./components/category-links-skeleton.tsx"

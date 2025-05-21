@@ -1,23 +1,25 @@
 import {Dispatch, useEffect, useState} from "react";
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
-import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
+import {InputWithLabel, SearchableSelect} from "@/components/ui";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
-import {InputWithLabel} from "@/components/ui";
 
 type CategoryFormProps = {
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
     value?: CategoryOutputDTO;
-    defaultParentId: string;
+    disabled?: boolean;
+    defaultParentId: string | null;
     className?: string;
     setFormRef?: Dispatch<React.SetStateAction<HTMLFormElement | null>>;
 }
 
-const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}: CategoryFormProps) => {
+const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, setFormRef}: CategoryFormProps) => {
     const [category, setCategory] = useState<CategoryInputDTO>({
         name: value?.name ?? "",
         parentId: value?.parentId ?? defaultParentId,
     });
+
+    const categories = useCategoriesContext().categories;
 
     useEffect(() => {
         setCategory(prev => {
@@ -37,8 +39,6 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}:
         return savedCategory;
     }
 
-    const categories = useCategoriesContext().categories;
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setCategory({...category, [name]: value});
@@ -47,7 +47,7 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}:
     return (
         <form
             ref={setFormRef}
-            className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className)}
+            className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className, disabled && "opacity-50 cursor-not-allowed")}
             onSubmit={handleSubmit}>
             <div className="h-full w-full">
                 <InputWithLabel
@@ -56,16 +56,12 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}:
                     onChange={handleChange}
                     onBlur={handleChange}
                     name={"name"}
-                    placeholder={"Category Name..."}
-                    className={cn(
-                        'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
-                        'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
-                    )}
+                    disabled={disabled}
+                    className="bg-white/95"
                 />
             </div>
-            <div className="h-full w-full">
-                <label htmlFor="parentId" className={cn("text-sm/6 font-medium text-gray")}>Unterkategorie
-                    von...</label>
+            {value && <div className="h-full w-full">
+                <label htmlFor="parentId" className={cn("text-sm/6 font-medium text-gray")}>verschieben nach...</label>
                 <SearchableSelect
                     name="parentId"
                     options={selectGroupsFromCategoryOutputDTOs(categories)}
@@ -78,7 +74,7 @@ const CategoryForm = ({onSubmit, value, defaultParentId, className, setFormRef}:
                     value={category.parentId}
                     defaultValue={defaultParentId}
                 />
-            </div>
+            </div>}
         </form>
     )
 }

@@ -206,6 +206,7 @@ export type InputWithLabelProps = {
     placeholder?: string
     required?: boolean
     className?: string
+    fieldClassName?: string
     error?: string
     disabled?: boolean
     step?: string;
