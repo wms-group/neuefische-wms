@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.wmsgroup.neuefische_wms.exception.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.exception.HallNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Hall;
 import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;
@@ -80,7 +79,8 @@ public class HallService {
         for (String aisleId : hall.aisleIds()) {
             try {
                 aisleService.deleteAisleById(aisleId);
-            } catch (AisleNotFoundException e) {
+            } catch(Exception e) {
+                // simply skip deletion if the aisle is already deleted
             }
         }
 	}

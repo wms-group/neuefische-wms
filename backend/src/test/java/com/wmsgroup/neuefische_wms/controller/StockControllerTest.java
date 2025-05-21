@@ -31,7 +31,7 @@ import com.wmsgroup.neuefische_wms.repository.StockRepository;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class StockControllerTest {
+class StockControllerTest {
     private final String uri = "/api/stock";
 
     @Autowired

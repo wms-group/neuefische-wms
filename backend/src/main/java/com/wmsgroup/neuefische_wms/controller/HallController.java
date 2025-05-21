@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wmsgroup.neuefische_wms.exception.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.exception.HallNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Hall;
 import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;
@@ -56,7 +55,7 @@ public class HallController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteHall(@PathVariable String id) throws HallNotFoundException, AisleNotFoundException {
+	public ResponseEntity<Void> deleteHall(@PathVariable String id) throws HallNotFoundException {
 		service.deleteHall(id);
 		return ResponseEntity.noContent().build();
 	}
