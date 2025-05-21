@@ -23,13 +23,11 @@ export default function useProduct() {
 
     function increaseCounterAndSetLoading() {
         loadCounter++;
-        console.log(loadCounter);
         setLoading(loadCounter > 0);
     }
 
     function decreaseCounterAndSetLoading() {
         loadCounter--;
-        console.log(loadCounter);
         setLoading(loadCounter > 0);
     }
 
