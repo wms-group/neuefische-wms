@@ -5,6 +5,7 @@ import {cn} from "@/utils";
 import CategoryLink from "@/features/category/ui/CategoryLink.tsx";
 import {PropsWithChildren, useEffect, useState} from "react";
 import {CategoryLinksSkeleton} from "@/features/category";
+import {Folders} from "lucide-react";
 
 export type CategoryCardWithSubcategoriesProps = PropsWithChildren<{
     category: CategoryOutputDTO | null;
