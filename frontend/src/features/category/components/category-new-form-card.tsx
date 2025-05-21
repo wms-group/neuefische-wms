@@ -18,7 +18,7 @@ export default function CategoryNewFormCard({ onSubmit, value, className, defaul
     return (
         <Card
             title={"Neue Kategorie"}
-            className={cn("max-w-2xl", className)}
+            className={cn("w-full xl:max-w-2xl", className)}
             actions={
             <div className={"flex justify-end items-center"}>
                 <Button type={ButtonType.button} onClick={() => formRef?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))} className="rounded w-fit h-fit bg-gray-600 px-4 py-2 text-sm text-white data-hover:bg-gray-500 data-hover:data-active:bg-gray-700">

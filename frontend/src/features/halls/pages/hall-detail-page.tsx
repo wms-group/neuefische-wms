@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
-import { Hall } from "@/types";
+import {useEffect, useState} from "react";
+import {NavLink, useParams} from "react-router-dom";
+import {Hall} from "@/types";
 import LayoutContainer from "@/components/shared/layout-container.tsx";
-import { useHalls } from "@/features/halls";
-import { AisleList, useAisles } from "@/features/aisles";
+import {useHalls} from "@/features/halls";
+import {AisleList, useAisles} from "@/features/aisles";
 import Button from "@/components/ui/button";
 
 const HallDetailPage = () => {
@@ -39,7 +39,7 @@ const HallDetailPage = () => {
         </div>
 
         <h3>
-            Gänge:
+            Neuen Gang erstellen:
         </h3>
         {
             hallAisles.length == 0 

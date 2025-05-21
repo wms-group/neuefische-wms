@@ -45,7 +45,7 @@ const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, h
             value={value}
             emptyLabel="Unterelemente löschen"
             options={selectGroupsFromCategoryOutputDTOs(categories.filter(c => c.id !== category.id))}
-            className={cn("bg-red-300 text-white/90")}>
+            className={cn("bg-red-300 text-white/90 p-2")}>
             Löschen
         </ButtonWithSelect>}
         </>
@@ -131,7 +131,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
 
     return (
         <Card title={category.name} actions={
-            <div className={"flex justify-between w-full items-center"}>
+            <div className={"flex flex-col text-sm items-start gap-2 justify-between w-full sm:text-base md:flex-row sm:items-center"}>
                 <CategoryActions
                     category={category}
                     onDelete={onDelete}
@@ -145,7 +145,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
                     categories={categories}
                 />
             </div>
-        } className={cn("max-w-2xl", className)}>
+        } className={cn("lg:max-w-2xl", className)}>
             {isEditing ?
                 <CategoryEdit
                     category={category}

@@ -28,8 +28,9 @@ const InputWithLabel = forwardRef<HTMLInputElement, InputWithLabelProps>(
     ) => {
         const decimalInputMode = inputMode || 'decimal';
         const decimalPattern = pattern || '[0-9]*[\\.,]?[0-9]{0,2}';
+        const showNumericHints = type === "number" || inputMode || pattern;
         return (
-            <Field className="flex flex-col gap-1">
+            <Field className="flex flex-col flex-1 gap-1 rounded-lg">
                 <Label htmlFor={name} className="text-sm font-medium text-gray-700">
                     {label}
                     {required && ' *'}
@@ -38,7 +39,7 @@ const InputWithLabel = forwardRef<HTMLInputElement, InputWithLabelProps>(
                     id={name}
                     name={name}
                     type={type}
-                    value={value}
+                    value={value ?? ""}
                     onChange={onChange}
                     onBlur={onBlur}
                     placeholder={placeholder}
@@ -48,8 +49,8 @@ const InputWithLabel = forwardRef<HTMLInputElement, InputWithLabelProps>(
                     step={step}
                     min={min}
                     max={max}
-                    inputMode={decimalInputMode}
-                    pattern={decimalPattern}
+                    inputMode={showNumericHints ? decimalInputMode : undefined}
+                    pattern={showNumericHints ? decimalPattern : undefined}
                     className={cn(
                         "rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2",
                         error ? "border-red-500 focus:ring-red-500" : "border-secondary focus:ring-blue-500",

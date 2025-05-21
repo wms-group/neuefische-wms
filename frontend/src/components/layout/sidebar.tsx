@@ -1,7 +1,7 @@
 import {SidebarComponentProps} from "@/types";
 import {cn} from "@/utils";
 import {NavLink, useLocation} from "react-router-dom";
-import UserAvatar from "@/features/user/components/user-avatar.tsx";
+import UserAvatarAction from "@/features/user/components/user-avatar-action.tsx";
 import {useSidebar} from "@/context/sidebar/useSidebar.ts";
 import {SidebarClose, UserPlus} from "lucide-react";
 import {Button} from "@/components/ui";
@@ -68,7 +68,7 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
                 </div>
                 <div
                     className="h-16 border-t-secondary border-t-1 flex items-center justify-center [&_svg]:size-5 [&_svg]:shrink-0 relative">
-                    <UserAvatar
+                    <UserAvatarAction
                         btnClassName={"p-0"}
                         userName={"Jane Doe"}
                         onLogout={() => console.log("log-out")}

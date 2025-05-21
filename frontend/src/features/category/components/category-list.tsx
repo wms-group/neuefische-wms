@@ -23,7 +23,7 @@ export default function CategoryList({parentId, onSubmit, onDelete}: CategoryLis
                                 countSubCategories={category.countSubCategories}
                                 onSubmit={onSubmit}
                                 onDelete={onDelete}
-                                className="max-w-none"
+                                className="lg:min-w-full"
                             />
                         )
                     )

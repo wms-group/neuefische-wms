@@ -99,14 +99,15 @@ const ProductListPage = () => {
             {category && <CategoryBreadcrumbs category={category} basePath={"/products/category"} rootName={"Produkte"}
                                               rootPath={"/products"}/>}
             <ProductNewFormCard onSubmit={handleSubmitNewProduct} defaultCategoryId={categoryId ?? ""}/>
-            <GridLayout gridCols={{base: 1, sm: 2, xl: 3}}>
+            <h3>Produkt Kategorien</h3>
+            <GridLayout gridCols={{base: 1, sm: 2, xl: 2}}>
                 <CategoryCardWithSubcategories category={category ?? null} basePath={"/products/category"}>
                     {products.length === 0 && "Keine Produkte"}
                     {products.length === 1 && "Ein Produkt"}
                     {products.length > 1 && products.length + " Produkte"}
                 </CategoryCardWithSubcategories>
             </GridLayout>
-            <GridLayout gridCols={{base: 1, sm: 2, xl: 3}}>
+            <GridLayout gridCols={{base: 1, sm: 2, xl: 2}}>
                 <ProductList
                     products={products} categoryId={category?.id ?? null}
                     onSubmit={handleSubmitUpdatedProduct}
