@@ -23,7 +23,12 @@ export const arraysEqual = (a: string[], b: string[]): boolean => {
 /*
 * Return Select Groups for react-select from Categories
 */
-export {selectGroupsFromCategoryOutputDTOs} from "./CategoryUtils"
+export {selectGroupsFromCategoryOutputDTOs, selectNestedGroupsFromCategoryOutputDTOs} from "./CategoryUtils"
+
+/*
+* Return Select Groups for react-select from Products sorted into Categories
+*/
+export {selectProductsInCategoriesFromCategoryOutputDTOs} from "./product-utils"
 
 /*
 * Helper function to create grid-cols/layout base on cols

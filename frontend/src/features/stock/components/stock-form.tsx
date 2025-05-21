@@ -1,9 +1,10 @@
 import {FC} from "react";
 import {Controller, useForm} from "react-hook-form";
-import {Field, Label, Select} from "@headlessui/react";
-import {Button, InputWithLabel} from "@/components/ui";
-import {cn} from "@/utils";
+import {Field, Label} from "@headlessui/react";
+import {Button, InputWithLabel, SearchableSelect} from "@/components/ui";
+import {cn, selectProductsInCategoriesFromCategoryOutputDTOs} from "@/utils";
 import {ButtonType, FormValues, StockFormProps} from "@/types";
+import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 
 export const StockForm: FC<StockFormProps> = ({
   products,
@@ -26,6 +27,8 @@ export const StockForm: FC<StockFormProps> = ({
         },
     });
 
+    const categories = useCategoriesContext().categories
+
     const internalSubmit = async (data: FormValues) => {
         await onSubmit(data);
         reset();
@@ -42,10 +45,11 @@ export const StockForm: FC<StockFormProps> = ({
                     render={({ field }) => (
                         <Field className="flex flex-col flex-1 gap-1">
                             <Label className="text-sm font-medium">Produkt</Label>
-                            <Select
+                            <SearchableSelect
                                 name={field.name}
                                 value={field.value}
-                                onChange={field.onChange}
+                                options={selectProductsInCategoriesFromCategoryOutputDTOs(categories, products)}
+                                onChange={(option) => field.onChange(option?.value)}
                                 className={cn(
                                     "h-[42px] px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
                                     errors.productId
@@ -53,16 +57,7 @@ export const StockForm: FC<StockFormProps> = ({
                                         : "border-secondary focus:ring-blue-500"
                                 )}
                                 aria-invalid={!!errors.productId}
-                            >
-                                <option value="" disabled>
-                                    — select a product —
-                                </option>
-                                {products.map((p) => (
-                                    <option key={p.id} value={p.id}>
-                                        {p.name}
-                                    </option>
-                                ))}
-                            </Select>
+                            />
                             {errors.productId && (
                                 <p className="mt-1 text-sm text-red-600">
                                     {errors.productId.message}
