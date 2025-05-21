@@ -13,9 +13,21 @@ type StateProps = {
 export default function useCategories() {
     const [state, setState] = useState<StateProps>({
         categories: [],
-        loading: false,
+        loading: true,
         error: null
     });
+
+    let loadCounter = 0;
+
+    function increaseCounterAndSetLoading() {
+        loadCounter++;
+        setLoading(loadCounter > 0);
+    }
+
+    function decreaseCounterAndSetLoading() {
+        loadCounter--;
+        setLoading(loadCounter > 0);
+    }
 
     function setCategories(categoriesOrSetter: CategoryOutputDTO[] | ((prev: CategoryOutputDTO[]) => CategoryOutputDTO[])) {
         if (Array.isArray(categoriesOrSetter)) {
@@ -50,7 +62,7 @@ export default function useCategories() {
     }
 
     const addCategory = (newCategory: CategoryInputDTO) => {
-        setLoading(true);
+        increaseCounterAndSetLoading();
         setError(null);
         return CategoriesApi.saveCategory(newCategory)
             .then((savedCategory) => {
@@ -65,11 +77,11 @@ export default function useCategories() {
                 setError(e.message);
                 throw e;
             })
-            .finally(() => setLoading(false));
+            .finally(() => decreaseCounterAndSetLoading());
     }
 
     const updateCategory = (changedCategory: CategoryInputDTO, categoryId: string) => {
-        setLoading(true);
+        increaseCounterAndSetLoading();
         setError(null);
         return CategoriesApi.updateCategory(changedCategory, categoryId)
             .then((updatedCategory) => {
@@ -84,11 +96,11 @@ export default function useCategories() {
                 setError(e.message);
                 throw e;
             })
-            .finally(() => setLoading(false));
+            .finally(() => decreaseCounterAndSetLoading());
     }
 
     const deleteCategory = (categoryId: string, moveToCategory?: string) => {
-        setLoading(true);
+        increaseCounterAndSetLoading();
         setError(null);
         return CategoriesApi.deleteCategory(categoryId, moveToCategory)
             .then(() => {
@@ -98,15 +110,19 @@ export default function useCategories() {
                 setError(e.message);
                 throw e;
             })
-            .finally(() => setLoading(false));
+            .finally(() => decreaseCounterAndSetLoading());
     }
 
     const flushCategories = () => {
-        setLoading(true);
+        increaseCounterAndSetLoading();
         CategoriesApi.getAllCategories()
-            .then(setCategories)
+            .then(categories => {
+                setCategories(categories);
+            })
             .catch((e: { message: string | null; }) => setError(e.message))
-            .finally(() => setLoading(false));
+            .finally(() => {
+                decreaseCounterAndSetLoading()
+            });
     }
 
     useEffect(() => {

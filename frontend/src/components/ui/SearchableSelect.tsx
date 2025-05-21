@@ -26,9 +26,9 @@ const SearchableSelect: FC<SearchableSelectProps> = (props) => {
             unstyled={true}
             defaultValue={optionForValue(props.defaultValue ?? null)}
             classNames={{
-                container: () => cn('text-gray-900'),
-                control: ({isFocused}) => cn('rounded-lg bg-white/95 m-0 px-3 py-1.5', props.className, isFocused && 'outline-2 outline-'),
-                menu: () => cn('rounded mt-1 bg-gray-100 m-0 p-0 min-w-fit z-1'),
+                container: ({isFocused}) => cn('rounded-lg bg-white/95 m-0 p-0', props.className, isFocused && 'outline-2 outline-primary'),
+                control: () => cn('border-none px-3 py-1.5'),
+                menu: () => cn('text-gray-900 rounded mt-1 bg-gray-100 m-0 p-0 min-w-fit z-1'),
                 groupHeading: () => cn('text-gray-400 bg-gray-100 text-xs border-b border-gray-200 px-4 pt-1 pb-0.5 z-100'),
                 option: ({isFocused, isSelected}) => cn("text-gray-600 whitespace-nowrap px-2 py-1 m-0", isFocused && 'bg-white/45 text-gray-400', isSelected && 'bg-white/80 text-gray-700'),
             }}
