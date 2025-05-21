@@ -7,11 +7,13 @@ import CategoryLink from "@/features/category/ui/CategoryLink.tsx";
 import {CategoryForm} from "@/features/category";
 import ButtonWithSelect from "@/components/ui/ButtonWithSelect.tsx";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import {ChevronRight, Folders} from "lucide-react";
 
 type CategoryCardProps = {
     category: CategoryOutputDTO;
     countSubCategories: number;
     className?: string;
+    basePath?: string;
     onDelete?: (categoryId: string, moveToCategory?: string) => Promise<unknown>;
     onSubmit?: (submittedCategory: CategoryInputDTO, categoryId: string) => Promise<unknown>;
 }
@@ -32,12 +34,16 @@ type CategoryActionsProps = {
 const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, handleDelete, handleMoveTo, handleSubmitClicked, value, categories}: CategoryActionsProps)=> (
     <>
         <>{onSubmit && <EditOrSubmitButton
+            className="w-full grow-1 sm:w-fit sm:grow-0"
             isEditing={isEditing}
             handleEdit={handleEdit}
             handleSubmitClicked={handleSubmitClicked}/>}</>
         <>{isEditing && <Button onClick={handleEdit}>Abbrechen</Button>}</>
         <>{onDelete && <ButtonWithSelect
             label="Elemente verschieben nach"
+            className="w-full grow-1 sm:w-fit sm:grow-0"
+            buttonClassName="bg-red-300 text-white/90 basis-30 p-2"
+            selectClassName="grow-1 w-full basis-100"
             name="select"
             onClick={handleDelete}
             onChange={handleMoveTo}
@@ -45,7 +51,7 @@ const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, h
             value={value}
             emptyLabel="Unterelemente löschen"
             options={selectGroupsFromCategoryOutputDTOs(categories.filter(c => c.id !== category.id))}
-            className={cn("bg-red-300 text-white/90 p-2")}>
+        >
             Löschen
         </ButtonWithSelect>}
         </>
@@ -54,14 +60,15 @@ const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, h
 
 type EditOrSubmitButtonProps = {
     isEditing: boolean;
+    className?: string;
     handleEdit: () => void;
     handleSubmitClicked: () => void;
 }
 
-const EditOrSubmitButton = ({isEditing, handleEdit, handleSubmitClicked}: EditOrSubmitButtonProps) => (
+const EditOrSubmitButton = ({isEditing, className, handleEdit, handleSubmitClicked}: EditOrSubmitButtonProps) => (
     isEditing ?
-        (<Button onClick={handleSubmitClicked}>Speichern</Button>) :
-        (<Button onClick={handleEdit}>Bearbeiten</Button>)
+        (<Button className={className} onClick={handleSubmitClicked}>Speichern</Button>) :
+        (<Button className={className} onClick={handleEdit}>Bearbeiten</Button>)
 )
 
 type CategoryEditProps = {
@@ -71,25 +78,26 @@ type CategoryEditProps = {
 }
 
 const CategoryEdit = ({category, onSubmit, setFormRef}: CategoryEditProps) => (
-    <CategoryForm defaultParentId={category.parentId ?? ""} onSubmit={onSubmit} value={category} {...{setFormRef}}></CategoryForm>
+    <CategoryForm defaultParentId={category.parentId ?? null} onSubmit={onSubmit} value={category} {...{setFormRef}}></CategoryForm>
 )
 
 type CategoryContentProps = {
     category: CategoryOutputDTO;
+    basePath?: string;
     countSubCategories: number;
     countProducts: number;
 }
 
-const CategoryContent = ({category, countSubCategories, countProducts}: CategoryContentProps) => (
-    <><CategoryLink category={category}>
-        {countSubCategories ? (countSubCategories + " Unterkategorien") : ("keine Unterkategorien")}
-    </CategoryLink>
-        <CategoryLink category={category} basePath={"/products/category"}>
-            {countProducts ? (countProducts + " Produkte") : ("keine Produkte")}
+const CategoryContent = ({category, countSubCategories, countProducts, basePath}: CategoryContentProps) => (
+    <>
+        <div>{countSubCategories ? (countSubCategories + " Unterkategorien") : ("keine Unterkategorien")}</div>
+        <div>{countProducts ? (countProducts + " Produkte") : ("keine Produkte")}</div>
+        <CategoryLink className="flex place-self-end" category={category} basePath={basePath} withBrackets={false}>
+            <span>zur Kategorie</span><ChevronRight/>
         </CategoryLink></>
 )
 
-const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardProps) => {
+const CategoryCard = ({category, onDelete, onSubmit, className, basePath}: CategoryCardProps) => {
     const {categories} = useCategoriesContext();
 
     useEffect(() => {
@@ -130,8 +138,8 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
     }
 
     return (
-        <Card title={category.name} actions={
-            <div className={"flex flex-col text-sm items-start gap-2 justify-between w-full sm:text-base md:flex-row sm:items-center"}>
+        <Card title={<div className="flex gap-1"><Folders />{category.name}</div>} actions={
+            <div className={"flex flex-col text-sm items-start gap-2 justify-end flex-wrap w-full sm:text-base md:flex-row sm:items-center"}>
                 <CategoryActions
                     category={category}
                     onDelete={onDelete}
@@ -145,7 +153,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
                     categories={categories}
                 />
             </div>
-        } className={cn("lg:max-w-2xl", className)}>
+        } className={cn("bg-neutral-200", className)}>
             {isEditing ?
                 <CategoryEdit
                     category={category}
@@ -156,6 +164,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className}: CategoryCardPro
                     category={category}
                     countSubCategories={category.countSubCategories}
                     countProducts={category.countProducts}
+                    basePath={basePath}
                 />}
         </Card>
     )

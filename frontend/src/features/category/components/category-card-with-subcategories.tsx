@@ -23,7 +23,7 @@ export default function CategoryCardWithSubcategories({category, className, base
     }, [category, getCategoriesByParentId]);
 
     return (
-        <Card title={category?.name ? "Kategorie: " + category.name : "Kategorien"} className={cn(className, "max-w-2xl")} contentClassName="flex flex-wrap gap-2">
+        <Card title={<div className="flex gap-1"><Folders />{category?.name ?? "Kategorien"}</div>} className={cn("min-h-24 bg-neutral-200", className)} contentClassName="flex flex-wrap gap-2">
             {children && <div className="flex-grow basis-full">{children}</div>}
             {loading ? (
                 <CategoryLinksSkeleton count={3} />
