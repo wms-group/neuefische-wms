@@ -6,7 +6,6 @@ export type ProductListProps = {
     products: ProductOutputDTO[]
     onSubmit?: (submittedProduct: ProductInputDTO, productId: string) => Promise<unknown>;
     onDelete?: (productId: string) => Promise<unknown>;
-    className?: string;
     categoryId?: string | null;
 };
 
@@ -23,6 +22,7 @@ export default function ProductList({products, onSubmit, onDelete, categoryId}: 
                                 product={product}
                                 onSubmit={onSubmit}
                                 onDelete={onDelete}
+                                className="xl:max-w-2xl"
                             />
                         </div>
                     )

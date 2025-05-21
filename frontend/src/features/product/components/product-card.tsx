@@ -4,6 +4,7 @@ import {cn} from "@/utils";
 import Button from "@/components/ui/button.tsx";
 import {ProductForm} from "@/features/product";
 import {Dispatch, SetStateAction, useState} from "react";
+import {Box} from "lucide-react";
 import {StockAmount} from "@/features/stock";
 
 type ProductCardProps = {
@@ -101,9 +102,9 @@ const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps)
 
     return (
         <Card
-            title={product.name}
+            title={<div className="flex gap-1"><Box />{product.name}</div>}
             actions={
-                <div className={"flex justify-end gap-4 w-full items-center"}>
+                <div className={"flex flex-wrap justify-end gap-2 w-full items-center"}>
                     <ProductActions
                         isEditing={isEditing}
                         onDelete={onDelete ? () => handleDelete() : undefined}
@@ -113,7 +114,7 @@ const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps)
                         handleSubmitClicked={handleSubmitClicked}
                     />
                 </div>}
-            className={cn("w-full lg:max-w-2xl", className)}
+            className={cn(className)}
         >
             {isEditing ?
                 <ProductEdit product={product} onSubmit={handleSubmit} setFormRef={setFormRef}/> :

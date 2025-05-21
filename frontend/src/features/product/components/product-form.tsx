@@ -1,24 +1,26 @@
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
-import {clsx} from "clsx";
-import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
 import {ProductInputDTO, ProductOutputDTO} from "@/types";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {InputWithLabel, SearchableSelect} from "@/components/ui";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 
 type ProductFormProps = {
     onSubmit: (product: ProductInputDTO) => Promise<unknown>;
     value?: ProductOutputDTO;
+    disabled?: boolean;
     defaultCategoryId: string;
     className?: string;
     setFormRef: Dispatch<SetStateAction<HTMLFormElement | null>>
 }
 
-const ProductForm = ({onSubmit, value, defaultCategoryId, className, setFormRef}: ProductFormProps) => {
+const ProductForm = ({onSubmit, value, disabled, defaultCategoryId, className, setFormRef}: ProductFormProps) => {
     const [product, setProduct] = useState<ProductInputDTO>({
         name: value?.name ?? "",
         categoryId: value?.categoryId ?? defaultCategoryId,
         price: value?.price ?? "",
     });
+
+    const categories = useCategoriesContext().categories;
 
     useEffect(() => {
         setProduct(prev => { return {...prev, categoryId: defaultCategoryId}});
@@ -37,8 +39,6 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, setFormRef}
         return savedProduct;
     }
 
-    const categories = useCategoriesContext().categories;
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setProduct({...product, [name]: value});
@@ -51,43 +51,44 @@ const ProductForm = ({onSubmit, value, defaultCategoryId, className, setFormRef}
                 "product-form",
                 value ? "edit" : "new"
             )}
-            className={cn("flex gap-1 flex-row justify-between items-end", className)}
+            className={cn("flex gap-2 flex-wrap flex-row justify-stretch items-end", className, disabled && "opacity-50 cursor-not-allowed")}
             onSubmit={handleSubmit}>
-            <div className="h-full grow flex-basis-40">
-                <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
-                <input
-                    name="name"
-                    value={product.name}
-                    className={cn(
-                        'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
-                        'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
-                    )}
-                    onChange={handleChange}
+            <InputWithLabel
+                label="Name"
+                value={product.name}
+                onChange={handleChange}
+                onBlur={handleChange}
+                name="name"
+                fieldClassName="w-full grow-1 sm:w-fit sm:grow basis-80"
+                className="bg-white/95"
+                disabled={disabled}
+            />
+            <InputWithLabel
+                name="price"
+                label="Preis"
+                value={product.price}
+                placeholder="0,00"
+                disabled={disabled}
+                onChange={handleChange}
+                fieldClassName="w-full w-fit grow sm:shrink-1 h-full basis-1"
+                className="bg-white/95"
+                onBlur={handleChange}
                 />
-            </div>
-            <div className="h-full grow flex-basis-20 max-w-32">
-                <label htmlFor="price" className={cn("text-sm/6 font-medium text-gray")}>Preis</label>
-                <input
-                    name="price"
-                    value={product.price}
-                    placeholder="0,00"
-                    className={cn(
-                        'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
-                        'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
-                    )}
-                    onChange={handleChange}
-                />
-            </div>
-            <div className="h-full grow flex-basis-60">
-                <label htmlFor="categoryId" className={clsx("text-sm/6 font-medium text-gray")}>Kategorie</label>
+            {value && <div className="h-full grow-1 basis-40 w-full">
+                <label htmlFor="categoryId" className={"text-sm/6 font-medium text-gray"}>Kategorie</label>
                 <SearchableSelect
                     name="categoryId"
                     options={selectGroupsFromCategoryOutputDTOs(categories)}
-                    onChange={(newValue) => handleChange({target: {name: 'categoryId', value: newValue?.value}} as unknown as React.ChangeEvent<HTMLInputElement>)}
+                    onChange={(newValue) => handleChange({
+                        target: {
+                            name: 'categoryId',
+                            value: newValue?.value
+                        }
+                    } as unknown as React.ChangeEvent<HTMLInputElement>)}
                     mandatory={true}
                     value={product.categoryId}
                     defaultValue={defaultCategoryId}/>
-            </div>
+            </div>}
         </form>
     )
 }
