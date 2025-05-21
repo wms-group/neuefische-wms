@@ -153,7 +153,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className, basePath}: Categ
                     categories={categories}
                 />
             </div>
-        } className={cn("bg-neutral-200", className)}>
+        } className={cn("bg-element-bg", className)}>
             {isEditing ?
                 <CategoryEdit
                     category={category}

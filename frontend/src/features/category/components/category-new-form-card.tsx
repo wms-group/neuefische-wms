@@ -19,7 +19,7 @@ export default function CategoryNewFormCard({ onSubmit, disabled, value, classNa
     return (
         <Card
             title={"Neue Kategorie"}
-            className={cn("bg-neutral-200", className, disabled && "opacity-50 cursor-not-allowed")}
+            className={cn("bg-element-bg", className, disabled && "opacity-50 cursor-not-allowed")}
             actions={
             <div className={"flex justify-end items-center"}>
                 <Button

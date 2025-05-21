@@ -14,7 +14,7 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
         <>
             {isOpen && <div
                 className="absolute h-full w-full inset-0 z-98 bg-zinc-600/65 transition-opacity duration-350 ease-in-out lg:hidden">
-                <Button className="w-full h-full bg-transparent" onClick={closeSidebar}></Button>
+                <Button className="w-full h-full bg-transparent" onClick={closeSidebar} />
             </div>}
             <aside className={cn(
                 "bg-element-bg border-r border-primary px-4 w-64 h-screen fixed top-0 left-0 z-999 transition-transform duration-300 ease-in-out",
@@ -22,7 +22,9 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
                 "lg:translate-x-0",
             )}>
                 <div className="h-16 border-b-secondary border-b-1 p-2 flex items-center relative justify-between">
-                    <p className="text-xl font-bold text-center flex-1 overflow-x-auto">{sidebarHeader.logo}</p>
+                    <div className={"h-full w-full"}>
+                        <img src={sidebarHeader.logoPath} alt="logo" className="h-full w-auto mx-auto" />
+                    </div>
 
                     <Button
                         className="bg-transparent p-2 lg:hidden"

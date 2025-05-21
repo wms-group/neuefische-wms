@@ -8,7 +8,7 @@ import Card from "@/components/shared/card";
 import GridLayout from "@/components/shared/grid-layout.tsx";
 
 const HallListPage = () => {
-    const { halls, fetchHalls, removeHall } = useHalls();
+    const {halls, fetchHalls, removeHall} = useHalls();
 
     useEffect(() => {
         fetchHalls();
@@ -19,7 +19,7 @@ const HallListPage = () => {
     }
 
     return (
-        <LayoutContainer >
+        <LayoutContainer>
             <div className="flex justify-between h-max mb-2">
                 <h2 className="text-xl mb-4">Hallen</h2>
                 <NavLink to={"new"}>
@@ -27,9 +27,15 @@ const HallListPage = () => {
                 </NavLink>
             </div>
 
-            <GridLayout gridCols={{ base: 1, sm: 2, md: 2, xl: 3 }} >
+            <GridLayout gridCols={{base: 1, sm: 2, md: 2, xl: 3}}>
                 {halls.map((h: Hall) =>
-                    <Card key={h.id} title={(<NavLink to={h.id} key={h.id}>{h.name}</NavLink>)}
+                    <Card key={h.id} title={
+                        <NavLink
+                            className="aisle-action-link"
+                            to={h.id} key={h.id}>
+                            {h.name}
+                        </NavLink>
+                    }
                           actions={(<Button label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}
                     >
                         <div>Aisle Count: {h.aisleIds.length}</div>

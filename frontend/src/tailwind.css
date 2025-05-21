@@ -48,4 +48,10 @@
         background-size: cover;
         background-position: center;
     }
+
+    .aisle-action-link {
+        @apply bg-indigo-100 text-indigo-600 px-3 py-2 my-2 inline-block rounded-lg transition-colors;
+        @apply hover:bg-indigo-400 hover:text-white;
+        @apply group-hover:bg-indigo-400 group-hover:text-white;
+    }
 }

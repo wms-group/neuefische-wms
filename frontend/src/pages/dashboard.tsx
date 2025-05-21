@@ -1,6 +1,8 @@
 import LayoutContainer from "@/components/shared/layout-container";
 import Chart from "react-apexcharts";
 import {ApexOptions} from "apexcharts";
+import {useOutletContext} from "react-router-dom";
+import {ProductOutputDTO} from "@/types";
 import GridLayout from "@/components/shared/grid-layout.tsx";
 import RecentOrders from "@/features/orders/components/recent-orders.tsx";
 import {orders} from "@data/recent-orders.ts"
@@ -49,14 +51,14 @@ const chartSeries = [
     },
 ];
 
-const stats = [
-    { title: "Produkte", value: 240 },
-    { title: "Bestellungen", value: 68 },
-    { title: "Kategorien", value: 12 },
-];
-
 const Dashboard = () => {
+    const allProducts = useOutletContext<ProductOutputDTO[]>();
 
+    const stats = [
+        { title: "Produkte", value: allProducts.length },
+        { title: "Bestellungen", value: 68 },
+        { title: "Kategorien", value: 12 },
+    ];
     return (
         <LayoutContainer className="p-6 space-y-6 overflow-x-hidden">
             <h1>Warehouse Dashboard</h1>

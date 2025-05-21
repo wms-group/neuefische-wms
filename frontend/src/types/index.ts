@@ -9,7 +9,7 @@ export interface SideBarNavItem {
 
 export interface SidebarConfig {
     sidebarHeader: {
-        logo: string | ReactNode;
+        logoPath?: string;
     }
     sidebarNavItems: SideBarNavItem[];
 }

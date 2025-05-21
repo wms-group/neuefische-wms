@@ -1,9 +1,10 @@
 import {FooterConfig, SidebarConfig} from "@/types";
 import {Box, ClipboardList, Columns3Icon, ContainerIcon, LayoutDashboardIcon} from "lucide-react";
+import wms from "/wms.png"
 
 export const sidebarItemsConfig: SidebarConfig = {
     sidebarHeader: {
-        logo: "LOGO",
+        logoPath: wms,
     },
     sidebarNavItems: [
         {

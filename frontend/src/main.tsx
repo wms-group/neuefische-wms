@@ -28,8 +28,10 @@ createRoot(document.getElementById('root')!).render(
                     {/*APP RootLayout*/}
                     <Route element={<RootLayout/>}>
                         {/*APP Entry point*/}
-                        <Route element={<DashboardLayoutPage/>}>
-                            <Route path={"/"} element={<Dashboard/>}/>
+                        <Route element={<CategoriesProductsLayout/>}>
+                            <Route element={<DashboardLayoutPage/>}>
+                                <Route path={"/"} element={<Dashboard/>}/>
+                            </Route>
                         </Route>
 
                         {/*Relative routing for products*/}
