@@ -8,7 +8,8 @@ import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 import {useParams} from "react-router-dom";
 import {
     CategoryBreadcrumbs,
-    CategoryCardWithSubcategories, CategoryLinksSkeleton,
+    CategoryCardWithSubcategories,
+    CategoryLinksSkeleton,
     CategoryList,
     CategoryNewFormCard
 } from "@/features/category";
@@ -17,9 +18,7 @@ import LayoutContainer from "@/components/shared/layout-container.tsx";
 
 const ProductListPage = () => {
     const {getProductsByCategoryId, addProduct, updateProduct, deleteProduct, flushProducts, loading: productsLoading} = useProductContext();
-
     const categoryId = useParams().categoryId;
-
     const [category, setCategory] = useState<CategoryOutputDTO | undefined>(undefined);
     const [products, setProducts] = useState<ProductOutputDTO[]>([]);
 

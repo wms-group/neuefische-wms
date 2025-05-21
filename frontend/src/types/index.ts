@@ -285,3 +285,18 @@ export type OrderItem = {
 export type RecentOrdersProps = {
     orders: OrderItem[];
 };
+
+export type FormValues = {
+    productId: string;
+    amount: number;
+};
+
+export interface StockFormProps {
+    products: ProductOutputDTO[];
+    onSubmit: (data: FormValues) => Promise<void | StockItemDto>;
+    submitLabel: string;
+    submitClassName?: string;
+    iconAfter?: ReactNode;
+    disabled?: boolean;
+    defaultValues?: Partial<FormValues>;
+}

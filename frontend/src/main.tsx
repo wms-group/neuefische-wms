@@ -45,7 +45,7 @@ createRoot(document.getElementById('root')!).render(
                         </Route>
 
                         {/*Relative routing for users*/}
-                        <Route path={"/users"} element={<UserLayout />}>
+                        <Route path={"/users"} element={<UserLayout/>}>
                             <Route path={"settings"} element={<UserProfilePage/>}/>
                             <Route path={"create-user"} element={<UserCreatePage/>}/>
                             {/* rotes can be extend to
@@ -54,21 +54,23 @@ createRoot(document.getElementById('root')!).render(
                                 ...*/}
                         </Route>
 
-                        <Route path={"halls"} element={<HallLayout />}>
-                            <Route index element={<HallListPage />} />
-                            <Route path="new" element={<HallEditPage />} />
-                            <Route path=":id" element={<HallDetailPage />} >
-                            <Route path=":aisleId" element={<AisleDetailPage />} />
-                                </Route>
-                                <Route path=":id/edit" element={<HallEditPage />} />
+                        <Route path={"halls"} element={<HallLayout/>}>
+                            <Route index element={<HallListPage/>}/>
+                            <Route path="new" element={<HallEditPage/>}/>
+                            <Route path=":id" element={<HallDetailPage/>}>
+                                <Route path=":aisleId" element={<AisleDetailPage/>}/>
                             </Route>
-
-                            <Route path="aisles" element={<AisleLayout />}>
-                                <Route path=":id" element={<AisleDetailPage />}/>
+                            <Route path=":id/edit" element={<HallEditPage/>}/>
                         </Route>
 
-                        <Route path={"stock"} element={<StockLayout />}>
-                            <Route index element={<StockPage />} />
+                        <Route path="aisles" element={<AisleLayout/>}>
+                            <Route path=":id" element={<AisleDetailPage/>}/>
+                        </Route>
+
+                        <Route element={<CategoriesProductsLayout/>}>
+                            <Route path={"stock"} element={<StockLayout/>}>
+                                <Route index element={<StockPage/>}/>
+                            </Route>
                         </Route>
                     </Route>
                 </Routes>
