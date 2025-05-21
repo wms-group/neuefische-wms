@@ -69,21 +69,24 @@ public class StockService {
             Optional<CategoryOutputDTO> current = categories.stream()
                 .filter(c -> c.id().equals(product.getCategoryId()))
                 .findFirst();
+            
             while (current.isPresent()) {
                 String parentId = current.get().parentId();
                 if (parentId == null) {
-                    break;
+                    current = Optional.empty();
+                } else {
+                    Optional<Aisle> parentAisle = aisles.stream()
+                        .filter(a -> a.categoryIds().contains(parentId))
+                        .findFirst();
+                    if (parentAisle.isPresent()) {
+                        aisle = parentAisle;
+                        current = Optional.empty();
+                    } else {
+                        current = categories.stream()
+                            .filter(c -> c.id().equals(parentId))
+                            .findFirst();
+                    }
                 }
-                Optional<Aisle> parentAisle = aisles.stream()
-                    .filter(a -> a.categoryIds().contains(parentId))
-                    .findFirst();
-                if (parentAisle.isPresent()) {
-                    aisle = parentAisle;
-                    break;
-                }
-                current = categories.stream()
-                    .filter(c -> c.id().equals(parentId))
-                    .findFirst();
             }
         }
 
