@@ -14,14 +14,16 @@ import com.wmsgroup.neuefische_wms.model.dto.HallUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.HallRepository;
 
 @Service
-public class HallManagementService {
+public class HallService {
 
 	private final HallRepository hallRepo;
+    private final AisleService aisleService;
 	private final IdService idService;
 
-	public HallManagementService(HallRepository hallRepo, IdService idService) {
+	public HallService(HallRepository hallRepo, IdService idService, AisleService aisleService) {
 		this.hallRepo = hallRepo;
 		this.idService = idService;
+        this.aisleService = aisleService;
 	}
 
 	public List<Hall> getHalls() {
@@ -71,11 +73,16 @@ public class HallManagementService {
 	}
 
 	public void deleteHall(String id) throws HallNotFoundException {
-		if (!hallRepo.existsById(id)) {
-			throw new HallNotFoundException("Hall with id: " + id + " could not be found.");
-		}
+        Hall hall = hallRepo.findById(id).orElseThrow(() -> new HallNotFoundException("Hall with id: " + id + " could not be found."));
 
 		hallRepo.deleteById(id);
+        for (String aisleId : hall.aisleIds()) {
+            try {
+                aisleService.deleteAisleById(aisleId);
+            } catch(Exception e) {
+                // simply skip deletion if the aisle is already deleted
+            }
+        }
 	}
 
 	private void throwIfNameIsNullOrEmpty(Hall hall) {

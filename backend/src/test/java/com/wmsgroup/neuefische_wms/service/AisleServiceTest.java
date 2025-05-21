@@ -15,23 +15,29 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.wmsgroup.neuefische_wms.exceptions.AisleNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.AisleNotFoundException;
+import com.wmsgroup.neuefische_wms.exception.StockNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Aisle;
 import com.wmsgroup.neuefische_wms.model.dto.AisleCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.AisleUpdateDTO;
+import com.wmsgroup.neuefische_wms.model.dto.ProductOutputDTO;
+import com.wmsgroup.neuefische_wms.model.dto.StockOutputDTO;
 import com.wmsgroup.neuefische_wms.repository.AisleRepository;
 
-class AisleManagementServiceTest {
-	private AisleManagementService service;
+class AisleServiceTest {
+	private AisleService service;
+    private StockService stockService;
 
 	private AisleRepository repo;
 	private IdService idService;
 
 	@BeforeEach
+    @SuppressWarnings("unused")
 	void setUp() {
 		repo = mock(AisleRepository.class);
 		idService = mock(IdService.class);
-		service = new AisleManagementService(idService, repo);
+        stockService = mock(StockService.class);
+		service = new AisleService(repo, idService, stockService);
 	}
 
 	@Test
@@ -48,29 +54,33 @@ class AisleManagementServiceTest {
 		verify(repo, times(1)).save(expected);
 	}
 
-	@Test
-	void deleteAisle_deletes_withValidId() throws AisleNotFoundException {
-		String validId = "A1";
-		when(repo.existsById(validId)).thenReturn(true);
+    @Test
+    void deleteAisle_deletes_withValidId() throws AisleNotFoundException {
+        String validId = "A1";
+        Aisle aisle = new Aisle(validId, "Test Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+        when(repo.findById(validId)).thenReturn(Optional.of(aisle));
 
-		service.deleteAisleById(validId);
+        service.deleteAisleById(validId);
 
-		verify(repo, times(1)).deleteById(validId);
-	}
+        verify(repo, times(1)).findById(validId);
+        verify(repo, times(1)).deleteById(validId);
+        verify(stockService, times(1)).deleteStockById("S1");
+        verify(stockService, times(1)).deleteStockById("S2");
+    }
 
-	@Test
-	void deleteAisle_throwsAisleNotFound_withInvalidId() {
-		String invalidId = "A1";
-		when(repo.existsById(invalidId)).thenReturn(false);
+    @Test
+    void deleteAisle_throwsAisleNotFound_withInvalidId() {
+        String invalidId = "A1";
+        when(repo.findById(invalidId)).thenReturn(Optional.empty());
 
-		assertThatThrownBy(() -> {
-			service.deleteAisleById(invalidId);
-		})
-				.isInstanceOf(AisleNotFoundException.class)
-				.hasMessage("Aisle with id: " + invalidId + " was not found.");
+        assertThatThrownBy(() -> service.deleteAisleById(invalidId))
+                .isInstanceOf(AisleNotFoundException.class)
+                .hasMessage("Aisle with id: " + invalidId + " was not found.");
 
-		verify(repo, never()).deleteById(any());
-	}
+        verify(repo, times(1)).findById(invalidId);
+        verify(repo, never()).deleteById(any());
+        verify(stockService, never()).deleteStockById(any());
+    }
 
 	@Test
 	void updateAisle_updatesAisle_withValidAisle() throws AisleNotFoundException {
@@ -129,7 +139,7 @@ class AisleManagementServiceTest {
 	}
 
 	@Test
-	void getAislesWitIds_returnsAisle_whenCalled() {
+	void getAislesWithIds_returnsAisle_whenCalled() {
 		Aisle aisle = new Aisle("A1", "New Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
 		List<Aisle> aisles = List.of(aisle, aisle.withId("A2"), aisle.withId("A3"));
 		List<String> ids = aisles.stream()
@@ -148,4 +158,40 @@ class AisleManagementServiceTest {
 				.hasSize(ids.size())
 				.containsExactlyElementsOf(aisles);
 	}
+
+    @Test
+    void getStockFrom_returnsStockList_withValidAisleId() throws AisleNotFoundException, StockNotFoundException {
+        String aisleId = "A1";
+        Aisle aisle = new Aisle(aisleId, "Test Aisle", List.of("C1", "C2"), List.of("S1", "S2"));
+        StockOutputDTO stock1 = new StockOutputDTO("S1", mock(ProductOutputDTO.class), 10);
+        StockOutputDTO stock2 = new StockOutputDTO("S2", mock(ProductOutputDTO.class), 20);
+        List<StockOutputDTO> expectedStocks = List.of(stock1, stock2);
+
+        when(repo.findById(aisleId)).thenReturn(Optional.of(aisle));
+        when(stockService.getStockById("S1")).thenReturn(stock1);
+        when(stockService.getStockById("S2")).thenReturn(stock2);
+
+        assertThat(service.getStockFrom(aisleId))
+                .hasSize(2)
+                .containsExactlyElementsOf(expectedStocks);
+
+        verify(repo, times(1)).findById(aisleId);
+        verify(stockService, times(1)).getStockById("S1");
+        verify(stockService, times(1)).getStockById("S2");
+    }
+
+    @Test
+    void getStockFrom_throwsAisleNotFound_withInvalidAisleId() throws StockNotFoundException {
+        String invalidAisleId = "A1";
+
+        when(repo.findById(invalidAisleId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> {
+            service.getStockFrom(invalidAisleId);
+        }).isInstanceOf(AisleNotFoundException.class)
+                .hasMessage("Aisle with id: " + invalidAisleId + " was not found.");
+
+        verify(repo, times(1)).findById(invalidAisleId);
+        verify(stockService, never()).getStockById(any());
+    }
 }

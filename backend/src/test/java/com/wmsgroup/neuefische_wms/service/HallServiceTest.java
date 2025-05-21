@@ -9,26 +9,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.wmsgroup.neuefische_wms.exception.AisleNotFoundException;
 import com.wmsgroup.neuefische_wms.exception.HallNotFoundException;
 import com.wmsgroup.neuefische_wms.model.Hall;
 import com.wmsgroup.neuefische_wms.model.dto.HallCreationDTO;
 import com.wmsgroup.neuefische_wms.model.dto.HallUpdateDTO;
 import com.wmsgroup.neuefische_wms.repository.HallRepository;
 
-class HallManagementServiceTest {
-	private HallManagementService service;
-	private IdService idService;
-	private HallRepository hallRepo;
+class HallServiceTest {
+	private HallService service;
+    private HallRepository hallRepo;
+    private IdService idService;
+    private AisleService aisleService;
 
 	@BeforeEach
 	@SuppressWarnings("unused")
 	void setup() {
 		idService = mock(IdService.class);
 		hallRepo = mock(HallRepository.class);
-		service = new HallManagementService(hallRepo, idService);
+        aisleService = mock(AisleService.class);
+		service = new HallService(hallRepo, idService, aisleService);
 	}
 
 	@Test
@@ -185,21 +190,30 @@ class HallManagementServiceTest {
 	}
 
 	@Test
-	void deleteHall_deletesHall_whenHallExists() throws HallNotFoundException {
-		String id = "H1";
-		when(hallRepo.existsById(id)).thenReturn(true);
+    void deleteHall_deletes_withValidId() throws HallNotFoundException, AisleNotFoundException {
+        String validId = "H1";
+        Hall hall = new Hall(validId, "Test Hall", List.of("A1", "A2"));
+        when(hallRepo.findById(validId)).thenReturn(Optional.of(hall));
 
-		service.deleteHall(id);
-		verify(hallRepo).deleteById(id);
-	}
+        service.deleteHall(validId);
 
-	@Test
-	void deleteHall_throwsHallNotFoundException_whenHallDoesNotExist() {
-		String id = "H1";
-		when(hallRepo.existsById(id)).thenReturn(false);
+        verify(hallRepo, times(1)).findById(validId);
+        verify(hallRepo, times(1)).deleteById(validId);
+        verify(aisleService, times(1)).deleteAisleById("A1");
+        verify(aisleService, times(1)).deleteAisleById("A2");
+    }
 
-		assertThatThrownBy(() -> service.deleteHall(id))
-				.isInstanceOf(HallNotFoundException.class)
-				.hasMessage("Hall with id: " + id + " could not be found.");
-	}
+    @Test
+    void deleteHall_throwsHallNotFound_withInvalidId() throws AisleNotFoundException {
+        String invalidId = "H1";
+        when(hallRepo.findById(invalidId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.deleteHall(invalidId))
+                .isInstanceOf(HallNotFoundException.class)
+                .hasMessage("Hall with id: " + invalidId + " could not be found.");
+
+        verify(hallRepo, times(1)).findById(invalidId);
+        verify(hallRepo, never()).deleteById(any());
+        verify(aisleService, never()).deleteAisleById(any());
+    }
 }
