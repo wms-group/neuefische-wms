@@ -14,7 +14,8 @@ import {
     DashboardLayoutPage,
     HallLayout,
     RootLayout,
-    StockLayout
+    StockLayout,
+    UserLayout
 } from "@/layouts";
 import {AisleDetailPage} from '@/features/aisles';
 import Dashboard from "@/pages/dashboard.tsx";
@@ -51,7 +52,7 @@ createRoot(document.getElementById('root')!).render(
                         </Route>
 
                         {/*Relative routing for users*/}
-                        <Route path={"/users"}>
+                        <Route path={"/users"} element={<UserLayout />}>
                             <Route path={"settings"} element={<UserProfilePage/>}/>
                             <Route path={"create-user"} element={<UserCreatePage/>}/>
                             {/* rotes can be extend to

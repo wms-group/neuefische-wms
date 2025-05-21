@@ -4,3 +4,4 @@ export { default as DashboardLayoutPage } from "./dashboard-layout-page.tsx";
 export { default as AisleLayout } from "./aisle-layout.tsx";
 export { default as HallLayout } from "./hall-layout.tsx";
 export { default as StockLayout } from "./stock-layout.tsx";
+export { default as UserLayout } from "./user-layout.tsx";

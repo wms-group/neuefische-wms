@@ -27,7 +27,7 @@ const HallListPage = () => {
                 </NavLink>
             </div>
 
-            <GridLayout gridCols={{ base: 1, sm: 2, md: 3 }} >
+            <GridLayout gridCols={{ base: 1, sm: 2, md: 2, xl: 3 }} >
                 {halls.map((h: Hall) =>
                     <Card key={h.id} title={(<NavLink to={h.id} key={h.id}>{h.name}</NavLink>)}
                           actions={(<Button label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}

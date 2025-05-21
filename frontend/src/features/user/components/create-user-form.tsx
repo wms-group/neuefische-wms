@@ -1,13 +1,13 @@
 import {Controller, useForm} from "react-hook-form";
 import {Button, InputWithLabel, SelectWithLabel} from "@/components/ui";
-import {ButtonType, Role} from "@/types";
+import {ButtonType, UserRole} from "@/types";
 import {createUser} from "@/features/user/api";
 
 type FormValues = {
     username: string;
     password: string;
     name: string;
-    role: Role;
+    role: UserRole;
 };
 
 const CreateUserForm = () => {
@@ -22,7 +22,7 @@ const CreateUserForm = () => {
             username: "",
             password: "",
             name: "",
-            role: Role.CLERK,
+            role: UserRole.CLERK,
         },
     });
 
@@ -91,7 +91,7 @@ const CreateUserForm = () => {
                 render={({ field }) => (
                     <SelectWithLabel
                         label="Role"
-                        options={Object.values(Role)}
+                        options={Object.values(UserRole)}
                         value={field.value}
                         onChange={field.onChange}
                         disabled={isSubmitting}

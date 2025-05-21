@@ -61,17 +61,17 @@ export type UserAvatarProps = {
     btnClassName?: string;
 };
 
-export enum Role {
+export enum UserRole {
     ADMIN = "ADMIN",
     MANAGER = "MANAGER",
     CLERK = "CLERK",
 }
 
 export type UserDto = {
-    id?: string;
+    id: string;
     username: string;
     name: string;
-    role: Role;
+    role: UserRole;
     password?: string;
 };
 
@@ -199,7 +199,7 @@ export type SelectProps<T extends string | number> = {
 export type InputWithLabelProps = {
     label: string
     name: string
-    value: string | number
+    value?: string | number
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
     onBlur?: (e: ChangeEvent<HTMLInputElement>) => void
     type?: string

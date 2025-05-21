@@ -38,4 +38,10 @@
     .card {
         @apply rounded-lg p-6 bg-element-bg shadow-xl;
     }
+
+    .bg-settings {
+        background-image: url("./assets/settins.svg");
+        background-size: cover;
+        background-position: center;
+    }
 }
