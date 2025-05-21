@@ -4,7 +4,7 @@ import {X} from "lucide-react";
 
 type CategoryPillProps = {
     category: CategoryOutputDTO;
-    onRemove: (id: string) => void;
+    onRemove?: (id: string) => void;
 };
 
 const CategoryPill = ({ category, onRemove }: CategoryPillProps) => {
@@ -16,7 +16,7 @@ const CategoryPill = ({ category, onRemove }: CategoryPillProps) => {
             {category.name}
             <Button
                 iconOnly
-                onClick={() => onRemove(category.id)}
+                onClick={onRemove && (() => onRemove(category.id))}
                 className="text-gray-500 hover:text-red-600 focus:outline-none text-xs p-0.75 bg-transparent"
                 aria-label={`Remove ${category.name}`}
             >
