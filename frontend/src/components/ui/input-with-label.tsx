@@ -53,7 +53,7 @@ const InputWithLabel = forwardRef<HTMLInputElement, InputWithLabelProps>(
                     inputMode={showNumericHints ? decimalInputMode : undefined}
                     pattern={showNumericHints ? decimalPattern : undefined}
                     className={cn(
-                        "rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2",
+                        "rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 bg-white",
                         error ? "border-red-500 focus:ring-red-500" : "border-secondary focus:ring-blue-500",
                         disabled && "bg-primary cursor-not-allowed",
                         className
