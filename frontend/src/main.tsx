@@ -5,7 +5,6 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {SidebarProvider} from "@/provider/sidebar-provider.tsx";
 import {OrderDetailPage, OrderListPage} from "@/features/orders";
 import {ProductListPage} from "@/features/product";
-import {CategoryListPage} from "@/features/category";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
 import {HallDetailPage, HallEditPage, HallListPage} from "@/features/halls";
 import {
@@ -31,12 +30,6 @@ createRoot(document.getElementById('root')!).render(
                         {/*APP Entry point*/}
                         <Route element={<DashboardLayoutPage/>}>
                             <Route path={"/"} element={<Dashboard/>}/>
-                        </Route>
-
-                        {/*Relative routing for categories*/}
-                        <Route path={"categories"} element={<CategoriesProductsLayout/>}>
-                            <Route index element={<CategoryListPage/>}/>
-                            <Route path=":categoryId" element={<CategoryListPage/>}/>
                         </Route>
 
                         {/*Relative routing for products*/}
