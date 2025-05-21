@@ -1,5 +1,5 @@
 import {FooterConfig, SidebarConfig} from "@/types";
-import {Box, ClipboardList, Columns3Icon, ContainerIcon, Folders, LayoutDashboardIcon,} from "lucide-react";
+import {Box, ClipboardList, Columns3Icon, ContainerIcon, LayoutDashboardIcon} from "lucide-react";
 
 export const sidebarItemsConfig: SidebarConfig = {
     sidebarHeader: {
@@ -10,11 +10,6 @@ export const sidebarItemsConfig: SidebarConfig = {
             link: "dashboard",
             path: "/",
             icon: LayoutDashboardIcon
-        },
-        {
-            link: "categories",
-            path: "/categories",
-            icon: Folders
         },
         {
             link: "products",
