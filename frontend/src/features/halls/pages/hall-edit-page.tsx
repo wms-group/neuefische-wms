@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Aisle, Hall } from "@/types";
+import {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {Aisle, ButtonType, Hall} from "@/types";
 import LayoutContainer from "@/components/shared/layout-container.tsx";
-import { useHalls } from "@/features/halls";
-import { EditableAisleList, useAisles } from "@/features/aisles";
-import { cn } from "@/utils";
+import {useHalls} from "@/features/halls";
+import {EditableAisleList, useAisles} from "@/features/aisles";
+import {Button, InputWithLabel} from "@/components/ui";
 
 const HallEditPage = () => {
-    const { addHall, updateHall, fetchHall } = useHalls();
-    const { id } = useParams();
+    const {addHall, updateHall, fetchHall} = useHalls();
+    const {id} = useParams();
     const navigate = useNavigate();
 
     const isCreationPage = id === undefined;
 
-    const [hall, setHall] = useState<Hall>({ 
-        id: "", name: "", aisleIds: [] 
+    const [hall, setHall] = useState<Hall>({
+        id: "", name: "", aisleIds: []
     });
     const [loading, setLoading] = useState(!isCreationPage);
 
@@ -31,7 +31,7 @@ const HallEditPage = () => {
         }
     }, [id, isCreationPage, fetchHall]);
 
-    const { aisles } = useAisles();
+    const {aisles} = useAisles();
     const getHallAisles = (): Aisle[] => {
         return hall.aisleIds.map(aid => aisles.find(a => a.id === aid)).filter(Boolean) as typeof aisles;
     };
@@ -40,7 +40,7 @@ const HallEditPage = () => {
         if (!isCreationPage) {
             setHallAisles(getHallAisles());
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hall, aisles, isCreationPage]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,15 +61,15 @@ const HallEditPage = () => {
             (hall.aisleIds?.length ?? 0) !== (newAisleIds?.length ?? 0) ||
             (hall.aisleIds ?? []).some(id => !(newAisleIds ?? []).includes(id)) ||
             (newAisleIds ?? []).some(id => !(hall.aisleIds ?? []).includes(id));
-            
+
         if (hasDiff) {
-            setHall({ ...hall, aisleIds: newAisleIds });
+            setHall({...hall, aisleIds: newAisleIds});
             setHallAisles(aisles);
         }
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setHall({ ...hall, name: event.target.value });
+        setHall({...hall, name: event.target.value});
     };
 
     if (loading) {
@@ -81,42 +81,36 @@ const HallEditPage = () => {
     }
 
     return (
+
         <LayoutContainer>
-            <div className="flex-col">
-                <button onClick={() => navigate(-1)}>Zurück</button>
-                <h2 className="text-xl mb-4">{isCreationPage ? "Neue Halle" : "Halle Bearbeiten"}</h2>
-                
-                <form className="h-full grow flex-basis-60" onSubmit={handleSubmit}>
-                    <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
-                    <input
-                        name="name"
-                        className={cn(
-                            'block w-full rounded border-none bg-white/95 px-3 py-1.5 text-gray-900',
-                            'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-900'
-                        )}
-                        onChange={handleChange}
-                        value={hall.name}
-                        autoFocus={isCreationPage}
-                    />
-                    {
-                        isCreationPage && <button
-                        type="submit"
-                        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-blue-300"
-                        disabled={hall.name === ""}
-                        >
-                            Halle Erstellen
-                        </button>
-                    }
-                    
-                </form>
+            <button onClick={() => navigate(-1)}>Zurück</button>
+            <h2 className="text-xl mb-4">{isCreationPage ? "Neue Halle" : "Halle Bearbeiten"}</h2>
+
+            <form className="flex items-end gap-4 max-w-4xl" onSubmit={handleSubmit}>
+                <InputWithLabel
+                    label="Halle Name:"
+                    name={"halle"}
+                    value={hall.name}
+                    onChange={handleChange}
+                />
+
                 {
-                    !isCreationPage && <>
-                            <h3 className="text-l mb-4">Gänge:</h3>
-                            <EditableAisleList aisles={hallAisles} setAisles={setAisles} />
-                        </>
+                    isCreationPage && <Button
+                        type={ButtonType.submit}
+                        className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-blue-300"
+                        disabled={!hall.name}
+                    >
+                        Halle Erstellen
+                    </Button>
                 }
 
-            </div>
+            </form>
+            {
+                !isCreationPage && <>
+                    <h3 className="text-l mb-4">Gänge:</h3>
+                    <EditableAisleList aisles={hallAisles} setAisles={setAisles} />
+                </>
+            }
         </LayoutContainer>
     );
 };

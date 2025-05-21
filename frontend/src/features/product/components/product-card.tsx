@@ -4,6 +4,7 @@ import {cn} from "@/utils";
 import Button from "@/components/ui/button.tsx";
 import {ProductForm} from "@/features/product";
 import {Dispatch, SetStateAction, useState} from "react";
+import {StockAmount} from "@/features/stock";
 
 type ProductCardProps = {
     product: ProductOutputDTO;
@@ -64,7 +65,10 @@ type ProductContentProps = {
 }
 
 const ProductContent = ({product}: ProductContentProps) => (
-    <p>Preis: {product.price}</p>
+    <div className={"flex gap-4"}>
+        <p>Preis: {product.price}</p>
+        <StockAmount productId={product.id} />
+    </div>
 
 );
 
@@ -109,7 +113,7 @@ const ProductCard = ({product, onDelete, onSubmit, className}: ProductCardProps)
                         handleSubmitClicked={handleSubmitClicked}
                     />
                 </div>}
-            className={cn(className, "max-w-2xl")}
+            className={cn("w-full lg:max-w-2xl", className)}
         >
             {isEditing ?
                 <ProductEdit product={product} onSubmit={handleSubmit} setFormRef={setFormRef}/> :

@@ -199,7 +199,7 @@ export type SelectProps<T extends string | number> = {
 export type InputWithLabelProps = {
     label: string
     name: string
-    value: string
+    value: string | number
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
     onBlur?: (e: ChangeEvent<HTMLInputElement>) => void
     type?: string
@@ -209,8 +209,8 @@ export type InputWithLabelProps = {
     error?: string
     disabled?: boolean
     step?: string;
-    min?: string;
-    max?: string;
+    min?: number;
+    max?: number;
     inputMode?: "text" | "decimal" | "search" | "none" | "email" | "tel" | "url" | "numeric";
     /** HTML `pattern` attribute "[0-9]*[\\.,]?[0-9]{0,2}" */
     pattern?: string;
@@ -247,4 +247,15 @@ export type SearchableSelectProps = {
     isClearable?: boolean;
     isDisabled?: boolean;
     isInvalid?: boolean;
+}
+
+export interface StockItemDto {
+    id: string;
+    product: ProductOutputDTO;
+    amount: number;
+}
+
+export interface StockInputDto {
+    productId: string;
+    amount: number;
 }
