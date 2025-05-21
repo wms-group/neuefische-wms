@@ -44,10 +44,9 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
     };
 
     const handleDelete = () => onDelete(order.id);
-
     if (!isEditing) {
         return (
-            <div className="card p-4 bg-white rounded shadow flex flex-col gap-2">
+            <div className="card p-4 rounded shadow flex flex-col gap-2">
                 <p>
                     Order: <strong>{order.id}#</strong>
                 </p>
@@ -56,15 +55,17 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
                 </div>
                 <div>
                     <strong>Items:</strong>
-                    <ul className="list-disc list-inside">
-                        {order.wares.map((item, i) => (
-                            <li key={i}>
-                                {item.product.name} × {item.amount}
-                            </li>
-                        ))}
+                    <ul className="max-h-30 overflow-y-auto pl-4 mt-2">
+                        {order.wares.map((item, i) => {
+                           return (
+                                <li key={i}>
+                                    {item.product.name} × {item.amount}
+                                </li>
+                            )
+                        })}
                     </ul>
                 </div>
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 mt-auto">
                     <Button onClick={() => setIsEditing(true)}>Edit</Button>
                     <Button onClick={handleDelete}>Delete</Button>
                 </div>
@@ -74,7 +75,7 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="card p-4 bg-white rounded shadow flex flex-col gap-4"
+            className="card p-4 m-0 rounded shadow flex flex-col gap-4"
         >
             {fields.map((field, index) => (
                 <div key={field.id} className="flex gap-4 items-end">

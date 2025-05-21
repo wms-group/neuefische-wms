@@ -1,8 +1,9 @@
 import {OrderDto} from "@/types";
 import {useEffect, useState} from "react";
 import {deleteOrder, getOrders} from "@/features/orders/api";
-import OrderForm from "@/features/orders/components/create-order-form.tsx";
-import OrderItem from "@/features/orders/components/order-item.tsx";
+import OrderForm from "@/features/orders/components/create-order-form";
+import OrderItem from "@/features/orders/components/order-item";
+import GridLayout from "@/components/shared/grid-layout";
 
 const OrdersPage = () => {
     const [orders, setOrders] = useState<(OrderDto & { id: string })[]>([]);
@@ -11,10 +12,21 @@ const OrdersPage = () => {
     const loadOrders = async () => {
         setLoading(true);
         const data = await getOrders();
-        setOrders(data as (OrderDto & { id: string })[]);
+
+        const sorted = (data as (OrderDto & { id: string })[]).sort((a, b) => {
+            const updatedDiff = new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+            if (updatedDiff !== 0) return updatedDiff;
+
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+
+        setOrders(sorted);
         setLoading(false);
     };
 
+    const handleCreate = (newOrder: OrderDto & { id: string }) => {
+        setOrders((prev) => [newOrder, ...prev]);
+    };
 
     const handleUpdate = (updatedOrder: OrderDto & { id: string }) => {
         setOrders((prev) =>
@@ -34,9 +46,9 @@ const OrdersPage = () => {
     if (loading) return <p>Loading orders...</p>;
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-8">
-            <OrderForm />
-            <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-8">
+            <OrderForm onCreate={handleCreate} />
+            <GridLayout gridCols={{ base: 1, sm: 2, md: 2, xl: 3 }}>
                 {orders.map((order) => (
                     <OrderItem
                         key={order.id}
@@ -45,7 +57,7 @@ const OrdersPage = () => {
                         onDelete={handleDelete}
                     />
                 ))}
-            </div>
+            </GridLayout>
         </div>
     );
 };

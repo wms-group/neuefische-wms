@@ -2,11 +2,19 @@ import {Controller, useFieldArray, useForm} from "react-hook-form";
 import {Button, InputWithLabel, SelectWithLabel} from "@/components/ui";
 import {ButtonType, CreateOrderDto, OrderDto, OrderStatus} from "@/types";
 import {createOrder} from "../api";
+import {X} from "lucide-react";
 
-type FormValues = CreateOrderDto;
+type Props = {
+    onCreate: (order: OrderDto) => void;
+};
 
-const OrderForm = ({ onCreated }: { onCreated?: (order: OrderDto) => void }) => {
-    const { control, handleSubmit, formState: { isSubmitting, isValid }, reset } = useForm<FormValues>({
+const OrderForm = ({ onCreate }: Props) => {
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { isSubmitting, isValid },
+    } = useForm<CreateOrderDto>({
         defaultValues: {
             wares: [{ productId: "", amount: 1 }],
             status: OrderStatus.PENDING,
@@ -14,19 +22,24 @@ const OrderForm = ({ onCreated }: { onCreated?: (order: OrderDto) => void }) => 
         mode: "onChange",
     });
 
-    const { fields, append, remove } = useFieldArray({ control, name: "wares" });
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "wares",
+    });
 
-    const onSubmit = async (data: FormValues) => {
-        const created = await createOrder(data);
-        onCreated?.(created);
+    const onSubmit = async (data: CreateOrderDto) => {
+        const newOrder = await createOrder(data);
+        onCreate(newOrder);
         reset();
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4 bg-white rounded shadow">
-            {/* ... wie gehabt, nur: statt productId/product */}
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4 p-4 bg-element-bg rounded shadow"
+        >
             {fields.map((field, idx) => (
-                <div key={field.id} className="flex gap-4 items-end">
+                <div key={field.id} className="flex gap-4 justify-center items-center">
                     <Controller
                         name={`wares.${idx}.productId`}
                         control={control}
@@ -56,13 +69,22 @@ const OrderForm = ({ onCreated }: { onCreated?: (order: OrderDto) => void }) => 
                             />
                         )}
                     />
-                    <button type="button" onClick={() => remove(idx)} disabled={isSubmitting} className="text-red-600">
-                        &times;
-                    </button>
+                    <Button
+                        onClick={() => remove(idx)}
+                        disabled={isSubmitting}
+                        iconOnly
+                        className="text-red-600 hover:text-red-500 bg-transparent"
+                    >
+                        <X />
+                    </Button>
                 </div>
             ))}
 
-            <Button type={ButtonType.button} onClick={() => append({ productId: "", amount: 1 })} disabled={isSubmitting}>
+            <Button
+                type={ButtonType.button}
+                onClick={() => append({ productId: "", amount: 1 })}
+                disabled={isSubmitting}
+            >
                 + Add Product
             </Button>
 
