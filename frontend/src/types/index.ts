@@ -248,3 +248,28 @@ export type SearchableSelectProps = {
     isDisabled?: boolean;
     isInvalid?: boolean;
 }
+
+export type Product = {
+    id: string;
+    name: string;
+    category: string;
+    imageUrl: string;
+    variants: number;
+    price: number;
+};
+
+export enum OrderStatus {
+    DELIVERED = "Delivered",
+    PENDING = "Pending",
+    CANCELED = "Canceled",
+}
+
+export type OrderItem = {
+    product: Product;
+    status: OrderStatus;
+    date: string;
+};
+
+export type RecentOrdersProps = {
+    orders: OrderItem[];
+};

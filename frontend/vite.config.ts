@@ -10,6 +10,7 @@ export default defineConfig({
     // Enables non-relative imports from the 'src' folder using '@/'
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@data": path.resolve(__dirname, "./data"),
       /*
       * only for example purposes - creates an alias "@utils" pointing to "src/utils"
       * "@utils": path.resolve(__dirname, "src/utils"),

@@ -1,6 +1,6 @@
 import {FC, PropsWithChildren} from "react";
 import {Outlet} from "react-router-dom";
-import {footerConfig, sidebarItemsConfig} from "../../data/navigations-data.ts";
+import {footerConfig, sidebarItemsConfig} from "@data/navigations-data.ts";
 import LayoutContainer from "@/components/shared/layout-container.tsx";
 import Header from "@/components/layout/header.tsx";
 import Sidebar from "@/components/layout/sidebar.tsx";

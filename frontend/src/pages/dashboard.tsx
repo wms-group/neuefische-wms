@@ -2,6 +2,8 @@ import LayoutContainer from "@/components/shared/layout-container";
 import Chart from "react-apexcharts";
 import {ApexOptions} from "apexcharts";
 import GridLayout from "@/components/shared/grid-layout.tsx";
+import RecentOrders from "@/features/orders/components/recent-orders.tsx";
+import {orders} from "@data/recent-orders.ts"
 
 const chartOptions: ApexOptions = {
     chart: {
@@ -69,18 +71,21 @@ const Dashboard = () => {
                 ))}
             </GridLayout>
 
-            <div className="card bg-transparent overflow-hidden">
-                <h2 className="text-lg font-semibold mb-4">Lagerbestand – Verlauf</h2>
-                <div className="w-full h-72">
-                    <Chart
-                        options={chartOptions}
-                        series={chartSeries}
-                        type="area"
-                        width="100%"
-                        height="100%"
-                    />
+            <GridLayout gridCols={{ base: 1, sm: 1,  md: 2 }}>
+                <div className="card bg-transparent overflow-hidden">
+                    <h2 className="text-lg font-semibold mb-4">Lagerbestand – Verlauf</h2>
+                    <div className="w-full h-72">
+                        <Chart
+                            options={chartOptions}
+                            series={chartSeries}
+                            type="area"
+                            width="100%"
+                            height="100%"
+                        />
+                    </div>
                 </div>
-            </div>
+                <RecentOrders orders={orders} />
+            </GridLayout>
         </LayoutContainer>
     );
 };
