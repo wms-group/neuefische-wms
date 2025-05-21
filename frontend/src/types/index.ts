@@ -270,7 +270,7 @@ export type Product = {
     price: number;
 };
 
-export enum OrderStatus {
+export enum OrderItemStatus {
     DELIVERED = "Delivered",
     PENDING = "Pending",
     CANCELED = "Canceled",
@@ -278,7 +278,7 @@ export enum OrderStatus {
 
 export type OrderItem = {
     product: Product;
-    status: OrderStatus;
+    status: OrderItemStatus;
     date: string;
 };
 
@@ -299,4 +299,35 @@ export interface StockFormProps {
     iconAfter?: ReactNode;
     disabled?: boolean;
     defaultValues?: Partial<FormValues>;
+}
+
+export enum OrderStatus {
+    PENDING = "PENDING",
+    PROCESSING = "PROCESSING",
+    SHIPPED = "SHIPPED",
+    DELIVERED = "DELIVERED",
+}
+
+export interface CreateOrderItemDto {
+    productId: string;
+    amount: number;
+}
+
+export interface CreateOrderDto {
+    wares: CreateOrderItemDto[];
+    status: OrderStatus;
+}
+
+export interface OrderItemDto {
+    product: ProductOutputDTO;
+    amount: number;
+    price: number;
+}
+
+export interface OrderDto {
+    id: string;
+    wares: OrderItemDto[];
+    status: OrderStatus;
+    createdAt: string;
+    updatedAt: string;
 }
