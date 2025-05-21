@@ -120,14 +120,6 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                             onChange={handleChange}
                             onBlur={handleChange}
                         />
-
-                        <label htmlFor="name" className={cn("text-sm/6 font-medium text-gray")}>Name</label>
-                        <input
-                            name="name"
-
-                            onChange={handleChange}
-                            value={editingAisle.name}
-                        />
                     </div>
 
                     <div className="h-full grow flex-basis-60">

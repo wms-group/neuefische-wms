@@ -46,11 +46,13 @@ const HallEditPage = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (isCreationPage) {
-            await addHall({ name: hall.name, aisleIds: hall.aisleIds });
+            const createdHall = await addHall({ name: hall.name, aisleIds: hall.aisleIds });
+            if(createdHall) {
+                navigate(`/halls/${createdHall.id}/edit`);
+            }
         } else {
             await updateHall(hall);
         }
-        navigate(-1);
     };
 
     const setAisles = (aisles: Aisle[]) => {
@@ -81,6 +83,7 @@ const HallEditPage = () => {
     return (
         <LayoutContainer>
             <div className="flex-col">
+                <button onClick={() => navigate(-1)}>Zurück</button>
                 <h2 className="text-xl mb-4">{isCreationPage ? "Neue Halle" : "Halle Bearbeiten"}</h2>
                 
                 <form className="h-full grow flex-basis-60" onSubmit={handleSubmit}>
@@ -93,6 +96,7 @@ const HallEditPage = () => {
                         )}
                         onChange={handleChange}
                         value={hall.name}
+                        autoFocus={isCreationPage}
                     />
                     {
                         isCreationPage && <button
@@ -105,9 +109,12 @@ const HallEditPage = () => {
                     }
                     
                 </form>
-                
-                <h3 className="text-l mb-4">Gänge:</h3>
-                <EditableAisleList aisles={hallAisles} setAisles={setAisles} />
+                {
+                    !isCreationPage && <>
+                            <h3 className="text-l mb-4">Gänge:</h3>
+                            <EditableAisleList aisles={hallAisles} setAisles={setAisles} />
+                        </>
+                }
 
             </div>
         </LayoutContainer>
