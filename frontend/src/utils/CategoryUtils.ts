@@ -32,17 +32,18 @@ export function selectGroupsFromCategoryOutputDTOs(categories: CategoryOutputDTO
     }) as SelectGroup[] & SelectOption[];
 }
 
-export function selectNestedGroupsFromCategoryOutputDTOs(categories: CategoryOutputDTO[], parentId: string | null = null): SelectGroup[] {
+export function selectNestedGroupsFromCategoryOutputDTOs(categories: CategoryOutputDTO[], parentId: string | null = null, prefix = ""): SelectGroup[] {
     return categories
         .filter(c => c.parentId === parentId)
         .flatMap(category => {
+            const label = (prefix ? (prefix + " > ") : "") + category.name;
             const group = {
-                label: category.name,
+                label: label,
                 options: [{
                     value: category.id,
                     label: '###placeholder###'
                 }],
             } as SelectGroup;
-            return [group, ...selectNestedGroupsFromCategoryOutputDTOs(categories, category.id)];
+            return [group, ...selectNestedGroupsFromCategoryOutputDTOs(categories, category.id, label)];
     });
 }
