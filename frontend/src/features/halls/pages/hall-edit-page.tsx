@@ -86,7 +86,7 @@ const HallEditPage = () => {
         <LayoutContainer>
             <h2 className="text-xl mb-4">{isCreationPage ? "Neue Halle" : "Halle Bearbeiten"}</h2>
 
-            <form className="flex items-end gap-4 max-w-4xl" onSubmit={handleSubmit}>
+            <form className="flex flex-col lg:flex-row lg:items-end gap-4 max-w-4xl" onSubmit={handleSubmit}>
                 <InputWithLabel
                     label="Halle Name:"
                     name={"halle"}

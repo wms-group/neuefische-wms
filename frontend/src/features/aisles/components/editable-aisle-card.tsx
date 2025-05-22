@@ -101,7 +101,7 @@ const EditableAisleCard = ({aisle, categories, onSubmit, creates, actions}: Prop
                         formRef.current = ref
                     }}
                     onSubmit={handleSubmit}
-                    className={"flex gap-1 flex-row justify-between items-end"}
+                    className={"flex flex-col gap-1 lg:flex-row justify-between lg:items-end"}
                 >
                     <div className="h-full w-full lg:w-1/2">
                         <InputWithLabel
