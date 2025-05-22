@@ -31,3 +31,18 @@ export function selectGroupsFromCategoryOutputDTOs(categories: CategoryOutputDTO
             return group;
     }) as SelectGroup[] & SelectOption[];
 }
+
+export function selectNestedGroupsFromCategoryOutputDTOs(categories: CategoryOutputDTO[], parentId: string | null = null): SelectGroup[] {
+    return categories
+        .filter(c => c.parentId === parentId)
+        .flatMap(category => {
+            const group = {
+                label: category.name,
+                options: [{
+                    value: category.id,
+                    label: '###placeholder###'
+                }],
+            } as SelectGroup;
+            return [group, ...selectNestedGroupsFromCategoryOutputDTOs(categories, category.id)];
+    });
+}
