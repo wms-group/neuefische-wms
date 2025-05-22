@@ -64,7 +64,7 @@ const OrdersPage = () => {
                 className={cn(loading && "cursor-not-allowed pointer-events-none")}
             />
 
-            <GridLayout gridCols={{ base: 1, sm: 2, md: 2, xl: 3 }}>
+            <GridLayout gridCols={{ base: 1, sm: 1, md: 1, lg:1, xl: 3 }}>
                 {!loading && orders && orders.map((order) => (
                     <OrderItem
                         products={allProducts}

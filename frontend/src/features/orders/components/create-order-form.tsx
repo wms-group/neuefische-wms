@@ -46,14 +46,15 @@ const OrderForm = ({ onCreate, className, products }: OrderFormProps) => {
             className={cn("flex flex-col gap-4 p-4 bg-element-bg rounded shadow max-", className)}
         >
             {fields.map((field, idx) => (
-                <div key={field.id} className="flex gap-4 justify-center items-center">
+                <div key={field.id} className="flex flex-col sm:flex-row gap-4 justify-center sm:items-center">
                     <ControlledProductSelect
                         control={control}
                         name={`wares.${idx}.productId`}
                         categories={categories}
                         products={products}
                     />
-                    <Controller
+                    <div className="flex gap-2 items-center justify-center">
+                        <Controller
                         name={`wares.${idx}.amount`}
                         control={control}
                         rules={{ min: { value: 1, message: "At least 1" } }}
@@ -68,15 +69,15 @@ const OrderForm = ({ onCreate, className, products }: OrderFormProps) => {
                             />
                         )}
                     />
-                    <Button
-                        onClick={() => remove(idx)}
-                        disabled={isSubmitting}
-                        iconOnly
-                        className={"bg-transparent mt-6"}
-                        variant="destructive"
-                    >
-                        <X />
-                    </Button>
+                        <Button
+                            onClick={() => remove(idx)}
+                            disabled={isSubmitting}
+                            iconOnly
+                            className={"bg-transparent mt-6"}
+                            variant="destructive"
+                        >
+                            <X />
+                        </Button></div>
                 </div>
             ))}
 

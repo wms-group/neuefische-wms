@@ -19,7 +19,7 @@ const HallListPage = () => {
     }
 
     return (
-        <LayoutContainer>
+        <LayoutContainer className="h-full">
             <div className="flex justify-between h-max mb-2">
                 <h2 className="text-xl mb-4">Hallen</h2>
                 <NavLink to={"new"}>

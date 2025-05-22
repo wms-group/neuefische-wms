@@ -14,6 +14,8 @@ body {
     line-height: 1.5;
     /* Improve text rendering */
     -webkit-font-smoothing: antialiased;
+    /* Add support for safe-area for iPhones */
+    padding-top: env(safe-area-inset-top);
 }
 
 /* Improve media defaults */

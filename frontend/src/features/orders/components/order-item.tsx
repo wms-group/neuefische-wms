@@ -98,7 +98,7 @@ const OrderItem = ({order, onUpdate, onDelete, products}: OrderItemProps) => {
             className="card p-4 m-0 rounded shadow flex flex-col gap-2"
         >
             {fields.map((field, index) => (
-                <div key={field.id} className="flex gap-4 items-end">
+                <div key={field.id} className="flex flex-col sm:flex-row gap-4 sm:items-end">
                     <ControlledProductSelect
                         control={control}
                         name={`wares.${index}.productId`}
@@ -106,36 +106,38 @@ const OrderItem = ({order, onUpdate, onDelete, products}: OrderItemProps) => {
                         products={products}
                     />
 
-                    <Controller
-                        name={`wares.${index}.amount`}
-                        control={control}
-                        rules={{
-                            required: "Amount is required",
-                            min: {value: 1, message: "Amount must be at least 1"},
-                        }}
-                        render={({field, fieldState}) => (
-                            <InputWithLabel
-                                label="Amount"
-                                type="number"
-                                min={1}
-                                placeholder="Amount"
-                                error={fieldState.error?.message}
+                    <div className="flex flex-row gap-2 items-center">
+                        <Controller
+                            name={`wares.${index}.amount`}
+                            control={control}
+                            rules={{
+                                required: "Amount is required",
+                                min: {value: 1, message: "Amount must be at least 1"},
+                            }}
+                            render={({field, fieldState}) => (
+                                <InputWithLabel
+                                    label="Amount"
+                                    type="number"
+                                    min={1}
+                                    placeholder="Amount"
+                                    error={fieldState.error?.message}
+                                    disabled={isSubmitting}
+                                    {...field}
+                                />
+                            )}
+                        />
+                        <div className="flex items-center justify-center h-full pt-6">
+                            <Button
+                                type={ButtonType.button}
+                                variant="destructive"
+                                iconOnly
+                                className="bg-transparent"
+                                onClick={() => remove(index)}
                                 disabled={isSubmitting}
-                                {...field}
-                            />
-                        )}
-                    />
-                    <div className="flex items-center justify-center h-full pt-6">
-                        <Button
-                            type={ButtonType.button}
-                            variant="destructive"
-                            iconOnly
-                            className="bg-transparent"
-                            onClick={() => remove(index)}
-                            disabled={isSubmitting}
-                        >
-                            <X/>
-                        </Button>
+                            >
+                                <X/>
+                            </Button>
+                        </div>
                     </div>
                 </div>
             ))}
