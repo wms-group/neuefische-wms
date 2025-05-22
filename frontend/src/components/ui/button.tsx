@@ -18,7 +18,7 @@ const Button: FC<ButtonProps> = ({
  }) => {
     const buttonContent = children ?? label;
 
-    const baseClasses = "flex justify-center items-center transition-all font-medium font-inherit rounded-lg border border-transparent px-5 py-[0.6em] [&_svg]:size-5 [&_svg]:shrink-0 focus:outline focus:outline-auto ring-0";
+    const baseClasses = "flex justify-center items-center transition-all font-medium font-inherit rounded-lg border border-transparent px-5 py-[0.6em] [&_svg]:size-5 [&_svg]:shrink-0 focus:outline-none focus:ring-0 focus-visible:border-0 data-active:ring-0 ring-0 ring-0";
 
     const variantClasses = {
         default: "bg-indigo-100 text-indigo-700 hover:bg-indigo-200",

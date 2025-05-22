@@ -4,7 +4,7 @@ import {ApexOptions} from "apexcharts";
 import {useOutletContext} from "react-router-dom";
 import {OrderDto, ProductOutputDTO} from "@/types";
 import GridLayout from "@/components/shared/grid-layout.tsx";
-import RecentOrders from "@/features/orders/components/recent-orders.tsx";
+import RecentOrders from "@/features/orders/components/recent-orders-table.tsx";
 import {getOrders} from "@/features/orders/api";
 import {useEffect, useState} from "react";
 
@@ -84,7 +84,7 @@ const Dashboard = () => {
         })()
     }, []);
     return (
-        <LayoutContainer className="p-6 space-y-6 overflow-x-hidden">
+        <LayoutContainer className="overflow-x-hidden">
             <h1>Warehouse Dashboard</h1>
 
             <GridLayout

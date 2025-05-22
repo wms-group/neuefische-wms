@@ -62,7 +62,7 @@ const OrderItem = ({order, onUpdate, onDelete, products}: OrderItemProps) => {
                     <StatusBadge status={order.status}/>
                 </div>
 
-                <div className="overflow-hidden w-full">
+                <div className="overflow-hidden w-full mt-2">
                     <table className="min-w-full text-sm">
                         <thead className="bg-white">
                         <tr>

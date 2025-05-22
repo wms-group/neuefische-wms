@@ -139,7 +139,7 @@ const ProductListPage = () => {
     }, [categoryId, categories])
 
     return (
-        <LayoutContainer className={"product-list-page p-2 flex flex-col gap-4"}>
+        <LayoutContainer className={"product-list-page flex flex-col gap-4"}>
             <h2>Produkte</h2>
             {categoryId && (category ? <CategoryBreadcrumbs category={category} basePath={"/products/category"} rootName={"Produkte"}
                                               rootPath={"/products"}/> : <CategoryLinksSkeleton count={3} className={"h-5"}/>)}

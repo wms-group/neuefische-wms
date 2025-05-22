@@ -5,6 +5,7 @@ import {Button} from "@/components/ui";
 import {LogOut, SettingsIcon} from "lucide-react";
 import {cn} from "@/utils";
 import UserAvatar from "@/features/user/components/user-avatar.tsx";
+import {CreateUserAction} from "@/features/user/components/create-user-action.tsx";
 
 const UserAvatarAction = ({userName = 'Jane Doe', onLogout, btnClassName}: UserAvatarProps) => {
     const [open, setOpen] = useState<boolean>(false);
@@ -14,15 +15,19 @@ const UserAvatarAction = ({userName = 'Jane Doe', onLogout, btnClassName}: UserA
             <Button
                 onClick={() => setOpen(!open)}
                 className={cn(
-                    "flex justify-center items-center relative text-left bg-transparent border-0 focus-visible:border-0 w-full",
+                    "flex justify-center items-center relative text-left bg-transparent  border-0 border-l ",
+                    "border-l-secondary rounded-none w-full",
                     btnClassName
                 )
                 }>
-                <UserAvatar nameOfUser={userName} />
+                <UserAvatar
+                    nameOfUser={userName}
+                    className={"lg:w-full pl-4 lg:px-6"}
+                />
             </Button>
             {open && (
                 <div className={cn(
-                    "absolute -top-32 left-1/2 -translate-x-1/2 w-60 lg:w-52 rounded-xl shadow-lg z-30 p-4",
+                    "absolute top-16 -right-4 w-60 rounded-xl shadow-lg z-30 p-4",
                     "bg-element-bg border border-secondary transition-all duration-300 ease-in-out"
                 )}>
                     <NavLink
@@ -37,6 +42,10 @@ const UserAvatarAction = ({userName = 'Jane Doe', onLogout, btnClassName}: UserA
                             Settings <SettingsIcon className="group-[.link-item]:text-indigo-500"/>
                         </span>
                     </NavLink>
+                    <CreateUserAction
+                        className="block lg:hidden"
+                        setOpenCallBack={setOpen}
+                    />
                     <Button
                         onClick={() => {
                             setOpen(false);
