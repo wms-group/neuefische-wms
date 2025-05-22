@@ -4,13 +4,13 @@ import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import {InputWithLabel, SearchableSelect} from "@/components/ui";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 import {Controller, useForm} from "react-hook-form";
-import {Field, Label} from "@headlessui/react";
+import {Field, Input, Label} from "@headlessui/react";
 
 type CategoryFormProps = {
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
     value?: CategoryOutputDTO;
     disabled?: boolean;
-    defaultParentId: string | null;
+    defaultParentId?: string;
     className?: string;
     setFormRef?: Dispatch<React.SetStateAction<HTMLFormElement | null>>;
 }
@@ -24,7 +24,7 @@ const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, se
     } = useForm<CategoryInputDTO>({
         defaultValues: {
             name: value?.name ?? "",
-            parentId: value?.parentId ?? defaultParentId,
+            parentId: value?.parentId ?? defaultParentId ?? undefined,
         },
     });
 
@@ -55,14 +55,15 @@ const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, se
                 )}
             />
 
-            {value && <Controller
+            <Controller
                 name="parentId"
                 control={control}
                 render={({ field }) => (
-                    <Field className="flex flex-col flex-1 gap-1 grow-1 basis-40">
+                    <>{value ?
+                        <Field className="flex flex-col flex-1 gap-1 grow-1 basis-40">
                         <Label>Kategorie</Label>
                         <SearchableSelect
-                            name="categoryId"
+                            {...field}
                             options={selectGroupsFromCategoryOutputDTOs(categories)}
                             onChange={(option) => field.onChange(option?.value)}
                             value={field.value}
@@ -77,9 +78,10 @@ const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, se
                                 {errors.parentId.message}
                             </p>
                         )}
-                    </Field>
+                    </Field> :
+                        <Input type="hidden" {...field} />}</>
                 )}
-            />}
+            />
 
         </form>
     )

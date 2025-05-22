@@ -4,7 +4,7 @@ import {Dispatch, SetStateAction} from "react";
 import {InputWithLabel, SearchableSelect} from "@/components/ui";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 import {Controller, useForm} from "react-hook-form";
-import {Field, Label} from "@headlessui/react";
+import {Field, Input, Label} from "@headlessui/react";
 
 type ProductFormProps = {
     onSubmit: (product: ProductInputDTO) => Promise<unknown>;
@@ -26,7 +26,7 @@ const ProductForm = ({onSubmit, value, disabled, defaultCategoryId, className, s
     } = useForm<ProductInputDTO>({
         defaultValues: {
             name: value?.name ?? "",
-            categoryId: value?.categoryId ?? defaultCategoryId,
+            categoryId: value ? value.categoryId : defaultCategoryId,
             price: value && parseFloat(value.price.replace(",", ".") ?? "0").toFixed(2),
         },
     });
@@ -78,33 +78,35 @@ const ProductForm = ({onSubmit, value, disabled, defaultCategoryId, className, s
                 )}
             />
 
-            {value && <Controller
+            <Controller
                 name="categoryId"
                 control={control}
                 rules={{ required: "Bitte eine Kategorie wählen" }}
                 render={({ field }) => (
-                    <Field className="flex flex-col flex-1 gap-1 grow-1 basis-40">
-                        <Label>Kategorie</Label>
-                        <SearchableSelect
-                            name="categoryId"
-                            options={selectGroupsFromCategoryOutputDTOs(categories)}
-                            onChange={(option) => field.onChange(option?.value)}
-                            mandatory={true}
-                            value={field.value}
-                            defaultValue={defaultCategoryId}
-                            className={cn(
-                                errors.categoryId && "border-red-500 ring-red-500"
+                    <>{value ?
+                            <Field className="flex flex-col flex-1 gap-1 grow-1 basis-40">
+                            <Label>Kategorie</Label>
+                            <SearchableSelect
+                                name="categoryId"
+                                options={selectGroupsFromCategoryOutputDTOs(categories)}
+                                onChange={(option) => field.onChange(option?.value)}
+                                mandatory={true}
+                                value={field.value}
+                                defaultValue={defaultCategoryId}
+                                className={cn(
+                                    errors.categoryId && "border-red-500 ring-red-500"
+                                )}
+                                aria-invalid={!!errors.categoryId}
+                            />
+                            {errors.categoryId && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {errors.categoryId.message}
+                                </p>
                             )}
-                            aria-invalid={!!errors.categoryId}
-                        />
-                        {errors.categoryId && (
-                            <p className="mt-1 text-sm text-red-600">
-                                {errors.categoryId.message}
-                            </p>
-                        )}
-                    </Field>
+                        </Field> :
+                          <Input type="hidden" {...field} />}</>
                 )}
-            />}
+            />
         </form>
     )
 }
