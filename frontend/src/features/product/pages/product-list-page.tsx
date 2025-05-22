@@ -145,7 +145,7 @@ const ProductListPage = () => {
                 </CategoryCardWithSubcategories>
             </GridLayout>
             <GridLayout gridCols={{ base: 1, xl: 3 }}>
-                <CategoryNewFormCard onSubmit={handleSubmitNewCategory} disabled={categoriesLoading} defaultParentId={categoryId ?? null}/>
+                <CategoryNewFormCard onSubmit={handleSubmitNewCategory} disabled={categoriesLoading} defaultParentId={categoryId}/>
                 <CategoryList
                     parentId={category?.id ?? null}
                     basePath="/products/category"
@@ -154,7 +154,7 @@ const ProductListPage = () => {
             </GridLayout>
             {categoryId && <GridLayout gridCols={{base: 1, xl: 3}}>
                 <ProductNewFormCard onSubmit={handleSubmitNewProduct} disabled={productsLoading}
-                                    defaultCategoryId={categoryId ?? ""}/>
+                                    defaultCategoryId={categoryId}/>
                 <ProductList
                     products={products} categoryId={category?.id ?? null}
                     onSubmit={handleSubmitUpdatedProduct}
