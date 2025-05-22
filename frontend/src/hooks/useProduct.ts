@@ -31,15 +31,17 @@ export default function useProduct() {
         setLoading(loadCounter > 0);
     }
 
-    function withReplaceOrAddedProducts(existingProducts: ProductOutputDTO[], products: ProductOutputDTO[]) {
+    function withReplaceOrAddedProductsSorted(existingProducts: ProductOutputDTO[], products: ProductOutputDTO[]) {
         return [
             ...existingProducts.filter(p => products.find(p2 => p2.id !== p.id) === undefined),
             ...products
-            ];
+            ]
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    function withReplacedProduct(existingProducts: ProductOutputDTO[], product: ProductOutputDTO) {
-        return existingProducts.map(p => p.id === product.id ? product : p);
+    function withReplacedProductSorted(existingProducts: ProductOutputDTO[], product: ProductOutputDTO) {
+        return existingProducts.map(p => p.id === product.id ? product : p)
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 
     function withRemovedProduct(existingProducts: ProductOutputDTO[], productId: string) {
@@ -87,7 +89,7 @@ export default function useProduct() {
                     setState(prev => ({...prev, productsByCategoryId: {...prev.productsByCategoryId, [categoryId]: []}}));
                     return Promise.resolve([]);
                 }
-                setProducts(prev => withReplaceOrAddedProducts(prev, products));
+                setProducts(prev => withReplaceOrAddedProductsSorted(prev, products));
                 return products
             })
             .catch(e => {
@@ -122,7 +124,7 @@ export default function useProduct() {
         return ProductApi.updateProduct(changedProduct, productId)
             .then((updatedProduct) => {
                 if (updatedProduct && isProductOutputDTO(updatedProduct)) {
-                    setProducts(prev => withReplacedProduct(prev, updatedProduct));
+                    setProducts(prev => withReplacedProductSorted(prev, updatedProduct));
                     return updatedProduct;
                 }
                 setError("Ungültige Antwort beim Speichern des Produktes")

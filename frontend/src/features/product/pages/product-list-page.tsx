@@ -48,11 +48,16 @@ const ProductListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 
+    function withNewProduct(products: ProductOutputDTO[], product: ProductOutputDTO) {
+        return [product, ...products]
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
     const handleSubmitNewProduct = async (product: ProductInputDTO) => {
         return toast.promise(addProduct(product)
                 .then(product => {
                     if (product) {
-                        setProducts(prev => [product, ...prev]);
+                        setProducts(prev => withNewProduct(prev, product));
                     }
                     return product;
                 }),
@@ -64,7 +69,8 @@ const ProductListPage = () => {
     }
 
     function withUpdatedProduct(products: ProductOutputDTO[], product: ProductOutputDTO) {
-        return products.map(p => p.id === product.id ? product : p);
+        return products.map(p => p.id === product.id ? product : p)
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 
     const handleSubmitUpdatedProduct = async (product: ProductInputDTO, productId: string) => {

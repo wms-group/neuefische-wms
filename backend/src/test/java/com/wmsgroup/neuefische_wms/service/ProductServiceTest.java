@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -161,14 +162,14 @@ class ProductServiceTest {
                 new ProductOutputDTO("id2", "Prod2", "id1", "1,00")
         );
 
-        when(productRepository.findAll()).thenReturn(products);
+        when(productRepository.findAll(any(Sort.class))).thenReturn(products);
 
         // When
         List<ProductOutputDTO> result = productService.getAllProducts();
 
         // Then
         assertEquals(outputDTOs, result);  // Hinweis: Hier wird verglichen, ob die Inhalte gleich sind. Die Konvertierung ist jetzt statisch im Service implementiert.
-        verify(productRepository).findAll();
+        verify(productRepository).findAll(any(Sort.class));
     }
 
     @Test
@@ -312,14 +313,14 @@ class ProductServiceTest {
     @Test
     void getAllProducts_shouldReturnEmptyList_whenNoProductsExist() {
         // Given
-        when(productRepository.findAll()).thenReturn(List.of());
+        when(productRepository.findAll(any(Sort.class))).thenReturn(List.of());
 
         // When
         List<ProductOutputDTO> result = productService.getAllProducts();
 
         // Then
         assertEquals(List.of(), result);
-        verify(productRepository).findAll();
+        verify(productRepository).findAll(any(Sort.class));
     }
     @Test
     void getProductsByCategoryId_shouldReturnProductDtoList_whenProductsExist() {
@@ -334,21 +335,21 @@ class ProductServiceTest {
         );
 
         when(categoryRepository.existsById("cat-1")).thenReturn(true);
-        when(productRepository.findAllByCategoryId("cat-1")).thenReturn(products);
+        when(productRepository.findAllByCategoryId(argThat(s -> s.equals("cat-1")), any(Sort.class))).thenReturn(products);
 
         // When
         List<ProductOutputDTO> result = productService.getProductsByCategoryId("cat-1");
 
         // Then
         assertEquals(outputDTOs, result);  // Hinweis: Hier wird verglichen, ob die Inhalte gleich sind. Die Konvertierung ist jetzt statisch im Service implementiert.
-        verify(productRepository).findAllByCategoryId("cat-1");
+        verify(productRepository).findAllByCategoryId(argThat(s -> s.equals("cat-1")), any(Sort.class));
         verify(categoryRepository).existsById("cat-1");
     }
 
     @Test
     void getProductsByCategoryId_shouldReturnEmptyList_whenNoProductsExist() {
         // Given
-        when(productRepository.findAllByCategoryId("cat-1")).thenReturn(List.of());
+        when(productRepository.findAllByCategoryId(argThat(s -> s.equals("cat-1")), any(Sort.class))).thenReturn(List.of());
         when(categoryRepository.existsById("cat-1")).thenReturn(true);
 
         // When
@@ -356,7 +357,7 @@ class ProductServiceTest {
 
         // Then
         assertEquals(List.of(), result);
-        verify(productRepository).findAllByCategoryId("cat-1");
+        verify(productRepository).findAllByCategoryId(argThat(s -> s.equals("cat-1")), any(Sort.class));
         verify(categoryRepository).existsById("cat-1");
     }
 

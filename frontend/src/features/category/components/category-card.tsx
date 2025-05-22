@@ -78,7 +78,7 @@ type CategoryEditProps = {
 }
 
 const CategoryEdit = ({category, onSubmit, setFormRef}: CategoryEditProps) => (
-    <CategoryForm defaultParentId={category.parentId ?? null} onSubmit={onSubmit} value={category} {...{setFormRef}}></CategoryForm>
+    <CategoryForm defaultParentId={category.parentId ?? undefined} onSubmit={onSubmit} value={category} {...{setFormRef}}></CategoryForm>
 )
 
 type CategoryContentProps = {

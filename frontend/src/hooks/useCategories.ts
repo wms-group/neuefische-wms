@@ -49,12 +49,14 @@ export default function useCategories() {
         setState(prev => ({ ...prev, loading }));
     }
 
-    const withAddedCategoryAtFirst = (categories: CategoryOutputDTO[], category: CategoryOutputDTO) => {
-        return [category, ...categories.filter(d => d.id !== category.id)];
+    const withAddedCategorySorted = (categories: CategoryOutputDTO[], category: CategoryOutputDTO) => {
+        return [category, ...categories.filter(d => d.id !== category.id)]
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    function withReplacedCategory(existingCategories: CategoryOutputDTO[], category: CategoryOutputDTO) {
-        return existingCategories.map(p => p.id === category.id ? category : p);
+    function withReplacedCategorySorted(existingCategories: CategoryOutputDTO[], category: CategoryOutputDTO) {
+        return existingCategories.map(p => p.id === category.id ? category : p)
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 
     function withRemovedCategory(existingCategories: CategoryOutputDTO[], categoryId: string) {
@@ -67,7 +69,7 @@ export default function useCategories() {
         return CategoriesApi.saveCategory(newCategory)
             .then((savedCategory) => {
                 if (savedCategory && isCategoryOutputDTO(savedCategory)) {
-                    setCategories(prev => withAddedCategoryAtFirst(prev, savedCategory));
+                    setCategories(prev => withAddedCategorySorted(prev, savedCategory));
                     return savedCategory;
                 }
                 setError("Ungültige Antwort beim Speichern der Kategorie")
@@ -86,7 +88,7 @@ export default function useCategories() {
         return CategoriesApi.updateCategory(changedCategory, categoryId)
             .then((updatedCategory) => {
                 if (updatedCategory && isCategoryOutputDTO(updatedCategory)) {
-                    setCategories(prev => withReplacedCategory(prev, updatedCategory));
+                    setCategories(prev => withReplacedCategorySorted(prev, updatedCategory));
                     return updatedCategory;
                 }
                 setError("Ungültige Antwort beim Speichern der Kategorie")
