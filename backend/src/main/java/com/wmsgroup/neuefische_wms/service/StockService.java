@@ -161,4 +161,8 @@ public class StockService {
     public void deleteStockById(String id) {
         stockRepo.deleteById(id);
     }
+
+    public List<Stock> getStocks() {
+        return stockRepo.findAll();
+    }
 }

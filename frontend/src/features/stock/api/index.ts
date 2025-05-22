@@ -59,3 +59,20 @@ export const deleteStockItem = async (input: StockInputDto): Promise<void> => {
         throw error;
     }
 };
+
+export const getStocks = async () => {
+    try {
+        const response = await api.get<StockItemDto[]>(`${STOCK_BASE_URL}`);
+        return response.data;
+    } catch (e: unknown) {
+        if(axios.isAxiosError(e)) {
+            const message = e.response?.data?.error || e.message;
+            toast.error(`Failed to load stocks: ${message}`);
+        } else if (e instanceof Error) {
+            toast.error(`Failed to load stocks: ${e.message}`);
+        } else {
+            toast.error(`Failed to load stocks: Unknown error`);
+        }
+        throw e;
+    }
+}

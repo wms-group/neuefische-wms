@@ -59,7 +59,7 @@ const UserCard = ({user, onUpdate, onDelete}: {
                     </div>
                     <div className="flex justify-between mt-auto">
                         <Button onClick={() => setIsEditing(true)}>Edit</Button>
-                        <Button onClick={() => onDelete(user.id)}>Delete</Button>
+                        <Button variant="destructive" onClick={() => onDelete(user.id)}>Delete</Button>
                     </div>
                 </>
             )}

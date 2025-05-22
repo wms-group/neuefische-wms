@@ -38,7 +38,7 @@ const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, h
             isEditing={isEditing}
             handleEdit={handleEdit}
             handleSubmitClicked={handleSubmitClicked}/>}</>
-        <>{isEditing && <Button onClick={handleEdit}>Abbrechen</Button>}</>
+        <>{isEditing && <Button variant="destructive" onClick={handleEdit}>Abbrechen</Button>}</>
         <>{onDelete && <ButtonWithSelect
             label="Elemente verschieben nach"
             className="w-full grow-1 sm:w-fit sm:grow-0"

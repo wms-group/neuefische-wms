@@ -12,8 +12,8 @@ const tabs = [
 const StockTabs = () => {
     const allProducts = useOutletContext<ProductOutputDTO[]>();
     return (
-        <LayoutContainer className="h-full">
-            <TabGroup className="w-full h-full">
+        <LayoutContainer className="flex-none">
+            <TabGroup className="w-full">
                 <TabList className="flex gap-4 border-b border-gray-200 w-full">
                     {tabs.map(({ name }) => (
                         <Tab

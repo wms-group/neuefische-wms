@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client'
 import './index.css'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {SidebarProvider} from "@/provider/sidebar-provider.tsx";
-import {OrderDetailPage, OrderListPage} from "@/features/orders";
+import {OrderListPage} from "@/features/orders";
 import {ProductListPage} from "@/features/product";
 import {UserCreatePage, UserProfilePage} from "@/features/user/pages";
 import {HallDetailPage, HallEditPage, HallListPage} from "@/features/halls";
@@ -41,9 +41,8 @@ createRoot(document.getElementById('root')!).render(
                         </Route>
 
                         {/*Relative routing for orders*/}
-                        <Route path={"orders"}>
-                            <Route index element={<OrderListPage/>}/>
-                            <Route path=":id" element={<OrderDetailPage/>}/>
+                        <Route element={<CategoriesProductsLayout/>}>
+                            <Route path={"orders"} element={<OrderListPage/>} />
                         </Route>
 
                         {/*Relative routing for users*/}
@@ -59,9 +58,8 @@ createRoot(document.getElementById('root')!).render(
                         <Route path={"halls"} element={<HallLayout/>}>
                             <Route index element={<HallListPage/>}/>
                             <Route path="new" element={<HallEditPage/>}/>
-                            <Route path=":id" element={<HallDetailPage/>}>
-                                <Route path=":aisleId" element={<AisleDetailPage/>}/>
-                            </Route>
+                            <Route path=":id" element={<HallDetailPage/>}/>
+                            <Route path=":id/:aisleId" element={<AisleDetailPage/>}/>
                             <Route path=":id/edit" element={<HallEditPage/>}/>
                         </Route>
 

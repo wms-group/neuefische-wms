@@ -1,13 +1,12 @@
 import {SidebarComponentProps} from "@/types";
 import {cn} from "@/utils";
-import {NavLink, useLocation} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import UserAvatarAction from "@/features/user/components/user-avatar-action.tsx";
 import {useSidebar} from "@/context/sidebar/useSidebar.ts";
 import {SidebarClose, UserPlus} from "lucide-react";
 import {Button} from "@/components/ui";
 
 const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
-    const location = useLocation();
     const {isOpen, closeSidebar} = useSidebar()
     const {sidebarHeader, sidebarNavItems} = sidebarItems;
     return (
@@ -23,7 +22,7 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
             )}>
                 <div className="h-16 border-b-secondary border-b-1 p-2 flex items-center relative justify-between">
                     <div className={"h-full w-full"}>
-                        <img src={sidebarHeader.logoPath} alt="logo" className="h-full w-auto mx-auto" />
+                        <img src={sidebarHeader.logoPath} alt="logo" className="h-14 w-auto mx-auto" />
                     </div>
 
                     <Button
@@ -40,7 +39,7 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
                         return (
                             <li key={path}>
                                 <NavLink
-                                    to={location.pathname === path ? "#" : path}
+                                    to={path}
                                     className={({isActive}) => cn(
                                         "w-full flex items-center justify-between gap-2 py-2 px-4 text-slate-600",
                                         "hover:bg-primary transition-colors ease-in-out rounded-lg group",
@@ -56,7 +55,7 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
                 </ul>
                 <div className={"my-2"}>
                     <NavLink
-                        to={location.pathname === "/users/create-user" ? "#" : "/users/create-user"}
+                        to={"/users/create-user"}
                         className={({isActive}) => cn(
                             "w-full flex items-center justify-between gap-2 py-2 px-4 text-slate-600 h-12",
                             "bg-primary/65 transition-colors ease-in-out rounded-lg [&_svg]:size-5 [&_svg]:shrink-0",
