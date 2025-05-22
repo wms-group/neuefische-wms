@@ -9,6 +9,7 @@ import com.wmsgroup.neuefische_wms.repository.CategoryRepository;
 import com.wmsgroup.neuefische_wms.repository.ProductRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -67,7 +68,7 @@ public class ProductService {
     }
 
     public List<ProductOutputDTO> getAllProducts() {
-        return ProductOutputDTOConverter.convert(productRepository.findAll());
+        return ProductOutputDTOConverter.convert(productRepository.findAll(Sort.by(Sort.Direction.ASC, "name")));
     }
 
     public ProductOutputDTO addProduct(@NonNull ProductInputDTO productInputDTO) {
@@ -102,6 +103,6 @@ public class ProductService {
                     String.format(PATH_FORMAT, "category", categoryId)
             );
         }
-        return ProductOutputDTOConverter.convert(productRepository.findAllByCategoryId(categoryId));
+        return ProductOutputDTOConverter.convert(productRepository.findAllByCategoryId(categoryId, Sort.by(Sort.Direction.ASC, "name")));
     }
 }
