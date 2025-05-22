@@ -242,6 +242,7 @@ export type SearchableSelectProps = {
     disabled?: boolean;
     error?: string | null;
     className?: string;
+    classNames?: Record<string, string>;
     placeholder?: string;
     isMulti?: boolean;
     isSearchable?: boolean;
