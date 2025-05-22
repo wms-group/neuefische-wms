@@ -1,8 +1,10 @@
-import {Dispatch, useEffect, useState} from "react";
+import {Dispatch} from "react";
 import {CategoryInputDTO, CategoryOutputDTO} from "@/types";
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import {InputWithLabel, SearchableSelect} from "@/components/ui";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import {Controller, useForm} from "react-hook-form";
+import {Field, Label} from "@headlessui/react";
 
 type CategoryFormProps = {
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
@@ -14,67 +16,71 @@ type CategoryFormProps = {
 }
 
 const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, setFormRef}: CategoryFormProps) => {
-    const [category, setCategory] = useState<CategoryInputDTO>({
-        name: value?.name ?? "",
-        parentId: value?.parentId ?? defaultParentId,
+    const {
+        control,
+        handleSubmit,
+        formState: { isSubmitting, errors },
+        reset,
+    } = useForm<CategoryInputDTO>({
+        defaultValues: {
+            name: value?.name ?? "",
+            parentId: value?.parentId ?? defaultParentId,
+        },
     });
 
     const categories = useCategoriesContext().categories;
 
-    useEffect(() => {
-        setCategory(prev => {
-            return {...prev, parentId: defaultParentId}
-        });
-    }, [defaultParentId]);
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleInternalSubmit = async (category: CategoryInputDTO) => {
         const savedCategory = await onSubmit(category);
-        if (!value) {
-            setCategory({
-                name: "",
-                parentId: defaultParentId,
-            });
-        }
+        reset();
         return savedCategory;
-    }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-        setCategory({...category, [name]: value});
     }
 
     return (
         <form
             ref={setFormRef}
-            className={cn("flex flex-col md:flex-row gap-6 justify-between items-center", className, disabled && "opacity-50 cursor-not-allowed")}
-            onSubmit={handleSubmit}>
-            <div className="h-full w-full">
-                <InputWithLabel
-                    label={"Name"}
-                    value={category.name}
-                    onChange={handleChange}
-                    onBlur={handleChange}
-                    name={"name"}
-                    disabled={disabled}
-                    className="bg-white/95"
-                />
-            </div>
-            {value && <div className="h-full w-full">
-                <label htmlFor="parentId" className={cn("text-sm/6 font-medium text-gray")}>verschieben nach...</label>
-                <SearchableSelect
-                    name="parentId"
-                    options={selectGroupsFromCategoryOutputDTOs(categories)}
-                    onChange={(newValue) => handleChange({
-                        target: {
-                            name: 'parentId',
-                            value: newValue?.value
-                        }
-                    } as unknown as React.ChangeEvent<HTMLInputElement>)}
-                    value={category.parentId}
-                    defaultValue={defaultParentId}
-                />
-            </div>}
+            className={cn("flex flex-col md:flex-row gap-6 justify-between items-start", className, (disabled || isSubmitting) && "opacity-50 cursor-not-allowed")}
+            onSubmit={handleSubmit(handleInternalSubmit)}>
+            <Controller
+                name="name"
+                control={control}
+                rules={{ required: "Kategoriename ist erforderlich" }}
+                render={({ field, fieldState }) => (
+                    <InputWithLabel
+                        label="Name"
+                        fieldClassName="w-full grow-1 sm:w-fit sm:grow basis-80 sm:basis-1"
+                        error={fieldState.error?.message}
+                        {...field}
+                    />
+                )}
+            />
+
+            {value && <Controller
+                name="parentId"
+                control={control}
+                render={({ field }) => (
+                    <Field className="flex flex-col flex-1 gap-1">
+                        <Label>Kategorie</Label>
+                        <SearchableSelect
+                            name="categoryId"
+                            options={selectGroupsFromCategoryOutputDTOs(categories)}
+                            onChange={(option) => field.onChange(option?.value)}
+                            value={field.value}
+                            defaultValue={defaultParentId}
+                            className={cn("w-full sm:w-fit sm:grow basis-80 sm:basis-1",
+                                errors.parentId && "border-red-500 ring-red-500"
+                            )}
+                            aria-invalid={!!errors.parentId}
+                        />
+                        {errors.parentId && (
+                            <p className="mt-1 text-sm text-red-600">
+                                {errors.parentId.message}
+                            </p>
+                        )}
+                    </Field>
+                )}
+            />}
+
         </form>
     )
 }

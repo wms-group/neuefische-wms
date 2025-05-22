@@ -25,7 +25,8 @@ const ButtonWithSelect: React.FC<ButtonWithSelectProps> = ({
     return (
         <div className={cn("flex flex-row gap-0 m-0 p-0 flex-nowrap relative", className)}>
             <SearchableSelect
-                className={cn("rounded-e-none h-auto pt-1.5", selectClassName)}
+                className={cn("rounded-e-none h-auto", selectClassName)}
+                classNames={{control: "pt-3 pb-1"}}
                 emptyLabel={emptyLabel}
                 onChange={onChange}
                 value={selectValue}

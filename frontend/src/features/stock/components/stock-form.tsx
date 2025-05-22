@@ -53,10 +53,7 @@ export const StockForm: FC<StockFormProps> = ({
                                 mandatory={true}
                                 emptyLabel={"Bitte ein Produkt wählen"}
                                 className={cn(
-                                    "h-[42px] px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
-                                    errors.productId
-                                        ? "border-red-500 focus:ring-red-500"
-                                        : "border-secondary focus:ring-blue-500"
+                                    errors.productId && "border-red-500 ring-red-500"
                                 )}
                                 aria-invalid={!!errors.productId}
                             />
