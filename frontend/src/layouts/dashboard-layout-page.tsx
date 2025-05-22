@@ -16,9 +16,7 @@ const DashboardLayoutPage = () => {
     }, []);
     return (
         <LayoutContainer className="h-full relative">
-            <div className="absolute inset-0 z-0 flex items-center justify-center">
-                <LayoutDashboard className="w-96 h-96 text-indigo-600/5 "/>
-            </div>
+            <LayoutDashboard className="absolute top-1/2 left-1/2 z-0 w-96 h-96 text-indigo-600/5 -translate-x-1/2 -translate-y-1/2" />
             <Outlet context={allProducts} />
         </LayoutContainer>
     );

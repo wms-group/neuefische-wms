@@ -1,9 +1,11 @@
+import {cn} from "@/utils";
 
 type userAvatarProps = {
     nameOfUser: string;
+    className?: string;
 }
 
-const UserAvatar = ({nameOfUser} : userAvatarProps) => {
+const UserAvatar = ({nameOfUser, className} : userAvatarProps) => {
 
     const initials = nameOfUser
         .split(' ')
@@ -12,7 +14,7 @@ const UserAvatar = ({nameOfUser} : userAvatarProps) => {
         .toUpperCase();
 
     return (
-        <div className="flex items-center gap-4">
+        <div className={cn("flex items-center gap-4", className)}>
             <div
                 className="w-10 h-10 bg-slate-500 text-white font-medium flex
                         items-center justify-center rounded-full cursor-pointer select-none"

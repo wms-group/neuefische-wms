@@ -1,9 +1,8 @@
 import {SidebarComponentProps} from "@/types";
 import {cn} from "@/utils";
 import {NavLink} from "react-router-dom";
-import UserAvatarAction from "@/features/user/components/user-avatar-action.tsx";
 import {useSidebar} from "@/context/sidebar/useSidebar.ts";
-import {SidebarClose, UserPlus} from "lucide-react";
+import {SidebarClose} from "lucide-react";
 import {Button} from "@/components/ui";
 
 const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
@@ -16,10 +15,11 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
                 <Button className="w-full h-full bg-transparent" onClick={closeSidebar} />
             </div>}
             <aside className={cn(
-                "bg-element-bg border-r border-primary px-4 w-64 h-screen fixed top-0 left-0 z-999 transition-transform duration-300 ease-in-out",
+                "sidebar fixed bg-element-bg border-x border-primary px-4 w-64 h-screen top-0 left-0 z-999 transition-transform duration-300 ease-in-out",
                 isOpen ? "translate-x-0" : "-translate-x-full",
-                "lg:translate-x-0",
-            )}>
+                "lg:translate-x-0"
+            )}
+                   style={{ left: "max((100vw - 1980px) / 2, 0px)" }}>
                 <div className="h-16 border-b-secondary border-b-1 p-2 flex items-center relative justify-between">
                     <div className={"h-full w-full"}>
                         <img src={sidebarHeader.logoPath} alt="logo" className="h-14 w-auto mx-auto" />
@@ -53,28 +53,6 @@ const Sidebar = ({sidebarItems}: SidebarComponentProps) => {
                         )
                     })}
                 </ul>
-                <div className={"my-2"}>
-                    <NavLink
-                        to={"/users/create-user"}
-                        className={({isActive}) => cn(
-                            "w-full flex items-center justify-between gap-2 py-2 px-4 text-slate-600 h-12",
-                            "bg-primary/65 transition-colors ease-in-out rounded-lg [&_svg]:size-5 [&_svg]:shrink-0",
-                            "hover:bg-indigo-400 hover:text-white hover:font-medium",
-                            isActive && "bg-indigo-400 text-white font-medium hover:bg-indigo-400"
-                        )}
-                        onClick={closeSidebar}
-                    >
-                        Create new user <UserPlus/>
-                    </NavLink>
-                </div>
-                <div
-                    className="h-16 border-t-secondary border-t-1 flex items-center justify-center [&_svg]:size-5 [&_svg]:shrink-0 relative">
-                    <UserAvatarAction
-                        btnClassName={"p-0"}
-                        userName={"Jane Doe"}
-                        onLogout={() => console.log("log-out")}
-                    />
-                </div>
             </aside>
             <div className="w-64 h-full hidden lg:block "/>
         </>

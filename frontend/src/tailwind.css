@@ -14,7 +14,7 @@
     }
 
     #root {
-        @apply min-h-screen;
+        @apply min-h-screen border-x border-primary;
     }
 
     h1 {
