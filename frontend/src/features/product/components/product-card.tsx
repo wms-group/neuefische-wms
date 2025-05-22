@@ -35,7 +35,7 @@ const ProductActions = ({
         <>{onSubmit && <EditOrSubmitButton isEditing={isEditing} handleEdit={handleEdit}
                                            handleSubmitClicked={handleSubmitClicked}/>}</>
         <>{isEditing && <Button onClick={handleEdit}>Abbrechen</Button>}</>
-        <>{onDelete && <Button onClick={handleDelete} className={cn("bg-red-300 text-white/90")}>Löschen</Button>}</>
+        <>{onDelete && <Button onClick={handleDelete} variant="destructive">Löschen</Button>}</>
     </>
 );
 

@@ -2,12 +2,7 @@ import {useEffect, useState} from "react";
 import {StockItemDto} from "@/types";
 import {getStockAmountByProductId} from "@/features/stock/api";
 
-
-interface Props {
-    productId: string;
-}
-
-const StockAmount = ({productId}: Props) => {
+const StockAmount = ({productId}: {productId: string}) => {
     const [stockItem, setStockItem] = useState<StockItemDto | null>(null);
 
     useEffect(() => {
@@ -29,7 +24,7 @@ const StockAmount = ({productId}: Props) => {
 
     return (
         <div>
-            <h3>Product: {stockItem.product.name}</h3>
+            <h3>Product: {stockItem.product?.name}</h3>
             <p>Amount in stock: {stockItem.amount}</p>
         </div>
     );

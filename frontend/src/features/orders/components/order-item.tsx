@@ -1,20 +1,25 @@
 import {useState} from "react";
 import {Controller, useFieldArray, useForm} from "react-hook-form";
-import {Button, InputWithLabel, SelectWithLabel} from "@/components/ui";
-import {ButtonType, CreateOrderDto, OrderDto, OrderStatus} from "@/types";
+import {Button, InputWithLabel, SearchableSelect, SelectWithLabel} from "@/components/ui";
+import {ButtonType, CreateOrderDto, OrderDto, OrderStatus, ProductOutputDTO} from "@/types";
 import {updateOrder} from "@/features/orders/api";
+import {Field, Label} from "@headlessui/react";
+import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import {selectProductsInCategoriesFromCategoryOutputDTOs} from "@/utils";
+import {StatusBadge} from "@/components/ui/status-badge.tsx";
+import {X} from "lucide-react";
 
 type OrderItemProps = {
     order: OrderDto;
     onUpdate: (order: OrderDto) => void;
     onDelete: (id: string) => void;
+    products: ProductOutputDTO[];
 };
 
-const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
+type FormValues = CreateOrderDto;
+
+const OrderItem = ({order, onUpdate, onDelete, products}: OrderItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
-
-    type FormValues = CreateOrderDto;
-
     const defaultValues: FormValues = {
         wares: order.wares.map((item) => ({
             productId: item.product.id,
@@ -26,48 +31,64 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
     const {
         control,
         handleSubmit,
-        formState: { isSubmitting, isValid },
+        formState: {isSubmitting, isValid},
+        reset,
     } = useForm<FormValues>({
         defaultValues,
         mode: "onChange",
     });
 
-    const { fields, append, remove } = useFieldArray({
+    const {fields, append, remove} = useFieldArray({
         control,
         name: "wares",
     });
+
+    const categories = useCategoriesContext().categories
 
     const onSubmit = async (data: FormValues) => {
         const updated = await updateOrder(order.id, data);
         onUpdate(updated);
         setIsEditing(false);
+        reset();
     };
-
     const handleDelete = () => onDelete(order.id);
+
     if (!isEditing) {
         return (
             <div className="card p-4 rounded shadow flex flex-col gap-2">
-                <p>
-                    Order: <strong>{order.id}#</strong>
-                </p>
-                <div>
-                    <strong>Status:</strong> {order.status}
+                <div className="flex gap-1 justify-between items-center">
+                    <p className="text-sm text-muted-foreground">
+                        Order: <strong>{order.id}#</strong>
+                    </p>
+                    <StatusBadge status={order.status}/>
                 </div>
-                <div>
-                    <strong>Items:</strong>
-                    <ul className="max-h-30 overflow-y-auto pl-4 mt-2">
-                        {order.wares.map((item, i) => {
-                           return (
-                                <li key={i}>
-                                    {item.product.name} × {item.amount}
-                                </li>
-                            )
-                        })}
-                    </ul>
+
+                <div className="overflow-hidden w-full">
+                    <table className="min-w-full text-sm">
+                        <thead className="bg-white">
+                        <tr>
+                            <th className="px-2 py-1 text-left">Product</th>
+                            <th className="px-2 py-1 text-right">Amount</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div className="max-h-32 overflow-y-auto">
+                        <table className="min-w-full text-sm">
+                            <tbody className="max-h-32 overflow-y-auto">
+                            {order.wares.map((item, i) => (
+                                <tr key={i} className="even:bg-indigo-100/60 rounded">
+                                    <td className="px-2 py-1">{item.product.name}</td>
+                                    <td className="px-2 py-1 text-right">{item.amount}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div className="flex gap-2 mt-auto">
+
+                <div className="flex gap-2 mt-4 justify-between">
                     <Button onClick={() => setIsEditing(true)}>Edit</Button>
-                    <Button onClick={handleDelete}>Delete</Button>
+                    <Button variant="destructive" onClick={handleDelete}>Delete</Button>
                 </div>
             </div>
         );
@@ -75,32 +96,42 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="card p-4 m-0 rounded shadow flex flex-col gap-4"
+            className="card p-4 m-0 rounded shadow flex flex-col gap-2"
         >
             {fields.map((field, index) => (
                 <div key={field.id} className="flex gap-4 items-end">
                     <Controller
                         name={`wares.${index}.productId`}
                         control={control}
-                        rules={{ required: "Product ID is required" }}
-                        render={({ field, fieldState }) => (
-                            <InputWithLabel
-                                label="Product ID"
-                                placeholder="Product ID"
-                                error={fieldState.error?.message}
-                                disabled={isSubmitting}
-                                {...field}
-                            />
+                        rules={{required: "Bitte ein Produkt wählen"}}
+                        render={({field, fieldState}) => (
+                            <Field className="flex flex-col flex-1 gap-1">
+                                <Label className="text-sm font-medium">Produkt</Label>
+                                <SearchableSelect
+                                    name={field.name}
+                                    value={field.value}
+                                    options={selectProductsInCategoriesFromCategoryOutputDTOs(categories, products)}
+                                    onChange={(option) => field.onChange(option?.value)}
+                                    mandatory={true}
+                                    emptyLabel={"Bitte ein Produkt wählen"}
+                                />
+                                {fieldState.error?.message && (
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {fieldState.error.message}
+                                    </p>
+                                )}
+                            </Field>
                         )}
                     />
+
                     <Controller
                         name={`wares.${index}.amount`}
                         control={control}
                         rules={{
                             required: "Amount is required",
-                            min: { value: 1, message: "Amount must be at least 1" },
+                            min: {value: 1, message: "Amount must be at least 1"},
                         }}
-                        render={({ field, fieldState }) => (
+                        render={({field, fieldState}) => (
                             <InputWithLabel
                                 label="Amount"
                                 type="number"
@@ -112,20 +143,24 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
                             />
                         )}
                     />
-                    <Button
-                        type={ButtonType.button}
-                        className="text-red-600 font-bold text-xl leading-none px-2"
-                        onClick={() => remove(index)}
-                        disabled={isSubmitting}
-                    >
-                        &times;
-                    </Button>
+                    <div className="flex items-center justify-center h-full pt-6">
+                        <Button
+                            type={ButtonType.button}
+                            variant="destructive"
+                            iconOnly
+                            className="bg-transparent"
+                            onClick={() => remove(index)}
+                            disabled={isSubmitting}
+                        >
+                            <X/>
+                        </Button>
+                    </div>
                 </div>
             ))}
 
             <Button
                 type={ButtonType.button}
-                onClick={() => append({ productId: "", amount: 1 })}
+                onClick={() => append({productId: "", amount: 1})}
                 disabled={isSubmitting}
                 className="self-start"
             >
@@ -135,7 +170,7 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
             <Controller
                 name="status"
                 control={control}
-                render={({ field }) => (
+                render={({field}) => (
                     <SelectWithLabel
                         label="Order Status"
                         options={Object.values(OrderStatus)}
@@ -146,12 +181,15 @@ const OrderItem = ({ order, onUpdate, onDelete }: OrderItemProps) => {
                 )}
             />
 
-            <div className="flex gap-2">
-                <Button type={ButtonType.submit} disabled={!isValid || isSubmitting}>
+            <div className="flex justify-between gap-2">
+                <Button
+                    type={ButtonType.submit}
+                    disabled={!isValid || isSubmitting}>
                     {isSubmitting ? "Saving..." : "Save"}
                 </Button>
                 <Button
                     type={ButtonType.button}
+                    variant="destructive"
                     onClick={() => setIsEditing(false)}
                     disabled={isSubmitting}
                 >

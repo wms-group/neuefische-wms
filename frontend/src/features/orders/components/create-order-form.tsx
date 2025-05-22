@@ -1,14 +1,19 @@
 import {Controller, useFieldArray, useForm} from "react-hook-form";
-import {Button, InputWithLabel, SelectWithLabel} from "@/components/ui";
-import {ButtonType, CreateOrderDto, OrderDto, OrderStatus} from "@/types";
+import {Button, InputWithLabel, SearchableSelect, SelectWithLabel} from "@/components/ui";
+import {ButtonType, CreateOrderDto, OrderDto, OrderStatus, ProductOutputDTO} from "@/types";
 import {createOrder} from "../api";
 import {X} from "lucide-react";
+import {cn, selectProductsInCategoriesFromCategoryOutputDTOs} from "@/utils";
+import {Field, Label} from "@headlessui/react";
+import {useCategoriesContext} from "@/context/CategoriesContext.ts";
 
-type Props = {
+type OrderFormProps = {
     onCreate: (order: OrderDto) => void;
+    className?: string;
+    products: ProductOutputDTO[];
 };
 
-const OrderForm = ({ onCreate }: Props) => {
+const OrderForm = ({ onCreate, className, products }: OrderFormProps) => {
     const {
         control,
         handleSubmit,
@@ -27,6 +32,8 @@ const OrderForm = ({ onCreate }: Props) => {
         name: "wares",
     });
 
+    const categories = useCategoriesContext().categories
+
     const onSubmit = async (data: CreateOrderDto) => {
         const newOrder = await createOrder(data);
         onCreate(newOrder);
@@ -36,22 +43,31 @@ const OrderForm = ({ onCreate }: Props) => {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 p-4 bg-element-bg rounded shadow"
+            className={cn("flex flex-col gap-4 p-4 bg-element-bg rounded shadow max-", className)}
         >
             {fields.map((field, idx) => (
                 <div key={field.id} className="flex gap-4 justify-center items-center">
                     <Controller
                         name={`wares.${idx}.productId`}
                         control={control}
-                        rules={{ required: "Product ID required" }}
+                        rules={{ required: "Bitte ein Produkt wählen" }}
                         render={({ field, fieldState }) => (
-                            <InputWithLabel
-                                label="Product ID"
-                                placeholder="Product ID"
-                                error={fieldState.error?.message}
-                                disabled={isSubmitting}
-                                {...field}
-                            />
+                            <Field className="flex flex-col flex-1 gap-1">
+                                <Label className="text-sm font-medium">Produkt</Label>
+                                <SearchableSelect
+                                    name={field.name}
+                                    value={field.value}
+                                    options={selectProductsInCategoriesFromCategoryOutputDTOs(categories, products)}
+                                    onChange={(option) => field.onChange(option?.value)}
+                                    mandatory={true}
+                                    emptyLabel={"Bitte ein Produkt wählen"}
+                                />
+                                {fieldState.error?.message && (
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {fieldState.error.message}
+                                    </p>
+                                )}
+                            </Field>
                         )}
                     />
                     <Controller
@@ -73,7 +89,8 @@ const OrderForm = ({ onCreate }: Props) => {
                         onClick={() => remove(idx)}
                         disabled={isSubmitting}
                         iconOnly
-                        className="text-red-600 hover:text-red-500 bg-transparent"
+                        className={"bg-transparent mt-6"}
+                        variant="destructive"
                     >
                         <X />
                     </Button>

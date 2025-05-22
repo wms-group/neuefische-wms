@@ -36,7 +36,7 @@ const HallListPage = () => {
                             {h.name}
                         </NavLink>
                     }
-                          actions={(<Button label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}
+                          actions={(<Button variant="destructive" label="Entfernen" onClick={() => handleHallRemoval(h.id)}/>)}
                     >
                         <div>Aisle Count: {h.aisleIds.length}</div>
                     </Card>

@@ -1,5 +1,6 @@
 package com.wmsgroup.neuefische_wms.controller;
 
+import com.wmsgroup.neuefische_wms.model.Stock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,8 @@ import com.wmsgroup.neuefische_wms.exception.StockNotFoundException;
 import com.wmsgroup.neuefische_wms.model.dto.StockInputDTO;
 import com.wmsgroup.neuefische_wms.model.dto.StockOutputDTO;
 import com.wmsgroup.neuefische_wms.service.StockService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/stock")
@@ -38,5 +41,10 @@ public class StockController {
     public ResponseEntity<StockOutputDTO> removeStock(@RequestBody StockInputDTO toRemove) throws StockNotFoundException, AisleNotFoundException {
         stockService.remove(toRemove);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Stock>> getAllStocks() {
+        return ResponseEntity.ok(stockService.getStocks());
     }
 }

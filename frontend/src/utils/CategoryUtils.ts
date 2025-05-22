@@ -44,5 +44,5 @@ export function selectNestedGroupsFromCategoryOutputDTOs(categories: CategoryOut
                 }],
             } as SelectGroup;
             return [group, ...selectNestedGroupsFromCategoryOutputDTOs(categories, category.id)];
-    });
+        });
 }

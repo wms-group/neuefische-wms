@@ -8,6 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -259,5 +262,17 @@ class StockServiceTest {
         service.deleteStockById(stockId);
 
         verify(stockRepo, times(1)).deleteById(stockId);
+    }
+
+    @Test
+    public void getAllStocks_returnAListOfStocks() {
+        List<Stock> mockStocks = List.of(new Stock("s1", "5432543", 34), new Stock("s2", "2345", 45));
+        when(stockRepo.findAll()).thenReturn(mockStocks);
+
+        List<Stock> stocks = service.getStocks();
+
+        assertNotNull(stocks);
+        assertEquals(2, stocks.size());
+        verify(stockRepo, times(1)).findAll();
     }
 }

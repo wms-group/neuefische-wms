@@ -1,4 +1,4 @@
-import {ChangeEvent, ComponentType, PropsWithChildren, type ReactNode} from "react";
+import {ButtonHTMLAttributes, ChangeEvent, ComponentType, PropsWithChildren, type ReactNode} from "react";
 import {LucideProps} from "lucide-react";
 
 export interface SideBarNavItem {
@@ -37,16 +37,19 @@ export interface ILayoutContainer extends PropsWithChildren {
     className?: string;
 }
 
+export type ButtonVariant = "default" | "destructive" | "outline" | "ghost";
+
 export enum ButtonType {
     button = "button",
     submit = "submit",
     reset = "reset",
 }
 
-export type ButtonProps = {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     className?: string;
     onClick?: () => void;
-    type?: ButtonType
+    type?: ButtonType;
+    variant?: ButtonVariant;
     children?: ReactNode;
     label?: string;
     disabled?: boolean;
@@ -253,7 +256,8 @@ export type SearchableSelectProps = {
 
 export interface StockItemDto {
     id: string;
-    product: ProductOutputDTO;
+    product?: ProductOutputDTO;
+    productId: string;
     amount: number;
 }
 
@@ -271,20 +275,10 @@ export type Product = {
     price: number;
 };
 
-export enum OrderItemStatus {
-    DELIVERED = "Delivered",
-    PENDING = "Pending",
-    CANCELED = "Canceled",
-}
-
 export type OrderItem = {
     product: Product;
-    status: OrderItemStatus;
+    status: OrderStatus;
     date: string;
-};
-
-export type RecentOrdersProps = {
-    orders: OrderItem[];
 };
 
 export type FormValues = {
@@ -307,7 +301,14 @@ export enum OrderStatus {
     PROCESSING = "PROCESSING",
     SHIPPED = "SHIPPED",
     DELIVERED = "DELIVERED",
+    CANCELED = "CANCELED",
 }
+
+export enum OrderStatusSkeleton {
+    SKELETON = "SKELETON"
+}
+
+export type OrderStatusWithSkeleton = OrderStatus | OrderStatusSkeleton
 
 export interface CreateOrderItemDto {
     productId: string;

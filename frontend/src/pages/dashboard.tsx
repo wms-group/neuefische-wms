@@ -2,10 +2,11 @@ import LayoutContainer from "@/components/shared/layout-container";
 import Chart from "react-apexcharts";
 import {ApexOptions} from "apexcharts";
 import {useOutletContext} from "react-router-dom";
-import {ProductOutputDTO} from "@/types";
+import {OrderDto, ProductOutputDTO} from "@/types";
 import GridLayout from "@/components/shared/grid-layout.tsx";
 import RecentOrders from "@/features/orders/components/recent-orders.tsx";
-import {orders} from "@data/recent-orders.ts"
+import {getOrders} from "@/features/orders/api";
+import {useEffect, useState} from "react";
 
 const chartOptions: ApexOptions = {
     chart: {
@@ -30,7 +31,7 @@ const chartOptions: ApexOptions = {
         colors: ["#6366f1"],
     },
     xaxis: {
-        categories: ["01.05", "05.05", "10.05", "15.05", "20.05", "21.05"],
+        categories: ["01.05", "05.05", "10.05", "15.05", "20.05", "21.05", "22.05", "23.05"],
         labels: { style: { colors: "#6b7280" } },
     },
     yaxis: {
@@ -53,12 +54,35 @@ const chartSeries = [
 
 const Dashboard = () => {
     const allProducts = useOutletContext<ProductOutputDTO[]>();
+    const [orders, setOrders] = useState<OrderDto[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const stats = [
         { title: "Produkte", value: allProducts.length },
         { title: "Bestellungen", value: 68 },
         { title: "Kategorien", value: 12 },
     ];
+
+    useEffect(() => {
+        (async () => {
+            try {
+                setIsLoading(true);
+                const allOrders = await getOrders();
+                const sorted = (allOrders as (OrderDto & { id: string })[]).sort((a, b) => {
+                    const updatedDiff = new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+                    if (updatedDiff !== 0) return updatedDiff;
+
+                    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                });
+
+                setOrders(sorted);
+            } catch (error) {
+                console.error("Fehler beim Laden der Bestellungen:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        })()
+    }, []);
     return (
         <LayoutContainer className="p-6 space-y-6 overflow-x-hidden">
             <h1>Warehouse Dashboard</h1>
@@ -86,7 +110,10 @@ const Dashboard = () => {
                         />
                     </div>
                 </div>
-                <RecentOrders orders={orders} />
+                <RecentOrders
+                    orders={orders}
+                    isLoading={isLoading}
+                />
             </GridLayout>
         </LayoutContainer>
     );

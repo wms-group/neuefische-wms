@@ -13,28 +13,39 @@ const Button: FC<ButtonProps> = ({
      iconBefore,
      iconAfter,
      iconOnly,
+    variant = "default",
      ...rest
  }) => {
-    const buttonContent = children ?? label
+    const buttonContent = children ?? label;
+
+    const baseClasses = "flex justify-center items-center transition-all font-medium font-inherit rounded-lg border border-transparent px-5 py-[0.6em] [&_svg]:size-5 [&_svg]:shrink-0 focus:outline focus:outline-auto ring-0";
+
+    const variantClasses = {
+        default: "bg-indigo-100 text-indigo-700 hover:bg-indigo-200",
+        destructive: "bg-red-100 text-red-700 hover:bg-red-200",
+        outline: "bg-transparent border text-indigo-700 hover:bg-indigo-50",
+        ghost: "bg-transparent text-indigo-700 hover:bg-indigo-100",
+    };
+
     return (
         <UIButton
             className={cn(
-                "flex justify-center items-center text-indigo-700 transition-all bg-indigo-100",
-                "rounded-lg border border-transparent px-5 py-[0.6em] [&_svg]:size-5 [&_svg]:shrink-0",
-                "font-medium font-inherit cursor-pointer transition-colors duration-200 outline-none focus:outline focus:outline-auto ring-0",
+                baseClasses,
+                variantClasses[variant],
                 disabled && "pointer-events-none text-neutral-400 cursor-not-allowed",
                 iconOnly && "w-fit h-fit rounded-full p-0",
-                className,
+                className
             )}
             type={type}
             onClick={onClick}
             disabled={disabled}
-            {...rest}>
+            {...rest}
+        >
             {iconBefore}
             {buttonContent}
             {iconAfter}
         </UIButton>
-    )
-}
+    );
+};
 
 export default Button;
