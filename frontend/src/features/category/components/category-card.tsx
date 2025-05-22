@@ -48,7 +48,7 @@ const CategoryActions = ({category, onDelete, onSubmit, isEditing, handleEdit, h
             onClick={handleDelete}
             onChange={handleMoveTo}
             defaultValue={category.parentId ?? ""}
-            value={value ?? undefined}
+            value={value}
             emptyLabel="Unterelemente löschen"
             options={selectGroupsFromCategoryOutputDTOs(categories.filter(c => c.id !== category.id))}
         >
@@ -101,11 +101,11 @@ const CategoryCard = ({category, onDelete, onSubmit, className, basePath}: Categ
     const {categories} = useCategoriesContext();
 
     useEffect(() => {
-        setMoveTo(category.parentId ?? undefined);
+        setMoveTo(category.parentId ?? null);
     }, [category]);
 
     const [isEditing, setIsEditing] = useState(false);
-    const [moveTo, setMoveTo] = useState<string | undefined>(undefined);
+    const [moveTo, setMoveTo] = useState<string | null>(null);
 
     const [formRef, setFormRef] = useState<HTMLFormElement | null>(null);
 
@@ -120,8 +120,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className, basePath}: Categ
         setIsEditing(!isEditing);
     }
 
-    const handleMoveTo = (option: SelectOption | null): void => {
-        if (!option && !(option === null)) return;
+    const handleMoveTo = (option: SelectOption | null) => {
         setMoveTo(option?.value ?? null);
     }
 
