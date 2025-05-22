@@ -1,8 +1,10 @@
 import {cn, selectGroupsFromCategoryOutputDTOs} from "@/utils";
 import {ProductInputDTO, ProductOutputDTO} from "@/types";
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {Dispatch, SetStateAction} from "react";
 import {InputWithLabel, SearchableSelect} from "@/components/ui";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import {Controller, useForm} from "react-hook-form";
+import {Field, Label} from "@headlessui/react";
 
 type ProductFormProps = {
     onSubmit: (product: ProductInputDTO) => Promise<unknown>;
@@ -14,34 +16,25 @@ type ProductFormProps = {
 }
 
 const ProductForm = ({onSubmit, value, disabled, defaultCategoryId, className, setFormRef}: ProductFormProps) => {
-    const [product, setProduct] = useState<ProductInputDTO>({
-        name: value?.name ?? "",
-        categoryId: value?.categoryId ?? defaultCategoryId,
-        price: value?.price ?? "",
-    });
-
     const categories = useCategoriesContext().categories;
 
-    useEffect(() => {
-        setProduct(prev => { return {...prev, categoryId: defaultCategoryId}});
-    }, [defaultCategoryId]);
+    const {
+        control,
+        handleSubmit,
+        formState: { isSubmitting, errors },
+        reset,
+    } = useForm<ProductInputDTO>({
+        defaultValues: {
+            name: value?.name ?? "",
+            categoryId: value?.categoryId ?? defaultCategoryId,
+            price: value && parseFloat(value.price.replace(",", ".") ?? "0").toFixed(2),
+        },
+    });
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleInternalSubmit = async (product: ProductInputDTO) => {
         const savedProduct = await onSubmit(product);
-        if (!value) {
-            setProduct({
-                name: "",
-                categoryId: defaultCategoryId,
-                price: "",
-            });
-        }
+        reset();
         return savedProduct;
-    }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-        setProduct({...product, [name]: value});
     }
 
     return (
@@ -51,44 +44,67 @@ const ProductForm = ({onSubmit, value, disabled, defaultCategoryId, className, s
                 "product-form",
                 value ? "edit" : "new"
             )}
-            className={cn("flex gap-2 flex-wrap flex-row justify-stretch items-end", className, disabled && "opacity-50 cursor-not-allowed")}
-            onSubmit={handleSubmit}>
-            <InputWithLabel
-                label="Name"
-                value={product.name}
-                onChange={handleChange}
-                onBlur={handleChange}
+            className={cn("flex gap-2 flex-wrap flex-row justify-stretch items-start", className, (disabled || isSubmitting) && "opacity-50 cursor-not-allowed")}
+            onSubmit={handleSubmit(handleInternalSubmit)}>
+            <Controller
                 name="name"
-                fieldClassName="w-full grow-1 sm:w-fit sm:grow basis-80"
-                className="bg-white/95"
-                disabled={disabled}
+                control={control}
+                rules={{ required: "Produktname ist erforderlich" }}
+                render={({ field, fieldState }) => (
+                    <InputWithLabel
+                        label="Name"
+                        fieldClassName="w-full grow-1 sm:w-fit sm:grow basis-80"
+                        error={fieldState.error?.message}
+                        {...field}
+                    />
+                )}
             />
-            <InputWithLabel
+
+            <Controller
                 name="price"
-                label="Preis"
-                value={product.price}
-                placeholder="0,00"
-                disabled={disabled}
-                onChange={handleChange}
-                fieldClassName="w-full w-fit grow sm:shrink-1 h-full basis-1"
-                className="bg-white/95"
-                onBlur={handleChange}
-                />
-            {value && <div className="h-full grow-1 basis-40 w-full">
-                <label htmlFor="categoryId" className={"text-sm/6 font-medium text-gray"}>Kategorie</label>
-                <SearchableSelect
-                    name="categoryId"
-                    options={selectGroupsFromCategoryOutputDTOs(categories)}
-                    onChange={(newValue) => handleChange({
-                        target: {
-                            name: 'categoryId',
-                            value: newValue?.value
-                        }
-                    } as unknown as React.ChangeEvent<HTMLInputElement>)}
-                    mandatory={true}
-                    value={product.categoryId}
-                    defaultValue={defaultCategoryId}/>
-            </div>}
+                control={control}
+                rules={{ required: "Bitte einen Preis eingeben" }}
+                render={({ field, fieldState }) => (
+                    <InputWithLabel
+                        {...field}
+                        label="Preis"
+                        value={field.value}
+                        placeholder="0,00"
+                        type="number"
+                        inputMode="decimal"
+                        fieldClassName="w-full w-fit grow sm:shrink-1 h-full basis-1"
+                        error={fieldState.error?.message}
+                    />
+                )}
+            />
+
+            {value && <Controller
+                name="categoryId"
+                control={control}
+                rules={{ required: "Bitte eine Kategorie wählen" }}
+                render={({ field }) => (
+                    <Field className="flex flex-col flex-1 gap-1">
+                        <Label>Kategorie</Label>
+                        <SearchableSelect
+                            name="categoryId"
+                            options={selectGroupsFromCategoryOutputDTOs(categories)}
+                            onChange={(option) => field.onChange(option?.value)}
+                            mandatory={true}
+                            value={field.value}
+                            defaultValue={defaultCategoryId}
+                            className={cn(
+                                errors.categoryId && "border-red-500 ring-red-500"
+                            )}
+                            aria-invalid={!!errors.categoryId}
+                        />
+                        {errors.categoryId && (
+                            <p className="mt-1 text-sm text-red-600">
+                                {errors.categoryId.message}
+                            </p>
+                        )}
+                    </Field>
+                )}
+            />}
         </form>
     )
 }
