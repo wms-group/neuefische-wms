@@ -1,13 +1,12 @@
 import {useState} from "react";
 import {Controller, useFieldArray, useForm} from "react-hook-form";
-import {Button, InputWithLabel, SearchableSelect, SelectWithLabel} from "@/components/ui";
+import {Button, InputWithLabel, SelectWithLabel} from "@/components/ui";
 import {ButtonType, CreateOrderDto, OrderDto, OrderStatus, ProductOutputDTO} from "@/types";
 import {updateOrder} from "@/features/orders/api";
-import {Field, Label} from "@headlessui/react";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
-import {selectProductsInCategoriesFromCategoryOutputDTOs} from "@/utils";
 import {StatusBadge} from "@/components/ui/status-badge.tsx";
 import {X} from "lucide-react";
+import ControlledProductSelect from "@/features/orders/components/controlled-product-select.tsx";
 
 type OrderItemProps = {
     order: OrderDto;
@@ -100,28 +99,11 @@ const OrderItem = ({order, onUpdate, onDelete, products}: OrderItemProps) => {
         >
             {fields.map((field, index) => (
                 <div key={field.id} className="flex gap-4 items-end">
-                    <Controller
-                        name={`wares.${index}.productId`}
+                    <ControlledProductSelect
                         control={control}
-                        rules={{required: "Bitte ein Produkt wählen"}}
-                        render={({field, fieldState}) => (
-                            <Field className="flex flex-col flex-1 gap-1">
-                                <Label className="text-sm font-medium">Produkt</Label>
-                                <SearchableSelect
-                                    name={field.name}
-                                    value={field.value}
-                                    options={selectProductsInCategoriesFromCategoryOutputDTOs(categories, products)}
-                                    onChange={(option) => field.onChange(option?.value)}
-                                    mandatory={true}
-                                    emptyLabel={"Bitte ein Produkt wählen"}
-                                />
-                                {fieldState.error?.message && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {fieldState.error.message}
-                                    </p>
-                                )}
-                            </Field>
-                        )}
+                        name={`wares.${index}.productId`}
+                        categories={categories}
+                        products={products}
                     />
 
                     <Controller

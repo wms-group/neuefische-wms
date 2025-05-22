@@ -1,11 +1,11 @@
 import {Controller, useFieldArray, useForm} from "react-hook-form";
-import {Button, InputWithLabel, SearchableSelect, SelectWithLabel} from "@/components/ui";
+import {Button, InputWithLabel, SelectWithLabel} from "@/components/ui";
 import {ButtonType, CreateOrderDto, OrderDto, OrderStatus, ProductOutputDTO} from "@/types";
 import {createOrder} from "../api";
 import {X} from "lucide-react";
-import {cn, selectProductsInCategoriesFromCategoryOutputDTOs} from "@/utils";
-import {Field, Label} from "@headlessui/react";
+import {cn} from "@/utils";
 import {useCategoriesContext} from "@/context/CategoriesContext.ts";
+import ControlledProductSelect from "@/features/orders/components/controlled-product-select.tsx";
 
 type OrderFormProps = {
     onCreate: (order: OrderDto) => void;
@@ -47,28 +47,11 @@ const OrderForm = ({ onCreate, className, products }: OrderFormProps) => {
         >
             {fields.map((field, idx) => (
                 <div key={field.id} className="flex gap-4 justify-center items-center">
-                    <Controller
-                        name={`wares.${idx}.productId`}
+                    <ControlledProductSelect
                         control={control}
-                        rules={{ required: "Bitte ein Produkt wählen" }}
-                        render={({ field, fieldState }) => (
-                            <Field className="flex flex-col flex-1 gap-1">
-                                <Label className="text-sm font-medium">Produkt</Label>
-                                <SearchableSelect
-                                    name={field.name}
-                                    value={field.value}
-                                    options={selectProductsInCategoriesFromCategoryOutputDTOs(categories, products)}
-                                    onChange={(option) => field.onChange(option?.value)}
-                                    mandatory={true}
-                                    emptyLabel={"Bitte ein Produkt wählen"}
-                                />
-                                {fieldState.error?.message && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {fieldState.error.message}
-                                    </p>
-                                )}
-                            </Field>
-                        )}
+                        name={`wares.${idx}.productId`}
+                        categories={categories}
+                        products={products}
                     />
                     <Controller
                         name={`wares.${idx}.amount`}
