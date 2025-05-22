@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -116,7 +117,7 @@ class CategoryServiceTest {
                 new CategoryOutputDTO("id2", "Cat2", "id1", 2, 0)
         );
 
-        when(categoryRepository.findAll()).thenReturn(categories);
+        when(categoryRepository.findAll(any(Sort.class))).thenReturn(categories);
         when(productRepository.countByCategoryId("id1")).thenReturn(3);
         when(productRepository.countByCategoryId("id2")).thenReturn(2);
         when(categoryRepository.countByParentId("id1")).thenReturn(1);
@@ -127,7 +128,7 @@ class CategoryServiceTest {
 
         // Then
         assertEquals(outputDTOs, result);  // Hinweis: Hier wird verglichen, ob die Inhalte gleich sind. Die Konvertierung ist jetzt statisch im Service implementiert.
-        verify(categoryRepository).findAll();
+        verify(categoryRepository).findAll(any(Sort.class));
     }
 
     @Test

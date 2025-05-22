@@ -2,6 +2,7 @@ package com.wmsgroup.neuefische_wms.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.wmsgroup.neuefische_wms.converter.CategoryConverter;
@@ -51,7 +52,7 @@ public class CategoryService {
     }
 
     public List<CategoryOutputDTO> getAllCategories() {
-        return CategoryOutputDTOConverter.convert(categoryRepository.findAll())
+        return CategoryOutputDTOConverter.convert(categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "name")))
                 .stream()
                 .map(categoryOutputDTO ->
                         categoryOutputDTO
