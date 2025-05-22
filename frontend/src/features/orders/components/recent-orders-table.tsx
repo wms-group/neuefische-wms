@@ -42,13 +42,10 @@ const RecentOrdersTable = ({orders, isLoading}: { orders: OrderDto[]; isLoading:
                 <table className="min-w-full text-sm">
                     <thead>
                     <tr className="text-left border-b border-secondary">
-                        <th className="py-3 px-4 w-96">Products</th>
+                        <th className="py-3 px-4 w-72 lg:w-96">Products</th>
                         <th className="py-3 px-2">Total Items</th>
-                        {/* px-2 statt px-4 */}
                         <th className="py-3 px-2">Ordered At</th>
-                        {/* Umbenannt + px-2 */}
                         <th className="py-3 px-2 text-right">Status</th>
-                        {/* px-2 statt px-4 */}
                     </tr>
                     </thead>
 
@@ -93,7 +90,7 @@ const RecentOrdersTable = ({orders, isLoading}: { orders: OrderDto[]; isLoading:
                                             isLast ? "last:border-b-0" : ""
                                         }`}
                                     >
-                                        <td className="py-3 px-4 max-w-[300px] truncate font-medium">{productNames}</td>
+                                        <td className="py-3 px-4 max-w-[200px] truncate font-medium">{productNames}</td>
                                         <td className="py-3 px-2">{totalItems}</td>
                                         <td className="py-3 px-2">{new Date(order.createdAt).toLocaleDateString()}</td>
                                         <td className="py-3 px-2 text-right">

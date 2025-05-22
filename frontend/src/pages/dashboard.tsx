@@ -98,7 +98,7 @@ const Dashboard = () => {
             </GridLayout>
 
             <GridLayout gridCols={{ base: 1, sm: 1,  md: 2 }}>
-                <div className="card bg-transparent overflow-hidden">
+                <div className="card bg-transparent overflow-hidden p-0">
                     <h2 className="text-lg font-semibold mb-4">Lagerbestand – Verlauf</h2>
                     <div className="w-full h-72">
                         <Chart
