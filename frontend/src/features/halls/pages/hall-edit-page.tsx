@@ -10,9 +10,7 @@ const HallEditPage = () => {
     const {addHall, updateHall, fetchHall} = useHalls();
     const {id} = useParams();
     const navigate = useNavigate();
-    const { params } = useParams();
 
-    console.log("Halls Edit Page Params: ", params);
     const isCreationPage = id === undefined;
 
     const [hall, setHall] = useState<Hall>({
@@ -108,9 +106,8 @@ const HallEditPage = () => {
 
             </form>
             {
-                !isCreationPage && <>
+                !isCreationPage &&
                     <EditableAisleList aisles={hallAisles} setAisles={setAisles} />
-                </>
             }
         </LayoutContainer>
     );

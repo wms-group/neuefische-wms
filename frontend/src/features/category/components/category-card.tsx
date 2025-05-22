@@ -27,7 +27,7 @@ type CategoryActionsProps = {
     handleDelete: () => void;
     handleMoveTo: (value: SelectOption | null) => void;
     handleSubmitClicked: () => void;
-    value: string | null;
+    value?: string;
     categories: CategoryOutputDTO[];
 }
 
@@ -149,7 +149,7 @@ const CategoryCard = ({category, onDelete, onSubmit, className, basePath}: Categ
                     handleDelete={handleDelete}
                     handleMoveTo={handleMoveTo}
                     handleSubmitClicked={handleSubmitClicked}
-                    value={moveTo}
+                    value={moveTo ?? undefined}
                     categories={categories}
                 />
             </div>
