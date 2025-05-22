@@ -83,7 +83,7 @@ const ProductForm = ({onSubmit, value, disabled, defaultCategoryId, className, s
                 control={control}
                 rules={{ required: "Bitte eine Kategorie wählen" }}
                 render={({ field }) => (
-                    <Field className="flex flex-col flex-1 gap-1">
+                    <Field className="flex flex-col flex-1 gap-1 grow-1 basis-40">
                         <Label>Kategorie</Label>
                         <SearchableSelect
                             name="categoryId"
