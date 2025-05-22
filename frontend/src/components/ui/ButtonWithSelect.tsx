@@ -1,14 +1,16 @@
-import {ButtonProps, SearchableSelectProps} from "@/types";
+import {SearchableSelectProps} from "@/types";
 import Button from "@/components/ui/button.tsx";
 import SearchableSelect from "@/components/ui/SearchableSelect.tsx";
 import {cn} from "@/utils";
+import {PropsWithChildren} from "react";
 
-type ButtonWithSelectProps = ButtonProps & SearchableSelectProps & {
+type ButtonWithSelectProps = PropsWithChildren<SearchableSelectProps & {
     label?: string;
     selectClassName?: string;
     buttonClassName?: string;
     selectValue?: string
-};
+    onClick?: () => void;
+}>;
 
 const ButtonWithSelect: React.FC<ButtonWithSelectProps> = ({
     label,
@@ -19,6 +21,7 @@ const ButtonWithSelect: React.FC<ButtonWithSelectProps> = ({
     emptyLabel,
     onClick,
     onChange,
+    children,
     ...props
                                                            }:ButtonWithSelectProps) => {
 
@@ -35,7 +38,7 @@ const ButtonWithSelect: React.FC<ButtonWithSelectProps> = ({
             <Button
                 className={cn("rounded-s-none h-full", buttonClassName)}
                 onClick={onClick}
-                {...props} />
+                 >{children}</Button>
         </div>
     )
 }
