@@ -39,7 +39,7 @@ const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, se
     return (
         <form
             ref={setFormRef}
-            className={cn("flex flex-col md:flex-row gap-6 justify-between items-start", className, (disabled || isSubmitting) && "opacity-50 cursor-not-allowed")}
+            className={cn("flex flex-col flex-wrap md:flex-row gap-6 justify-between items-start", className, (disabled || isSubmitting) && "opacity-50 cursor-not-allowed")}
             onSubmit={handleSubmit(handleInternalSubmit)}>
             <Controller
                 name="name"
@@ -48,7 +48,7 @@ const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, se
                 render={({ field, fieldState }) => (
                     <InputWithLabel
                         label="Name"
-                        fieldClassName="w-full grow-1 sm:w-fit sm:grow basis-80 sm:basis-1"
+                        fieldClassName="grow-1 basis-40"
                         error={fieldState.error?.message}
                         {...field}
                     />
@@ -59,7 +59,7 @@ const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, se
                 name="parentId"
                 control={control}
                 render={({ field }) => (
-                    <Field className="flex flex-col flex-1 gap-1">
+                    <Field className="flex flex-col flex-1 gap-1 grow-1 basis-40">
                         <Label>Kategorie</Label>
                         <SearchableSelect
                             name="categoryId"
@@ -67,7 +67,7 @@ const CategoryForm = ({onSubmit, value, disabled, defaultParentId, className, se
                             onChange={(option) => field.onChange(option?.value)}
                             value={field.value}
                             defaultValue={defaultParentId}
-                            className={cn("w-full sm:w-fit sm:grow basis-80 sm:basis-1",
+                            className={cn(
                                 errors.parentId && "border-red-500 ring-red-500"
                             )}
                             aria-invalid={!!errors.parentId}
