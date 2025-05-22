@@ -99,7 +99,7 @@ export function isCategoryOutputDTO(obj: unknown): obj is CategoryOutputDTO {
 
 export interface CategoryInputDTO {
     name: string;
-    parentId?: string | null;
+    parentId?: string;
 }
 
 export interface ProductOutputDTO {

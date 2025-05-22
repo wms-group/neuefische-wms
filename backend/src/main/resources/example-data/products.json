@@ -1,278 +1,324 @@
 [
   {
+    "_id": "7c7a633e-f2b7-4eb8-b1bb-affd23340b9b",
     "name": "Gaming Laptop Acer Predator",
     "categoryId": "d19c8ee3-8e44-4289-9e88-31fcd0b29c27",
     "price": "1499.00"
   },
   {
+    "_id": "b093b396-32cf-41ad-920c-3e2d8995fec0",
     "name": "Business Laptop Dell Latitude",
     "categoryId": "d19c8ee3-8e44-4289-9e88-31fcd0b29c27",
     "price": "1350.99"
   },
   {
+    "_id": "800e59e6-5389-4ad3-9857-c266dd2adea6",
     "name": "Mini PC Apple Mac Mini",
     "categoryId": "923d807a-5776-4bc6-957b-1c1a706f7e47",
     "price": "899.00"
   },
   {
+    "_id": "34f6ee9a-6ec8-449b-bcaf-4e507d5c1b10",
     "name": "Gaming Desktop HP Omen",
     "categoryId": "923d807a-5776-4bc6-957b-1c1a706f7e47",
     "price": "1689.90"
   },
   {
+    "_id": "287b8538-0cf7-4825-97f0-fd783db16755",
     "name": "Samsung Galaxy S24 Ultra",
     "categoryId": "b1229fae-14dd-414b-9047-8abac4f8346b",
     "price": "1249.00"
   },
   {
+    "_id": "51ae63b4-9953-4cdd-a290-acfe1d007981",
     "name": "Xiaomi 13 Pro",
     "categoryId": "b1229fae-14dd-414b-9047-8abac4f8346b",
     "price": "899.95"
   },
   {
+    "_id": "c65d9525-a3ad-49ff-9d68-2128ccad81d2",
     "name": "iPhone 15 Pro Max",
     "categoryId": "d9bb1026-0bc0-4e5b-b6c8-3d8bbee599e8",
     "price": "1599.00"
   },
   {
+    "_id": "09dc38ab-6225-49dc-b358-d241163213d7",
     "name": "iPhone SE (2024)",
     "categoryId": "d9bb1026-0bc0-4e5b-b6c8-3d8bbee599e8",
     "price": "529.00"
   },
   {
+    "_id": "1461f426-cad7-42e2-931e-20da769f1792",
     "name": "Samsung 65 Zoll LED TV",
     "categoryId": "55739726-85d6-47b1-b5f2-7b4fb2d5dfc5",
     "price": "879.00"
   },
   {
+    "_id": "51018682-fd3e-48f6-ae0a-9f928b59ca2f",
     "name": "Philips Ambilight LED TV",
     "categoryId": "55739726-85d6-47b1-b5f2-7b4fb2d5dfc5",
     "price": "739.99"
   },
   {
+    "_id": "0fef7527-7c6f-47e5-9000-d4411a3767f6",
     "name": "LG OLED 4K Fernseher",
     "categoryId": "23a7ee7a-c85b-4700-82ca-932cd6ece99a",
     "price": "1240.00"
   },
   {
+    "_id": "bb3cbbe0-76ef-4316-b7ff-200bdc6ccb1a",
     "name": "Sony OLED Bravia XR",
     "categoryId": "23a7ee7a-c85b-4700-82ca-932cd6ece99a",
     "price": "1799.99"
-  },  
-
+  },
   {
+    "_id": "2a727030-0f5c-426c-831d-9f2e03b7fa82",
     "name": "Sommerkleid Blumendruck",
     "categoryId": "173a35be-6f44-48c8-a8b1-7bc7186315c0",
     "price": "34.99"
   },
   {
+    "_id": "5dbb950d-635e-4366-9f9c-4013262cc404",
     "name": "Cocktailkleid festlich",
     "categoryId": "173a35be-6f44-48c8-a8b1-7bc7186315c0",
     "price": "89.95"
   },
   {
+    "_id": "b6e8921d-fd3c-4ca2-8847-512f51848d41",
     "name": "Damen Sneaker Adidas",
     "categoryId": "487f7bdc-95d4-4f22-ae87-3a4f2600f0b2",
     "price": "59.95"
   },
   {
+    "_id": "3d0c19b3-6a3c-45bc-8ff7-cf204d4c8b9d",
     "name": "Damen Sneaker Nike Air",
     "categoryId": "487f7bdc-95d4-4f22-ae87-3a4f2600f0b2",
     "price": "109.99"
   },
   {
+    "_id": "08873243-e775-40b2-b95b-1c014bafc716",
     "name": "Damen Stiefel mit Absatz",
     "categoryId": "1e1eadb0-7669-4b6c-a486-2d7ba2eceef4",
     "price": "124.90"
   },
   {
+    "_id": "12c3b067-cb55-4b75-bc38-4e41d91e53c0",
     "name": "Damen Reitstiefel",
     "categoryId": "1e1eadb0-7669-4b6c-a486-2d7ba2eceef4",
     "price": "149.00"
   },
-
   {
+    "_id": "56932331-0830-4628-b6d5-3cb2af60fda1",
     "name": "Herren Hemd Slim Fit blau",
     "categoryId": "2285d0b2-9a95-41e8-a109-06e7a1bafea9",
     "price": "24.99"
   },
   {
+    "_id": "7465e1ad-1d70-42d9-b885-ad9b6fed3ed2",
     "name": "Herren Businesshemd weiß",
     "categoryId": "2285d0b2-9a95-41e8-a109-06e7a1bafea9",
     "price": "39.99"
   },
   {
+    "_id": "a7fb7473-0a10-42ce-ab21-c3b0bade7ebe",
     "name": "Herren Jeans Regular",
     "categoryId": "122bbe85-c3b8-434e-afc1-d7f78baa0cfa",
     "price": "49.90"
   },
   {
+    "_id": "6b4e5b18-2622-4cf4-aba3-3c1ef8be663b",
     "name": "Herren Chino Hose",
     "categoryId": "122bbe85-c3b8-434e-afc1-d7f78baa0cfa",
     "price": "54.90"
   },
-
   {
+    "_id": "640f7855-8f8f-4426-ab6f-ee549858e84b",
     "name": "Ecksofa Stoff grau",
     "categoryId": "ed831983-dd33-4385-ac61-eac9ccbc905c",
     "price": "849.00"
   },
   {
+    "_id": "4b87d48c-18ef-4ea5-b6d5-2307e5a42782",
     "name": "Wohnwand Set Eiche",
     "categoryId": "ed831983-dd33-4385-ac61-eac9ccbc905c",
     "price": "1250.00"
   },
   {
+    "_id": "5408a07c-bb62-4ae5-8646-0b194c04659a",
     "name": "Boxspringbett 180x200",
     "categoryId": "f27b3e9a-bf7f-4b96-8372-30eedfd09c3f",
     "price": "649.00"
   },
   {
+    "_id": "b4e7b635-8713-4e60-9056-b0a2c0d0d75b",
     "name": "Futonbett mit Stauraum",
     "categoryId": "f27b3e9a-bf7f-4b96-8372-30eedfd09c3f",
     "price": "349.95"
   },
   {
+    "_id": "003a8195-9698-41a6-be23-bbce9b57d494",
     "name": "5-türiger Kleiderschrank",
     "categoryId": "ad11c9b6-281f-4ad7-b49f-7b773e9ad7b9",
     "price": "720.00"
   },
   {
+    "_id": "63806c84-c43d-477b-bd58-fbbd1e4aee41",
     "name": "Schwebetürenschrank weiß",
     "categoryId": "ad11c9b6-281f-4ad7-b49f-7b773e9ad7b9",
     "price": "999.00"
   },
   {
+    "_id": "2b34a769-15e6-451e-9338-912c149ca14e",
     "name": "Gasgrill Weber Genesis",
     "categoryId": "9aabb14e-6cb7-4961-9928-64bb7f5122db",
     "price": "1199.00"
   },
   {
+    "_id": "ab8114a5-0fd9-4051-9df5-16c6ebc86e97",
     "name": "Holzkohlegrill Tepro Toronto",
     "categoryId": "9aabb14e-6cb7-4961-9928-64bb7f5122db",
     "price": "159.99"
   },
   {
+    "_id": "316b1c71-3b7e-49ec-bd3a-75f3b64680a2",
     "name": "Akkuschrauber Bosch Professional",
     "categoryId": "ff01b49c-cb5f-452d-b5e5-e306d5e7ccca",
     "price": "114.90"
   },
   {
+    "_id": "20b53663-49df-4c34-bae1-888f5dff8be7",
     "name": "Rasenmäher Gardena PowerMax",
     "categoryId": "ff01b49c-cb5f-452d-b5e5-e306d5e7ccca",
     "price": "239.00"
   },
-
   {
+    "_id": "4e53b489-3901-4920-8eac-9e7330bc35ed",
     "name": "Lerncomputer VTech Storio",
     "categoryId": "96244c91-2f4e-429e-8548-fbe1c813da61",
     "price": "69.99"
   },
   {
+    "_id": "c70ac96b-f69e-4ee1-b970-c6e26806c8ef",
     "name": "Experimentierkasten Elektronik",
     "categoryId": "96244c91-2f4e-429e-8548-fbe1c813da61",
     "price": "49.99"
   },
   {
+    "_id": "cb229062-6a85-458a-859e-20c70dfe063c",
     "name": "LEGO Classic Bausteine",
     "categoryId": "1ebac8a2-9ced-4f92-8262-0318a66300ea",
     "price": "39.95"
   },
   {
+    "_id": "0e41d1b8-199f-4e19-8456-634f03c85dc0",
     "name": "Playmobil Ritterburg",
     "categoryId": "1ebac8a2-9ced-4f92-8262-0318a66300ea",
     "price": "79.99"
   },
   {
+    "_id": "6c086f03-11b9-4549-a47c-b0e2ad847b7d",
     "name": "Baby Strampler Set Bio-Baumwolle",
     "categoryId": "b8031f49-7a43-499e-a10e-aacfceabcde6",
     "price": "29.99"
   },
   {
+    "_id": "9e95a2ce-ad7c-413c-befb-2d773378e1d8",
     "name": "Strampler mit Fuß für Babys",
     "categoryId": "b8031f49-7a43-499e-a10e-aacfceabcde6",
     "price": "19.99"
   },
-
   {
+    "_id": "253f48b2-77a2-4ab4-a65e-6b0cae7595d2",
     "name": "Hantelset 30kg",
     "categoryId": "cdcd0c9d-4b2c-41c1-b6ad-6ea8ff0f4e36",
     "price": "89.00"
   },
   {
+    "_id": "ec2945bd-e5eb-43ad-a27a-e6b9461b4dd2",
     "name": "Klimmzugstange Türrahmen",
     "categoryId": "cdcd0c9d-4b2c-41c1-b6ad-6ea8ff0f4e36",
     "price": "34.99"
   },
-
   {
+    "_id": "da7dacdc-df41-43ad-8726-73f66564216f",
     "name": "Adidas Team Fußball Matchball",
     "categoryId": "c6da0c21-9a97-4e0e-b45e-892338dc85b2",
     "price": "24.99"
   },
   {
+    "_id": "2585c75d-cf6b-49b8-9530-464908d95095",
     "name": "Fußballtrikot Deutschland Kinder",
     "categoryId": "c6da0c21-9a97-4e0e-b45e-892338dc85b2",
     "price": "39.95"
   },
   {
+    "_id": "fad956ba-af31-4fd3-b9a1-8ce3c2ae84e0",
     "name": "Spalding Basketbal NBA",
     "categoryId": "516769bf-209d-4020-9340-9e362cf4067a",
     "price": "22.95"
   },
   {
+    "_id": "8951f56d-7b5b-498a-9f93-ab2b448545b6",
     "name": "Basketballkorb höhenverstellbar",
     "categoryId": "516769bf-209d-4020-9340-9e362cf4067a",
     "price": "98.90"
   },
-
   {
+    "_id": "da375b6c-2e9a-46ae-9bff-82d04237f7d4",
     "name": "KFZ Dachbox 400 Liter",
     "categoryId": "b237295a-d307-4035-9fe5-5e7d6b4f9e4c",
     "price": "239.99"
   },
   {
+    "_id": "5a4313c2-6339-43e5-8b7a-1ed518d2375b",
     "name": "Autoreifen Michelin, 17 Zoll",
     "categoryId": "cd2f27fa-6e08-446f-9baf-49b43c44be81",
     "price": "120.00"
   },
   {
+    "_id": "f595fd09-99b4-4c02-9b4a-2ea42e850790",
     "name": "KFZ Navigationsgerät TomTom GO",
     "categoryId": "cfb097c2-da9d-4b81-99ae-f009f8154f83",
     "price": "179.99"
   },
   {
+    "_id": "fc3c45d2-6e61-4581-b5cb-47d4c093e987",
     "name": "Motorradjacke Leder schwarz",
     "categoryId": "30faf32f-dd5a-45d3-8e14-13b1549e338b",
     "price": "165.00"
   },
-
   {
+    "_id": "8995bc5d-0908-4638-abe8-5469d194c568",
     "name": "Roman: Der Schatten des Windes",
     "categoryId": "30bc7fd1-7a9f-4ac1-9b21-9ba868da23f0",
     "price": "12.00"
   },
   {
+    "_id": "6ed46438-7413-4d99-bcbc-2fd47e30832e",
     "name": "Roman: Die Känguru-Chroniken",
     "categoryId": "30bc7fd1-7a9f-4ac1-9b21-9ba868da23f0",
     "price": "10.95"
   },
   {
+    "_id": "49f63ef6-ee74-44dd-bb8b-bebd8977aade",
     "name": "Kinderbuch: Die kleine Raupe Nimmersatt",
     "categoryId": "1df1ca11-04b3-429b-809b-280e8bc1eacd",
     "price": "7.99"
   },
   {
+    "_id": "c8b24bfd-8a33-46b4-8581-44546d270d6a",
     "name": "Kinderbuch: Der Grüffelo",
     "categoryId": "1df1ca11-04b3-429b-809b-280e8bc1eacd",
     "price": "10.99"
   },
   {
+    "_id": "b8d2f5a9-d40d-4de2-a132-2e821c17e120",
     "name": "Bilderbuch: Mein erstes Wörterbuch",
     "categoryId": "a7d6ed22-9e18-44a4-a29d-8ad1cca33a69",
     "price": "8.95"
   },
   {
+    "_id": "f48a71a9-5e41-4bdb-995a-04881f6ae7a7",
     "name": "Bilderbuch: Gute Nacht, Gorilla!",
     "categoryId": "a7d6ed22-9e18-44a4-a29d-8ad1cca33a69",
     "price": "7.50"

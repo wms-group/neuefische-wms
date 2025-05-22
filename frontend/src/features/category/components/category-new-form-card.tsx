@@ -9,7 +9,7 @@ type CategoryNewFormCardProps = {
     onSubmit: (category: CategoryInputDTO) => Promise<unknown>;
     disabled?: boolean;
     value?: CategoryOutputDTO;
-    defaultParentId: string | null;
+    defaultParentId?: string;
     className?: string;
 }
 
